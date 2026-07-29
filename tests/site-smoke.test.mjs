@@ -54,3 +54,28 @@ test("environment example separates public and server-only form secrets", () => 
   assert.match(env, /KIV_FORM_WEBHOOK_SECRET/);
   assert.doesNotMatch(env, /NEXT_PUBLIC_.*SECRET/);
 });
+
+
+test("KIS availability environment matrix is represented in source", () => {
+  const source = readFileSync(join(root, "lib/site.ts"), "utf8");
+  const download = readFileSync(join(root, "app/download/page.tsx"), "utf8");
+  const productPanel = readFileSync(join(root, "components/PageBlocks.tsx"), "utf8");
+
+  for (const key of [
+    "NEXT_PUBLIC_KIS_LAUNCH_LIST",
+    "NEXT_PUBLIC_KIS_ANDROID_AVAILABLE",
+    "NEXT_PUBLIC_KIS_IOS_AVAILABLE",
+    "NEXT_PUBLIC_KIS_GOOGLE_PLAY_URL",
+    "NEXT_PUBLIC_KIS_APP_STORE_URL",
+    "NEXT_PUBLIC_KIS_WEB_APP_URL",
+  ]) {
+    assert.match(source, new RegExp(key));
+  }
+
+  assert.match(download, /Coming soon/);
+  assert.match(download, /Google Play/);
+  assert.match(download, /App Store/);
+  assert.match(download, /Web app/);
+  assert.match(productPanel, /Store links will appear here only after official release links are configured/);
+  assert.match(productPanel, /rel="noopener noreferrer"/);
+});

@@ -38,9 +38,13 @@
   },
   "type": "module",
   "description": "Production-ready public website for Kingdom Impact Ventures.",
-  "overrides": {
-    "postcss": "8.5.24",
-    "sharp": "0.35.3",
-    "brace-expansion": "5.0.8"
+  "pnpm": {
+    "overrides": {
+      "next>postcss": "8.5.24",
+      "next>sharp": "0.35.2",
+      "postcss": "8.5.24",
+      "sharp": "0.35.2",
+      "brace-expansion": "5.0.8"
+    }
   }
 }

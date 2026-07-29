@@ -68,7 +68,7 @@ Public forms support contact, partnership, investor, launch-list, deletion and s
 
 ## Security controls
 
-Security headers are configured in `next.config.ts`, including CSP, Referrer-Policy, X-Content-Type-Options, Permissions-Policy and frame-ancestor protection. HSTS should be enabled only after HTTPS domain deployment is confirmed.
+Security headers are configured in `next.config.ts` and mirrored in the Vinext worker response path, including CSP, Referrer-Policy, X-Content-Type-Options, Permissions-Policy and frame-ancestor protection. HSTS should be enabled only after HTTPS domain deployment is confirmed.
 
 ## SEO implementation
 
@@ -86,11 +86,18 @@ Pages are server-rendered by default. The implementation avoids making whole pag
 
 Final validation results:
 
-- `npm run lint`: passed
-- `npm run typecheck`: passed
-- `npm run smoke`: passed, 3 tests passed
-- `npm run build`: passed, standalone output generated in `dist/standalone/`
-- `npm audit`: passed, found 0 vulnerabilities
+- `pnpm run lint`: passed
+- `pnpm run typecheck`: passed
+- `pnpm run smoke`: passed, 4 tests passed
+- `pnpm run build`: passed, standalone output generated in `dist/standalone/`
+- `pnpm audit`: passed, found 0 known vulnerabilities
+
+## Live QA findings
+
+- Safari raw-HTML rendering was traced to the Vinext dev server exposing `app/globals.css` as a JavaScript style module while the rendered HTML referenced it as a stylesheet.
+- The global CSS is now delivered through a critical inline style component and the broken stylesheet import has been removed from the root layout.
+- Local HTML verification confirms `id="kiv-critical-css"` is present and the `/app/globals.css` stylesheet link is absent.
+- Security headers were verified on the local Vinext response path after the worker header fix.
 
 ## Environment variables requiring production values
 

@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Libre_Baskerville } from "next/font/google";
+import { CriticalStyles } from "@/components/CriticalStyles";
 import { OrganizationJsonLd, WebsiteJsonLd } from "@/components/StructuredData";
 import { site } from "@/lib/site";
-import "./globals.css";
 
 const inter = Inter({ variable: "--font-sans", subsets: ["latin"] });
 const serif = Libre_Baskerville({ variable: "--font-serif", subsets: ["latin"], weight: ["400", "700"] });
@@ -51,6 +51,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={`${inter.variable} ${serif.variable}`}>
+        <CriticalStyles />
         <OrganizationJsonLd />
         <WebsiteJsonLd />
         {children}
