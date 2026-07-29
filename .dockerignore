@@ -1,0 +1,11 @@
+node_modules
+.next
+.vinext
+dist
+coverage
+.env*
+.git
+.wrangler
+npm-debug.log*
+README.md
+docs
