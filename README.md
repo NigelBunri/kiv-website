@@ -6,21 +6,21 @@ KCAN, Kingdom Citizens & Ambassadors Network, is the parent organisation. KIV is
 
 ## Local setup
 
-Use Node.js 22.13 or newer.
+Use Node.js 22.13 or newer and pnpm (this project is pnpm-only — do not commit a `package-lock.json` or `yarn.lock`).
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 ## Quality gates
 
 ```bash
-npm run lint
-npm run typecheck
-npm run smoke
-npm run build
-npm audit
+pnpm run lint
+pnpm run typecheck
+pnpm run smoke
+pnpm run build
+pnpm audit
 ```
 
 ## Environment variables
@@ -50,11 +50,22 @@ Place reviewed original screenshots in `public/` and reference them from native 
 
 ## Form provider setup
 
-Public forms post to `/api/forms`. The current implementation validates input, limits field length, includes a honeypot and uses local in-memory rate limiting. Production distributed rate limiting should use shared storage or provider-native protection. Email/webhook delivery must remain server-side.
+Public forms post to `/api/forms`. The current implementation validates input, limits field length, includes a honeypot and rate-limits submissions. The in-memory rate-limit counter is only meaningful on a single long-running Node process (the Docker/AWS path below); on Cloudflare Workers, set `REDIS_URL` so it uses the shared Redis-backed limiter instead (see `lib/rate-limiter.ts`). Email/webhook delivery must remain server-side.
 
 ## Deployment options
 
-The site can run on Vercel-compatible hosting or a self-hosted/AWS container. See `docs/deployment.md` for domain, Nginx, Docker, health-check and rollback details.
+The site deploys to Cloudflare Workers via the official `@opennextjs/cloudflare` adapter — see `docs/deployment.md` for the full Cloudflare setup, plus the Vercel-compatible and self-hosted/AWS container alternatives (domain, Nginx, Docker, health-check and rollback details).
+
+```bash
+pnpm run preview   # build + run once in the local Workers runtime
+pnpm run deploy    # build + deploy to Cloudflare Workers
+```
+
+`NEXT_PUBLIC_TURNSTILE_SITE_KEY` must be set wherever `pnpm run deploy`/`build` executes (it's inlined into the client bundle at build time). `TURNSTILE_SECRET_KEY` and any other server-only secret must never go in `wrangler.jsonc` or `.env*` files that get committed — set them once with:
+
+```bash
+pnpm wrangler secret put TURNSTILE_SECRET_KEY
+```
 
 ## Security considerations
 

@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "kiv-website",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-07-29",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Real secret values must never be written here (this file is committed
+  // to source control). Set TURNSTILE_SECRET_KEY and other server-only
+  // secrets with `wrangler secret put <NAME>` instead — see README.md.
+  "vars": {}
+}

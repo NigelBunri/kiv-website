@@ -1,7 +1,4 @@
-import { notFound } from "next/navigation";
-import { SiteShell } from "@/components/SiteShell";
-import { AvailabilityPanel, CardGrid, Hero, Section } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd, ProductJsonLd } from "@/components/StructuredData";
+import { FutureVentureProductPage } from "@/components/FutureVentureProductPage";
 import { pageMetadata } from "@/lib/metadata";
 import { productBySlug } from "@/lib/site";
 
@@ -11,19 +8,23 @@ export const metadata = pageMetadata({
   title: product?.fullName ?? "Product",
   description: product?.summary ?? "KIV product page.",
   path: "/products/kih",
+  image: { url: "/images/kih-venture-visual-1200.jpg", width: 1200, height: 675, alt: "KIH presented as a research-stage health-support concept." },
 });
 
 export default function ProductPage() {
-  if (!product) notFound();
   return (
-    <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Products", href: "/products" }, { name: product.name, href: "/products/kih" }]} />
-      <ProductJsonLd product={product} />
-      <Hero eyebrow={product.statusLabel} title={product.fullName} body={product.summary} actions={[{ href: "/download", label: "Availability", variant: "primary" }, { href: "/contact", label: "Contact KIV" }]} />
-      <Section title="Who this is for" body={product.audience}>
-        <CardGrid items={product.details.map((body, index) => ({ title: `Readiness note ${index + 1}`, body }))} />
-      </Section>
-      <AvailabilityPanel product={product} />
-    </SiteShell>
+    <FutureVentureProductPage
+      slug="kih"
+      storyImage={{ src: "/images/kih-venture-visual.jpg", alt: "A research-stage health-support concept with care coordination panels, privacy shield, support network nodes and partner care pods." }}
+      storyEyebrow="Research stage"
+      storyTitle="Health is framed as future care coordination support."
+      storyBody="KIH remains a research-stage concept. The page avoids medical-service claims, diagnosis claims and clinical availability language."
+      storyPoints={[
+        "Care coordination requires partner and privacy review.",
+        "No diagnosis, treatment or medical advice is implied.",
+        "Any public workflow must pass compliance review first.",
+      ]}
+      ventureDetailBody="KIH is intentionally careful because health-related pages must avoid implying medical services or clinical advice."
+    />
   );
 }

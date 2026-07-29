@@ -1,7 +1,4 @@
-import { notFound } from "next/navigation";
-import { SiteShell } from "@/components/SiteShell";
-import { AvailabilityPanel, CardGrid, Hero, Section } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd, ProductJsonLd } from "@/components/StructuredData";
+import { FutureVentureProductPage } from "@/components/FutureVentureProductPage";
 import { pageMetadata } from "@/lib/metadata";
 import { productBySlug } from "@/lib/site";
 
@@ -11,19 +8,23 @@ export const metadata = pageMetadata({
   title: product?.fullName ?? "Product",
   description: product?.summary ?? "KIV product page.",
   path: "/products/kim",
+  image: { url: "/images/kim-venture-visual-1200.jpg", width: 1200, height: 675, alt: "KIM presented as a planned marketplace venture." },
 });
 
 export default function ProductPage() {
-  if (!product) notFound();
   return (
-    <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Products", href: "/products" }, { name: product.name, href: "/products/kim" }]} />
-      <ProductJsonLd product={product} />
-      <Hero eyebrow={product.statusLabel} title={product.fullName} body={product.summary} actions={[{ href: "/download", label: "Availability", variant: "primary" }, { href: "/contact", label: "Contact KIV" }]} />
-      <Section title="Who this is for" body={product.audience}>
-        <CardGrid items={product.details.map((body, index) => ({ title: `Readiness note ${index + 1}`, body }))} />
-      </Section>
-      <AvailabilityPanel product={product} />
-    </SiteShell>
+    <FutureVentureProductPage
+      slug="kim"
+      storyImage={{ src: "/images/kim-venture-visual.jpg", alt: "A planned ethical marketplace ecosystem with vendor, product, customer, fulfilment and trust symbols." }}
+      storyEyebrow="Future venture"
+      storyTitle="Market is planned as trusted community commerce."
+      storyBody="KIM is presented as a future marketplace concept for vendors, partners and KCAN communities, not as an active sales channel."
+      storyPoints={[
+        "Vendor and buyer workflows remain planned.",
+        "No products, prices or live transactions are implied.",
+        "Trust and fulfilment need review before launch claims.",
+      ]}
+      ventureDetailBody="KIM is explained as a planned marketplace direction while avoiding any suggestion of live commerce."
+    />
   );
 }

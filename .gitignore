@@ -15,8 +15,13 @@
 
 # next.js
 /.next/
-/.vinext/
 /out/
+
+# cloudflare / opennext
+/.open-next/
+/.wrangler/
+.dev.vars
+.dev.vars.*
 
 # misc
 .DS_Store
@@ -37,9 +42,12 @@ yarn-error.log*
 # typescript
 next-env.d.ts
 /dist/
-/.wrangler/
 /outputs/
 /work/
+
+# wrangler-generated type shapes (no secret values, but regenerate via
+# `pnpm run cf-typegen` rather than editing/committing by hand)
+cloudflare-env.d.ts
 
 !.env.example
 

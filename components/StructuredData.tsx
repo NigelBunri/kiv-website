@@ -13,6 +13,7 @@ export function OrganizationJsonLd() {
         name: site.name,
         alternateName: site.shortName,
         url: site.url,
+        logo: absoluteUrl("/images/kiv-logo-512.png"),
         parentOrganization: {
           "@type": "Organization",
           name: site.parentName,

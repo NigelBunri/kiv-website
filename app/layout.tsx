@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Libre_Baskerville } from "next/font/google";
 import { CriticalStyles } from "@/components/CriticalStyles";
 import { OrganizationJsonLd, WebsiteJsonLd } from "@/components/StructuredData";
+import { ScrollReveal } from "@/components/ScrollReveal";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { site } from "@/lib/site";
 
 const inter = Inter({ variable: "--font-sans", subsets: ["latin"] });
@@ -20,16 +22,19 @@ export const metadata: Metadata = {
   publisher: site.name,
   alternates: { canonical: site.url },
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-    apple: "/apple-touch-icon.svg",
+    icon: [
+      { url: "/images/kiv-logo-256.png", sizes: "256x256", type: "image/png" },
+      { url: "/images/kiv-logo-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: "/images/kiv-logo-256.png",
+    apple: "/images/kiv-logo-256.png",
   },
   openGraph: {
     title: site.name,
     description: site.description,
     url: site.url,
     siteName: site.name,
-    images: [{ url: "/og.svg", width: 1200, height: 630, alt: `${site.name} social preview` }],
+    images: [{ url: "/images/kiv-logo.png", width: 512, height: 512, alt: `${site.name} social preview` }],
     locale: "en_US",
     type: "website",
   },
@@ -37,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: site.name,
     description: site.description,
-    images: ["/og.svg"],
+    images: ["/images/kiv-logo.png"],
   },
 };
 
@@ -54,6 +59,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <CriticalStyles />
         <OrganizationJsonLd />
         <WebsiteJsonLd />
+        <ScrollProgress />
+        <ScrollReveal />
         {children}
       </body>
     </html>
