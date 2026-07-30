@@ -1,6 +1,5 @@
-import { CardGrid, DetailList, Section } from "@/components/PageBlocks";
+import { Breadcrumbs, CardGrid, DetailList, Section } from "@/components/PageBlocks";
 import { SiteShell } from "@/components/SiteShell";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({ title: "Cookies", description: "Cookie and analytics posture for the KIV website.", path: "/cookies" });
@@ -8,7 +7,7 @@ export const metadata = pageMetadata({ title: "Cookies", description: "Cookie an
 export default function Page() {
   return (
     <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Cookies", href: "/cookies" }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Cookies", href: "/cookies" }]} />
       <section className="content-page">
         <article>
           <p className="eyebrow">Policy</p>

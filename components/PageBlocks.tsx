@@ -1,5 +1,38 @@
 import Link from "next/link";
+import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { products, site, type Product } from "@/lib/site";
+
+/**
+ * Visible breadcrumb trail paired with its BreadcrumbJsonLd — a page's
+ * markup and its structured data should describe the same thing, and a
+ * JSON-LD-only breadcrumb with no matching visible trail is both a weaker
+ * trust signal for Google and a missed internal-link/navigation aid for
+ * real visitors. The last item renders as plain text (aria-current="page"),
+ * matching how breadcrumbs conventionally treat "you are here".
+ */
+export function Breadcrumbs({ items }: { items: Array<{ name: string; href: string }> }) {
+  return (
+    <>
+      <nav className="breadcrumb-trail" aria-label="Breadcrumb">
+        <ol>
+          {items.map((item, index) => (
+            <li key={item.href}>
+              {index === items.length - 1 ? (
+                <span aria-current="page">{item.name}</span>
+              ) : (
+                <>
+                  <Link href={item.href}>{item.name}</Link>
+                  <span aria-hidden="true">/</span>
+                </>
+              )}
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <BreadcrumbJsonLd items={items} />
+    </>
+  );
+}
 
 function stripExt(src: string): string {
   return src.replace(/\.(jpg|jpeg|png)$/i, "");

@@ -1,7 +1,6 @@
 import { SiteShell } from "@/components/SiteShell";
 import { PublicForm } from "@/components/PublicForm";
-import { CardGrid, ImageStory, Section } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { Breadcrumbs, CardGrid, ImageStory, Section } from "@/components/PageBlocks";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({ title: "Security", description: "Security reporting and public controls for the KIV website.", path: "/security" });
@@ -9,7 +8,7 @@ export const metadata = pageMetadata({ title: "Security", description: "Security
 export default function Page() {
   return (
     <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Security", href: "/security" }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Security", href: "/security" }]} />
       <section className="content-page">
         <article>
           <p className="eyebrow">Policy</p>

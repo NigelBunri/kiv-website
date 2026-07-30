@@ -1,6 +1,5 @@
 import { SiteShell } from "@/components/SiteShell";
-import { CardGrid, DetailList, Hero, ImageStory, ProductGrid, Section, Timeline } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { Breadcrumbs, CardGrid, DetailList, Hero, ImageStory, ProductGrid, Section, Timeline } from "@/components/PageBlocks";
 import { pageMetadata } from "@/lib/metadata";
 import { launchWorkflow, products, ventureTimeline } from "@/lib/site";
 
@@ -9,7 +8,7 @@ export const metadata = pageMetadata({ title: "Products", description: "KIV prod
 export default function ProductsPage() {
   return (
     <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Products", href: "/products" }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Products", href: "/products" }]} />
       <Hero eyebrow="Products" title="One flagship product in launch preparation, with future ventures clearly staged." body="KIS is KIV's first flagship product. KIE, KIM, KIP and KIH are future ventures and are not represented as launched products." />
       <ImageStory
         src="/images/kiv-portfolio-roadmap.jpg"

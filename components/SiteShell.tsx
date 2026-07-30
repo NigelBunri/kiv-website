@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { nav, site, utilityRoutes } from "@/lib/site";
+import { nav, products, site, utilityRoutes } from "@/lib/site";
 
 function isActiveNavLink(pathname: string | null, href: string) {
   return pathname === href || pathname?.startsWith(`${href}/`) === true;
@@ -98,13 +98,36 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <footer className="site-footer">
         <div>
           <strong>{site.name}</strong>
-          <p>KIV builds business and technology ventures under {site.parentName}. KIS is the first flagship product.</p>
+          <p>{site.name} (KIV) builds business and technology ventures under {site.parentName}. KIS is the first flagship product.</p>
         </div>
-        <nav aria-label="Legal and trust links">
-          {utilityRoutes.map((item) => (
-            <Link key={item.href} href={item.href}>{item.label}</Link>
-          ))}
-        </nav>
+        <div className="footer-nav-groups">
+          <div className="footer-nav-group">
+            <span className="footer-nav-heading">Company</span>
+            <nav aria-label="Company links">
+              {nav.map((item) => (
+                <Link key={item.href} href={item.href}>{item.label}</Link>
+              ))}
+              <Link href="/support">Support</Link>
+              <Link href="/download">Download</Link>
+            </nav>
+          </div>
+          <div className="footer-nav-group">
+            <span className="footer-nav-heading">Products</span>
+            <nav aria-label="Product links">
+              {products.map((product) => (
+                <Link key={product.slug} href={`/products/${product.slug}`}>{product.name}</Link>
+              ))}
+            </nav>
+          </div>
+          <div className="footer-nav-group">
+            <span className="footer-nav-heading">Legal &amp; trust</span>
+            <nav aria-label="Legal and trust links">
+              {utilityRoutes.map((item) => (
+                <Link key={item.href} href={item.href}>{item.label}</Link>
+              ))}
+            </nav>
+          </div>
+        </div>
       </footer>
     </>
   );

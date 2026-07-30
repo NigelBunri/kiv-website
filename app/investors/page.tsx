@@ -1,7 +1,6 @@
 import { PublicForm } from "@/components/PublicForm";
 import { SiteShell } from "@/components/SiteShell";
-import { CardGrid, Hero, ImageStory, Section } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { Breadcrumbs, CardGrid, Hero, ImageStory, Section } from "@/components/PageBlocks";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({ title: "Investors", description: "Investor information for Kingdom Impact Ventures without unsupported claims or unverified metrics.", path: "/investors", image: { url: "/images/kiv-investors-visual-1200.jpg", width: 1200, height: 675, alt: "Investor information for Kingdom Impact Ventures." } });
@@ -9,7 +8,7 @@ export const metadata = pageMetadata({ title: "Investors", description: "Investo
 export default function InvestorsPage() {
   return (
     <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Investors", href: "/investors" }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Investors", href: "/investors" }]} />
       <Hero eyebrow="Investors" title="A disciplined venture portfolio beginning with KIS." body="This page provides a compliant public overview. Detailed investment materials require direct review and should not be treated as an offer from this website." />
       <ImageStory
         src="/images/kiv-investors-visual.jpg"

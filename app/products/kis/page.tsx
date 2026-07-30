@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { SiteShell } from "@/components/SiteShell";
-import { AvailabilityPanel, DetailList, FeatureGrid, Hero, ImageStory, Section, Timeline } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd, ProductJsonLd } from "@/components/StructuredData";
+import { AvailabilityPanel, Breadcrumbs, DetailList, FeatureGrid, Hero, ImageStory, Section, Timeline } from "@/components/PageBlocks";
+import { ProductJsonLd } from "@/components/StructuredData";
 import { pageMetadata } from "@/lib/metadata";
 import { kisModules, launchWorkflow, productBySlug, productDeepDives } from "@/lib/site";
 
@@ -51,7 +51,7 @@ export default function ProductPage() {
   if (!product) notFound();
   return (
     <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Products", href: "/products" }, { name: product.name, href: "/products/kis" }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Products", href: "/products" }, { name: product.name, href: "/products/kis" }]} />
       <ProductJsonLd product={product} />
       <Hero
         eyebrow={`${product.statusLabel} · KIV's flagship product`}

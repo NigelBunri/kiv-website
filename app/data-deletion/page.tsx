@@ -1,7 +1,6 @@
 import { SiteShell } from "@/components/SiteShell";
 import { PublicForm } from "@/components/PublicForm";
-import { CardGrid, DetailList, ImageStory, Section } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { Breadcrumbs, CardGrid, DetailList, ImageStory, Section } from "@/components/PageBlocks";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({ title: "Data Deletion", description: "Request deletion or review of personal data handled by KIV/KIS.", path: "/data-deletion" });
@@ -9,7 +8,7 @@ export const metadata = pageMetadata({ title: "Data Deletion", description: "Req
 export default function Page() {
   return (
     <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Data Deletion", href: "/data-deletion" }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Data Deletion", href: "/data-deletion" }]} />
       <section className="content-page">
         <article>
           <p className="eyebrow">Policy</p>

@@ -13,7 +13,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
     default: `${site.name} | Business and technology venture of KCAN`,
-    template: `%s | ${site.shortName}`,
+    // Full legal name, not the "KIV" short form: every indexed page title
+    // repeating "Kingdom Impact Ventures" verbatim is one of the strongest
+    // legitimate on-page signals for Google to associate that exact phrase
+    // with this site as the branded/entity result.
+    template: `%s | ${site.name}`,
   },
   description: site.description,
   applicationName: site.name,
@@ -21,20 +25,34 @@ export const metadata: Metadata = {
   creator: site.name,
   publisher: site.name,
   alternates: { canonical: site.url },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+  },
   icons: {
     icon: [
-      { url: "/images/kiv-logo-256.png", sizes: "256x256", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-48.png", sizes: "48x48", type: "image/png" },
+      { url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
       { url: "/images/kiv-logo-512.png", sizes: "512x512", type: "image/png" },
     ],
-    shortcut: "/images/kiv-logo-256.png",
-    apple: "/images/kiv-logo-256.png",
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  other: {
+    "msapplication-TileColor": "#1f1a12",
+    "msapplication-TileImage": "/mstile-150x150.png",
+    "msapplication-config": "/browserconfig.xml",
   },
   openGraph: {
     title: site.name,
     description: site.description,
     url: site.url,
     siteName: site.name,
-    images: [{ url: "/images/kiv-logo.png", width: 512, height: 512, alt: `${site.name} social preview` }],
+    images: [{ url: "/images/og-cover.png", width: 1200, height: 630, alt: `${site.name} — business and technology venture of KCAN` }],
     locale: "en_US",
     type: "website",
   },
@@ -42,7 +60,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: site.name,
     description: site.description,
-    images: ["/images/kiv-logo.png"],
+    images: ["/images/og-cover.png"],
   },
 };
 

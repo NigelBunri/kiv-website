@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { SiteShell } from "@/components/SiteShell";
-import { AvailabilityPanel, CardGrid, DetailList, Hero, ImageStory, Section, Timeline } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd, ProductJsonLd } from "@/components/StructuredData";
+import { AvailabilityPanel, Breadcrumbs, CardGrid, DetailList, Hero, ImageStory, Section, Timeline } from "@/components/PageBlocks";
+import { ProductJsonLd } from "@/components/StructuredData";
 import { launchWorkflow, productBySlug, productDeepDives } from "@/lib/site";
 
 const readinessTitles = ["What the site claims today", "What must happen first"];
@@ -39,7 +39,7 @@ export function FutureVentureProductPage({
 
   return (
     <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Products", href: "/products" }, { name: product.name, href: `/products/${slug}` }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Products", href: "/products" }, { name: product.name, href: `/products/${slug}` }]} />
       <ProductJsonLd product={product} />
       <Hero
         eyebrow={product.statusLabel}

@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import { SiteShell } from "@/components/SiteShell";
-import { BreadcrumbJsonLd, JsonLd } from "@/components/StructuredData";
+import { JsonLd } from "@/components/StructuredData";
 import { pageMetadata } from "@/lib/metadata";
 import { absoluteUrl, site, supportArticles, supportBySlug } from "@/lib/site";
+import { Breadcrumbs } from "@/components/PageBlocks";
 
 export function generateStaticParams() {
   return supportArticles.map((article) => ({ slug: article.slug }));
@@ -20,7 +21,7 @@ export default async function SupportArticlePage({ params }: { params: Promise<{
   if (!article) notFound();
   return (
     <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Support", href: "/support" }, { name: article.title, href: `/support/${slug}` }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Support", href: "/support" }, { name: article.title, href: `/support/${slug}` }]} />
       <JsonLd data={{
         "@context": "https://schema.org",
         "@type": "Article",

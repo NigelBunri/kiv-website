@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import { SiteShell } from "@/components/SiteShell";
-import { BreadcrumbJsonLd, JsonLd } from "@/components/StructuredData";
+import { ArticleJsonLd } from "@/components/StructuredData";
 import { pageMetadata } from "@/lib/metadata";
-import { absoluteUrl, updateBySlug, updates, site } from "@/lib/site";
+import { updateBySlug, updates } from "@/lib/site";
+import { Breadcrumbs } from "@/components/PageBlocks";
 
 export function generateStaticParams() {
   return updates.map((update) => ({ slug: update.slug }));
@@ -20,17 +21,8 @@ export default async function UpdatePage({ params }: { params: Promise<{ slug: s
   if (!update) notFound();
   return (
     <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Updates", href: "/updates" }, { name: update.title, href: `/updates/${slug}` }]} />
-      <JsonLd data={{
-        "@context": "https://schema.org",
-        "@type": "Article",
-        headline: update.title,
-        description: update.description,
-        datePublished: update.date,
-        author: { "@type": "Organization", name: site.name },
-        publisher: { "@type": "Organization", name: site.name },
-        mainEntityOfPage: absoluteUrl(`/updates/${slug}`),
-      }} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Updates", href: "/updates" }, { name: update.title, href: `/updates/${slug}` }]} />
+      <ArticleJsonLd title={update.title} description={update.description} path={`/updates/${slug}`} datePublished={update.date} />
       <section className="content-page">
         <article>
           <p className="eyebrow">{update.date}</p>

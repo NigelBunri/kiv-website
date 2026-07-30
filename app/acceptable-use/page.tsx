@@ -1,6 +1,5 @@
-import { CardGrid, DetailList, Section } from "@/components/PageBlocks";
+import { Breadcrumbs, CardGrid, DetailList, Section } from "@/components/PageBlocks";
 import { SiteShell } from "@/components/SiteShell";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({ title: "Acceptable Use", description: "Acceptable-use expectations for KIV public channels.", path: "/acceptable-use" });
@@ -8,7 +7,7 @@ export const metadata = pageMetadata({ title: "Acceptable Use", description: "Ac
 export default function Page() {
   return (
     <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Acceptable Use", href: "/acceptable-use" }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Acceptable Use", href: "/acceptable-use" }]} />
       <section className="content-page">
         <article>
           <p className="eyebrow">Policy</p>

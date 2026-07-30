@@ -1,6 +1,6 @@
 import { SiteShell } from "@/components/SiteShell";
-import { CardGrid, ContactStrip, DetailList, Hero, Section, Timeline } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { Breadcrumbs, CardGrid, ContactStrip, DetailList, Hero, Section, Timeline } from "@/components/PageBlocks";
+import { WebPageJsonLd } from "@/components/StructuredData";
 import { pageMetadata } from "@/lib/metadata";
 import { operatingModel, trustSafeguards, ventureTimeline } from "@/lib/site";
 
@@ -13,7 +13,8 @@ export const metadata = pageMetadata({
 export default function AboutPage() {
   return (
     <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "About", href: "/about" }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "About", href: "/about" }]} />
+      <WebPageJsonLd type="AboutPage" name="About Kingdom Impact Ventures" description="About Kingdom Impact Ventures, the business and technology venture of KCAN." path="/about" />
       <Hero eyebrow="About KIV" title="A venture structure for building technology with Kingdom accountability." body="KIV exists under KCAN to build, prepare and operate practical technology ventures with clear public claims and responsible launch gates." />
       <Section title="Operating model" body="KIV is not a disconnected product label. It is the venture arm that translates KCAN-aligned purpose into practical technology and operating systems.">
         <DetailList items={operatingModel} />

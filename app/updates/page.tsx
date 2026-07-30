@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { SiteShell } from "@/components/SiteShell";
-import { CardGrid, Hero, ImageStory, Section, Timeline } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { Breadcrumbs, CardGrid, Hero, ImageStory, Section, Timeline } from "@/components/PageBlocks";
 import { pageMetadata } from "@/lib/metadata";
 import { launchWorkflow, updates } from "@/lib/site";
 
@@ -10,7 +9,7 @@ export const metadata = pageMetadata({ title: "Updates", description: "Official 
 export default function UpdatesPage() {
   return (
       <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Updates", href: "/updates" }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Updates", href: "/updates" }]} />
       <Hero eyebrow="Updates" title="Public updates without hype or unsupported claims." body="KIV publishes updates about launch readiness, route changes, product status, visual explainers and production-hardening work." />
       <ImageStory
         src="/images/kiv-portfolio-roadmap.jpg"

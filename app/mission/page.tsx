@@ -1,6 +1,5 @@
 import { SiteShell } from "@/components/SiteShell";
-import { CardGrid, DetailList, Hero, ImageStory, Section, Timeline } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { Breadcrumbs, CardGrid, DetailList, Hero, ImageStory, Section, Timeline } from "@/components/PageBlocks";
 import { pageMetadata } from "@/lib/metadata";
 import { launchWorkflow, trustSafeguards, ventureTimeline } from "@/lib/site";
 
@@ -9,7 +8,7 @@ export const metadata = pageMetadata({ title: "Mission", description: "The missi
 export default function MissionPage() {
   return (
     <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Mission", href: "/mission" }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Mission", href: "/mission" }]} />
       <Hero eyebrow="Mission" title="Build ventures that serve formation, connection and practical community infrastructure." body="KIV translates KCAN's mission into technology products while preserving legal, safety, privacy and operational review before each public launch." />
       <ImageStory
         src="/images/kiv-mission-visual.jpg"

@@ -1,7 +1,7 @@
 import { PublicForm } from "@/components/PublicForm";
 import { SiteShell } from "@/components/SiteShell";
-import { CardGrid, Hero, ImageStory, Section } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { Breadcrumbs, CardGrid, Hero, ImageStory, Section } from "@/components/PageBlocks";
+import { WebPageJsonLd } from "@/components/StructuredData";
 import { pageMetadata } from "@/lib/metadata";
 import { site } from "@/lib/site";
 
@@ -10,7 +10,8 @@ export const metadata = pageMetadata({ title: "Contact", description: "Contact K
 export default function ContactPage() {
   return (
     <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Contact", href: "/contact" }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Contact", href: "/contact" }]} />
+      <WebPageJsonLd type="ContactPage" name="Contact Kingdom Impact Ventures" description="Contact Kingdom Impact Ventures." path="/contact" />
       <Hero eyebrow="Contact" title="Reach the correct KIV workflow." body="Use the public form for general enquiries. Do not submit passwords, recovery codes or confidential credentials." />
       <ImageStory
         src="/images/kiv-contact-workflows-visual.jpg"

@@ -1,12 +1,11 @@
 import { SiteShell } from "@/components/SiteShell";
-import { CardGrid, ContactStrip, DetailList, HomeHero, ProductGrid, Section, Timeline } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { Breadcrumbs, CardGrid, ContactStrip, DetailList, HomeHero, ProductGrid, Section, Timeline } from "@/components/PageBlocks";
 import { pageMetadata } from "@/lib/metadata";
 import { audienceSegments, launchWorkflow, operatingModel, ventureTimeline } from "@/lib/site";
 
 export const metadata = pageMetadata({
   title: "Kingdom Impact Ventures",
-  description: "KIV builds business and technology ventures under KCAN, beginning with Kingdom Impact Social.",
+  description: "Kingdom Impact Ventures (KIV) is KCAN's technology venture arm, building Kingdom-aligned products in education, marketplace, payments and community.",
   path: "/",
   image: { url: "/images/kiv-structure-visual-1200.jpg", width: 1200, height: 675, alt: "The structure connecting KCAN, KIV and its product portfolio." },
 });
@@ -14,8 +13,16 @@ export const metadata = pageMetadata({
 export default function HomePage() {
   return (
       <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }]} />
       <HomeHero />
+      <Section title="What Kingdom Impact Ventures is">
+        <p>
+          Kingdom Impact Ventures (KIV) is the technology venture arm of KCAN — Kingdom Citizens &amp; Ambassadors Network. KIV designs, builds and operates Kingdom-aligned digital products: practical, accountable technology for real community, education, marketplace, payments and social-impact needs, not abstract mission statements.
+        </p>
+        <p>
+          The first product is Kingdom Impact Social (KIS), a Christian digital ecosystem combining community, private communication and discipleship tools. Future ventures extend the same approach into education, marketplace, payments and health — each announced publicly only once it has real launch readiness behind it, never before.
+        </p>
+      </Section>
       <Section title="How the organisation fits together" body="The project is easier to understand when the public structure is kept explicit.">
         <DetailList items={operatingModel} />
       </Section>

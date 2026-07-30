@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { SiteShell } from "@/components/SiteShell";
-import { CardGrid, Hero, ImageStory, Section } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { Breadcrumbs, CardGrid, Hero, ImageStory, Section } from "@/components/PageBlocks";
 import { pageMetadata } from "@/lib/metadata";
 import { supportArticles } from "@/lib/site";
 
@@ -10,7 +9,7 @@ export const metadata = pageMetadata({ title: "Support", description: "KIV publi
 export default function SupportPage() {
   return (
       <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Support", href: "/support" }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Support", href: "/support" }]} />
       <Hero eyebrow="Support" title="Support routes for public website, KIS readiness and safety questions." body="Support content explains how to reach the right team without submitting private credentials, unsupported partnership claims or sensitive account information." />
       <ImageStory
         src="/images/kiv-contact-workflows-visual.jpg"

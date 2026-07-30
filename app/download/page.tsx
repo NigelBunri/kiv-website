@@ -1,7 +1,6 @@
 import { PublicForm } from "@/components/PublicForm";
 import { SiteShell } from "@/components/SiteShell";
-import { CardGrid, Hero, ImageStory, Section, Timeline } from "@/components/PageBlocks";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { Breadcrumbs, CardGrid, Hero, ImageStory, Section, Timeline } from "@/components/PageBlocks";
 import { pageMetadata } from "@/lib/metadata";
 import { launchWorkflow, productBySlug } from "@/lib/site";
 
@@ -12,7 +11,7 @@ export default function DownloadPage() {
   const hasStore = (kis.availability.android && kis.availability.googlePlayUrl) || (kis.availability.ios && kis.availability.appStoreUrl) || (kis.availability.web && kis.availability.webAppUrl);
   return (
     <SiteShell>
-      <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: "Download", href: "/download" }]} />
+      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Download", href: "/download" }]} />
       <Hero eyebrow="KIS availability" title="KIS release actions appear only when configured." body="The download page supports coming-soon, Android, iOS and web states without fake links or automatic redirects." />
       <ImageStory
         src="/images/kis-availability-visual.jpg"
