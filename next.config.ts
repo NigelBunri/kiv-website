@@ -14,6 +14,11 @@ const scriptSrc = [
   "'unsafe-inline'",
   ...(process.env.NODE_ENV === "production" ? [] : ["'unsafe-eval'"]),
   "https://challenges.cloudflare.com",
+  // Cloudflare injects its own Web Analytics beacon into the served HTML
+  // at the edge (outside this app's control) whenever it's enabled on the
+  // zone — without this, every single page load logs a blocked-by-CSP
+  // console error for a script this app never requested.
+  "https://static.cloudflareinsights.com",
 ].join(" ");
 
 const csp = [
@@ -35,7 +40,7 @@ const csp = [
   `script-src ${scriptSrc}`,
   "frame-src https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline'",
-  "connect-src 'self'",
+  "connect-src 'self' https://cloudflareinsights.com",
   "upgrade-insecure-requests",
 ].join("; ");
 

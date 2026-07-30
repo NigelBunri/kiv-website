@@ -11,6 +11,11 @@ import { products, site, type Product } from "@/lib/site";
  * matching how breadcrumbs conventionally treat "you are here".
  */
 export function Breadcrumbs({ items }: { items: Array<{ name: string; href: string }> }) {
+  // A single "Home" crumb on the homepage itself isn't a real trail (Google's
+  // own BreadcrumbList examples always show 2+ levels) — it was rendering as
+  // a lone "Home" label between the header and the hero, adding unwanted
+  // vertical space for no navigational value. Skip entirely below 2 items.
+  if (items.length < 2) return null;
   return (
     <>
       <nav className="breadcrumb-trail" aria-label="Breadcrumb">
