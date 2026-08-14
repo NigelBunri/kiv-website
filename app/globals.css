@@ -932,6 +932,20 @@ h3 { font-size: 1.3rem; }
   box-shadow: none !important;
 }
 
+/* ---------- Spinner (payment-status polling) ---------- */
+.spinner {
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-top: .5rem;
+  border-radius: 50%;
+  border: 3px solid var(--line-soft, var(--line));
+  border-top-color: var(--gold, var(--ink));
+  animation: spin 900ms linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* ---------- Breadcrumbs ---------- */
 .breadcrumb-trail {
   padding: 1.1rem clamp(1.25rem, 5vw, 5rem) 0;
