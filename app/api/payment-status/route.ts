@@ -11,7 +11,10 @@ import { NextRequest, NextResponse } from "next/server";
 // Deliberately forwards only tx_ref/transaction_id — both are opaque,
 // unguessable identifiers (tx_ref is a uuid4 hex string), never anything
 // that could let a caller act on another user's account.
-const DEFAULT_KIS_API_BASE_URL = "https://kis-django-backend.onrender.com";
+// The Django backend runs on AWS Lightsail (Docker/GHCR, see the ops
+// runbook), not Render — this must stay in sync with that deployment's
+// public domain, currently api.kingdomimpactventures.org.
+const DEFAULT_KIS_API_BASE_URL = "https://api.kingdomimpactventures.org";
 
 export async function GET(request: NextRequest) {
   const txRef = request.nextUrl.searchParams.get("tx_ref")?.trim() ?? "";
