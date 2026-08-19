@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { WebsiteBuilderPage, WebsiteBuilderSite } from "@/lib/website-builder-api";
 import { websiteBrandingStyle } from "@/lib/website-branding";
+import { AnalyticsBeacon } from "./AnalyticsBeacon";
 import { SectionRenderer } from "./SectionRenderer";
 
 // Shared render body for both app/page/[siteSlug]/page.tsx (Home) and
@@ -11,6 +12,7 @@ export function WebsitePageView({ site, page }: { site: WebsiteBuilderSite; page
   const pageUrlSlug = page.is_home ? "home" : page.slug;
   return (
     <main className="wb-page" style={websiteBrandingStyle(site.branding)}>
+      <AnalyticsBeacon siteSlug={site.slug} pageSlug={pageUrlSlug} />
       {otherPages.length > 0 && (
         <nav className="wb-nav" aria-label={`${site.name} pages`}>
           {otherPages.map((p) => (
