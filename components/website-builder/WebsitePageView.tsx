@@ -8,6 +8,7 @@ import { SectionRenderer } from "./SectionRenderer";
 // backend payload shape, same rendering, only the fetch call differs.
 export function WebsitePageView({ site, page }: { site: WebsiteBuilderSite; page: WebsiteBuilderPage }) {
   const otherPages = site.pages.filter((p) => p.slug !== page.slug);
+  const pageUrlSlug = page.is_home ? "home" : page.slug;
   return (
     <main className="wb-page" style={websiteBrandingStyle(site.branding)}>
       {otherPages.length > 0 && (
@@ -20,7 +21,7 @@ export function WebsitePageView({ site, page }: { site: WebsiteBuilderSite; page
         </nav>
       )}
       {page.sections.map((section) => (
-        <SectionRenderer key={section.id} section={section} />
+        <SectionRenderer key={section.id} section={section} siteSlug={site.slug} pageSlug={pageUrlSlug} />
       ))}
     </main>
   );

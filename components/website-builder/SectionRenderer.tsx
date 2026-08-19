@@ -1,5 +1,6 @@
 import type { WebsiteBuilderSection } from "@/lib/website-builder-api";
 import { BuyButton } from "./BuyButton";
+import { PublicFormSection } from "./PublicFormSection";
 
 // One renderer per section type, dispatched by `type`. Kept in a single
 // file deliberately — these are small, purely presentational blocks over
@@ -279,25 +280,6 @@ function MapSection({ data }: { data: Data }) {
   );
 }
 
-function FormSection({ data }: { data: Data }) {
-  // Phase 1: render-only, no submission backend (see plan Phase 2/3
-  // roadmap) — shown as a static preview of the intended form.
-  const fields = Array.isArray(data.fields) ? (data.fields as Data[]) : [];
-  return (
-    <section className="wb-section wb-form">
-      {str(data, "heading") && <h2>{str(data, "heading")}</h2>}
-      <form onSubmit={(e) => e.preventDefault()}>
-        {fields.map((field, i) => (
-          <label key={i}>
-            {str(field, "label")}
-            <input type="text" disabled placeholder={str(field, "placeholder")} />
-          </label>
-        ))}
-        <button type="submit" disabled>{str(data, "submit_label") || "Submit"}</button>
-      </form>
-    </section>
-  );
-}
 
 function KisContentSection({ section }: { section: WebsiteBuilderSection }) {
   const items = section.resolved_items ?? [];
@@ -329,7 +311,15 @@ function KisContentSection({ section }: { section: WebsiteBuilderSection }) {
   );
 }
 
-export function SectionRenderer({ section }: { section: WebsiteBuilderSection }) {
+export function SectionRenderer({
+  section, siteSlug, pageSlug,
+}: {
+  section: WebsiteBuilderSection;
+  /** Only `form` sections need these — used to build the submit proxy
+   * URL (/api/website-forms/[siteSlug]/[pageSlug]/[sectionId]). */
+  siteSlug?: string;
+  pageSlug?: string;
+}) {
   const data = section.data || {};
   switch (section.type) {
     case "hero": return <HeroSection data={data} />;
@@ -351,7 +341,10 @@ export function SectionRenderer({ section }: { section: WebsiteBuilderSection })
     case "cta": return <CtaSection data={data} />;
     case "call_to_action": return <CallToActionSection data={data} />;
     case "map": return <MapSection data={data} />;
-    case "form": return <FormSection data={data} />;
+    case "form":
+      return siteSlug && pageSlug
+        ? <PublicFormSection data={data} sectionId={section.id} siteSlug={siteSlug} pageSlug={pageSlug} />
+        : null;
     case "kis_content": return <KisContentSection section={section} />;
     default: return null;
   }
