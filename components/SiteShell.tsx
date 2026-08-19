@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { nav, products, site, utilityRoutes } from "@/lib/site";
+import { UserMenu } from "./UserMenu";
 
 function isActiveNavLink(pathname: string | null, href: string) {
   return pathname === href || pathname?.startsWith(`${href}/`) === true;
@@ -92,6 +93,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         <div className="header-actions" aria-label="Primary actions">
           <Link className="header-button header-button--gold" href="/products/kis">View KIS <span aria-hidden="true">→</span></Link>
           <Link className="header-button header-button--light" href="/download">Check availability</Link>
+          <UserMenu />
         </div>
       </header>
       <main id="main">{children}</main>
