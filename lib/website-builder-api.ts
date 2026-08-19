@@ -55,11 +55,20 @@ export type WebsiteBuilderKisContentItem = {
   [key: string]: unknown;
 };
 
+export type WebsiteBuilderResolvedKisVideo = {
+  title: string;
+  description: string;
+  video_url: string;
+  thumbnail_url: string;
+  duration_seconds: number | null;
+};
+
 export type WebsiteBuilderSection = {
   id: string;
   type: string;
   data: Record<string, unknown>;
   resolved_items?: WebsiteBuilderKisContentItem[];
+  resolved_video?: WebsiteBuilderResolvedKisVideo | null;
 };
 
 export type WebsiteBuilderSite = {

@@ -317,6 +317,26 @@ function EmbedSection({ data }: { data: Data }) {
   );
 }
 
+function KisVideoSection({ section }: { section: WebsiteBuilderSection }) {
+  const video = section.resolved_video;
+  if (!video || !video.video_url) return null;
+  return (
+    <section className="wb-section wb-kis-video">
+      {video.title && <h2>{video.title}</h2>}
+      <video
+        className="wb-kis-video-player"
+        controls
+        preload="metadata"
+        poster={video.thumbnail_url || undefined}
+        src={video.video_url}
+      >
+        Your browser doesn&apos;t support embedded video.
+      </video>
+      {video.description && <p className="wb-kis-video-description">{video.description}</p>}
+    </section>
+  );
+}
+
 function KisContentSection({ section }: { section: WebsiteBuilderSection }) {
   const items = section.resolved_items ?? [];
   if (!items.length) return null;
@@ -378,6 +398,7 @@ export function SectionRenderer({
     case "call_to_action": return <CallToActionSection data={data} />;
     case "map": return <MapSection data={data} />;
     case "embed": return <EmbedSection data={data} />;
+    case "kis_video": return <KisVideoSection section={section} />;
     case "form":
       return siteSlug && pageSlug
         ? <PublicFormSection data={data} sectionId={section.id} siteSlug={siteSlug} pageSlug={pageSlug} />
