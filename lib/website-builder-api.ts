@@ -47,6 +47,11 @@ export type WebsiteBuilderKisContentItem = {
   image_url: string;
   price_display: string;
   deep_link: string;
+  /** product only — which shop to check out against. */
+  shop_id?: string;
+  /** course only — the underlying EducationInstitutionBroadcast to enroll
+   * in; null when this course has no purchasable content yet. */
+  checkout_content_id?: string | null;
   [key: string]: unknown;
 };
 

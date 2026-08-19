@@ -1602,7 +1602,13 @@ textarea { resize: vertical; }
 .wb-testimonials-grid blockquote { margin: 0; padding: 1.25rem; border-radius: var(--radius-md, .75rem); background: rgba(0, 0, 0, .03); }
 .wb-faqs details { padding: .75rem 0; border-bottom: 1px solid rgba(0, 0, 0, .08); }
 .wb-social-links { display: flex; flex-wrap: wrap; gap: 1rem; }
-.wb-kis-content-card { display: block; text-decoration: none; color: inherit; }
+.wb-kis-content-card { display: block; color: inherit; }
+.wb-kis-content-card a { color: inherit; }
 .wb-kis-content-card .wb-price { font-weight: 600; }
+.wb-buy { margin-top: .75rem; }
+.wb-buy .wb-button { border: none; cursor: pointer; font: inherit; }
+.wb-buy-scheduler { display: flex; flex-direction: column; gap: .5rem; align-items: flex-start; }
+.wb-buy-scheduler input[type="datetime-local"] { display: block; margin-top: .25rem; padding: .4rem .6rem; border-radius: .5rem; border: 1px solid rgba(0, 0, 0, .15); }
+.wb-buy .field-error { font-size: .85rem; color: #b42318; margin: .35rem 0 0; }
 .wb-cta { text-align: center; }
 .wb-form input { display: block; width: 100%; margin: .35rem 0 1rem; padding: .6rem .75rem; border-radius: .5rem; border: 1px solid rgba(0, 0, 0, .15); }
