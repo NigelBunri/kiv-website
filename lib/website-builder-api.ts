@@ -74,6 +74,7 @@ export type WebsiteBuilderSection = {
 export type WebsiteBuilderSite = {
   slug: string;
   name: string;
+  owner_type: string;
   branding: Record<string, unknown>;
   seo: WebsiteBuilderSeo;
   canonical_url: string;
