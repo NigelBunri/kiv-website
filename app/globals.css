@@ -1570,3 +1570,39 @@ textarea { resize: vertical; }
   .site-header, .site-footer, .button, .public-form { display: none; }
   body { background: white; color: black; }
 }
+
+/* ---------- Website Builder public pages (kingdomimpactventures.org/page/<slug>) ---------- */
+.wb-page { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem 4rem; }
+.wb-section { padding: clamp(2rem, 5vw, 3.5rem) 0; }
+.wb-section h1 { font-size: clamp(2rem, 4vw, 2.8rem); margin: 0 0 .75rem; }
+.wb-section h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); margin: 0 0 1rem; }
+.wb-hero {
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--radius-md, 1rem);
+  padding: clamp(3rem, 8vw, 5rem) clamp(1.5rem, 5vw, 3rem);
+}
+.wb-hero-inner { max-width: 42rem; }
+.wb-hero-subheadline { font-size: 1.1rem; opacity: .85; margin: 0 0 1.25rem; }
+.wb-button {
+  display: inline-block;
+  padding: .75rem 1.5rem;
+  border-radius: 999px;
+  background: var(--brand-primary, #1a1a2e);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+.wb-gallery-grid, .wb-testimonials-grid, .wb-kis-content-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+.wb-gallery-grid img, .wb-kis-content-card img { width: 100%; border-radius: var(--radius-md, .75rem); object-fit: cover; aspect-ratio: 4 / 3; }
+.wb-testimonials-grid blockquote { margin: 0; padding: 1.25rem; border-radius: var(--radius-md, .75rem); background: rgba(0, 0, 0, .03); }
+.wb-faqs details { padding: .75rem 0; border-bottom: 1px solid rgba(0, 0, 0, .08); }
+.wb-social-links { display: flex; flex-wrap: wrap; gap: 1rem; }
+.wb-kis-content-card { display: block; text-decoration: none; color: inherit; }
+.wb-kis-content-card .wb-price { font-weight: 600; }
+.wb-cta { text-align: center; }
+.wb-form input { display: block; width: 100%; margin: .35rem 0 1rem; padding: .6rem .75rem; border-radius: .5rem; border: 1px solid rgba(0, 0, 0, .15); }
