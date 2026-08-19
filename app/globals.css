@@ -1572,7 +1572,18 @@ textarea { resize: vertical; }
 }
 
 /* ---------- Website Builder public pages (kingdomimpactventures.org/page/<slug>) ---------- */
-.wb-page { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem 4rem; }
+/* --wb-* custom properties are set inline on .wb-page's root by
+   WebsitePageView from the owner's Website.branding (palette/typography/
+   buttons) — see lib/website-branding.ts. Every rule below falls back to
+   this site's own design tokens when a website has no branding set yet. */
+.wb-page {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1.25rem 4rem;
+  background: var(--wb-bg, transparent);
+  color: var(--wb-text, inherit);
+  font-family: var(--wb-font, inherit);
+}
 .wb-section { padding: clamp(2rem, 5vw, 3.5rem) 0; }
 .wb-section h1 { font-size: clamp(2rem, 4vw, 2.8rem); margin: 0 0 .75rem; }
 .wb-section h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); margin: 0 0 1rem; }
@@ -1587,9 +1598,10 @@ textarea { resize: vertical; }
 .wb-button {
   display: inline-block;
   padding: .75rem 1.5rem;
-  border-radius: 999px;
-  background: var(--brand-primary, #1a1a2e);
-  color: #fff;
+  border-radius: var(--wb-btn-radius, 999px);
+  background: var(--wb-btn-bg, var(--brand-primary, #1a1a2e));
+  color: var(--wb-btn-fg, #fff);
+  border: var(--wb-btn-border, none);
   text-decoration: none;
   font-weight: 600;
 }
@@ -1605,8 +1617,37 @@ textarea { resize: vertical; }
 .wb-kis-content-card { display: block; color: inherit; }
 .wb-kis-content-card a { color: inherit; }
 .wb-kis-content-card .wb-price { font-weight: 600; }
+.wb-about {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+.wb-about--reverse { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
+.wb-about--reverse .wb-about-image { order: 2; }
+.wb-about-image { width: 100%; border-radius: var(--radius-md, .75rem); object-fit: cover; aspect-ratio: 4 / 3; }
+.wb-stats-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  text-align: center;
+}
+.wb-stat { display: grid; gap: .25rem; }
+.wb-stat strong { font-size: clamp(1.6rem, 3vw, 2.4rem); }
+.wb-stat span { opacity: .75; font-size: .9rem; }
+.wb-cards-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+.wb-card { padding: 1.25rem; border-radius: var(--radius-md, .75rem); background: rgba(0, 0, 0, .03); }
+.wb-card h3 { margin: 0 0 .5rem; }
+@media (max-width: 640px) {
+  .wb-about, .wb-about--reverse { grid-template-columns: 1fr; }
+  .wb-about--reverse .wb-about-image { order: 0; }
+}
 .wb-buy { margin-top: .75rem; }
-.wb-buy .wb-button { border: none; cursor: pointer; font: inherit; }
+.wb-buy .wb-button { cursor: pointer; font: inherit; }
 .wb-buy-scheduler { display: flex; flex-direction: column; gap: .5rem; align-items: flex-start; }
 .wb-buy-scheduler input[type="datetime-local"] { display: block; margin-top: .25rem; padding: .4rem .6rem; border-radius: .5rem; border: 1px solid rgba(0, 0, 0, .15); }
 .wb-buy .field-error { font-size: .85rem; color: #b42318; margin: .35rem 0 0; }

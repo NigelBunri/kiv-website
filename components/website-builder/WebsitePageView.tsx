@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { WebsiteBuilderPage, WebsiteBuilderSite } from "@/lib/website-builder-api";
+import { websiteBrandingStyle } from "@/lib/website-branding";
 import { SectionRenderer } from "./SectionRenderer";
 
 // Shared render body for both app/page/[siteSlug]/page.tsx (Home) and
@@ -8,7 +9,7 @@ import { SectionRenderer } from "./SectionRenderer";
 export function WebsitePageView({ site, page }: { site: WebsiteBuilderSite; page: WebsiteBuilderPage }) {
   const otherPages = site.pages.filter((p) => p.slug !== page.slug);
   return (
-    <main className="wb-page">
+    <main className="wb-page" style={websiteBrandingStyle(site.branding)}>
       {otherPages.length > 0 && (
         <nav className="wb-nav" aria-label={`${site.name} pages`}>
           {otherPages.map((p) => (

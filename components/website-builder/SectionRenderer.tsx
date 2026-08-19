@@ -31,6 +31,116 @@ function HeroSection({ data }: { data: Data }) {
   );
 }
 
+// hero_banner/about/image_gallery_grid/statistics/programs_services/
+// call_to_action/contact_information below are the RN Website Builder
+// editor's own section vocabulary (KIS/src/components/section-builder/
+// types.ts, reused from the older per-owner-type legacy landing pages),
+// accepted verbatim by the Django backend (apps.websites.models.
+// SECTION_TYPES) rather than translated into this file's hero/text/
+// gallery/cta/contact_info shapes — so these read the RN field names
+// directly.
+function HeroBannerSection({ data }: { data: Data }) {
+  const image = str(data, "backgroundImageUrl");
+  return (
+    <section className="wb-section wb-hero" style={image ? { backgroundImage: `url(${image})` } : undefined}>
+      <div className="wb-hero-inner">
+        {str(data, "title") && <h1>{str(data, "title")}</h1>}
+        {str(data, "subtitle") && <p className="wb-hero-subheadline">{str(data, "subtitle")}</p>}
+        {str(data, "ctaText") && str(data, "ctaLink") && (
+          <a className="wb-button" href={str(data, "ctaLink")}>{str(data, "ctaText")}</a>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function AboutSection({ data }: { data: Data }) {
+  const image = str(data, "imageUrl");
+  const reverse = data.layout === "image_right";
+  return (
+    <section className={`wb-section wb-about${reverse ? " wb-about--reverse" : ""}`}>
+      {image && <img className="wb-about-image" src={image} alt="" />}
+      <div className="wb-about-copy">
+        {str(data, "title") && <h2>{str(data, "title")}</h2>}
+        {str(data, "description") && <p>{str(data, "description")}</p>}
+      </div>
+    </section>
+  );
+}
+
+function ImageGalleryGridSection({ data }: { data: Data }) {
+  const images = Array.isArray(data.images) ? (data.images as string[]) : [];
+  if (!images.length) return null;
+  return (
+    <section className="wb-section wb-image-gallery-grid">
+      {str(data, "title") && <h2>{str(data, "title")}</h2>}
+      <div className="wb-gallery-grid">
+        {images.map((url, i) => (
+          <img key={i} src={url} alt="" />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function StatisticsSection({ data }: { data: Data }) {
+  const metrics = Array.isArray(data.metrics) ? (data.metrics as Data[]) : [];
+  if (!metrics.length) return null;
+  return (
+    <section className="wb-section wb-statistics">
+      {str(data, "title") && <h2>{str(data, "title")}</h2>}
+      <div className="wb-stats-grid">
+        {metrics.map((metric, i) => (
+          <div key={i} className="wb-stat">
+            <strong>{str(metric, "value")}</strong>
+            <span>{str(metric, "label")}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ProgramsServicesSection({ data }: { data: Data }) {
+  const cards = Array.isArray(data.cards) ? (data.cards as Data[]) : [];
+  if (!cards.length) return null;
+  return (
+    <section className="wb-section wb-programs-services">
+      {str(data, "title") && <h2>{str(data, "title")}</h2>}
+      <div className="wb-cards-grid">
+        {cards.map((card, i) => (
+          <div key={i} className="wb-card">
+            <h3>{str(card, "name")}</h3>
+            {str(card, "description") && <p>{str(card, "description")}</p>}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CallToActionSection({ data }: { data: Data }) {
+  if (!str(data, "buttonLink")) return null;
+  return (
+    <section className="wb-section wb-cta">
+      {str(data, "title") && <h2>{str(data, "title")}</h2>}
+      {str(data, "description") && <p>{str(data, "description")}</p>}
+      <a className="wb-button" href={str(data, "buttonLink")}>{str(data, "buttonText") || "Learn more"}</a>
+    </section>
+  );
+}
+
+function ContactInformationSection({ data }: { data: Data }) {
+  return (
+    <section className="wb-section wb-contact-information">
+      {str(data, "title") && <h2>{str(data, "title")}</h2>}
+      {str(data, "phone") && <p>Phone: {str(data, "phone")}</p>}
+      {str(data, "email") && <p>Email: {str(data, "email")}</p>}
+      {str(data, "address") && <p>{str(data, "address")}</p>}
+    </section>
+  );
+}
+
 function TextSection({ data }: { data: Data }) {
   return (
     <section className="wb-section wb-text">
@@ -223,16 +333,23 @@ export function SectionRenderer({ section }: { section: WebsiteBuilderSection })
   const data = section.data || {};
   switch (section.type) {
     case "hero": return <HeroSection data={data} />;
+    case "hero_banner": return <HeroBannerSection data={data} />;
     case "text": return <TextSection data={data} />;
+    case "about": return <AboutSection data={data} />;
     case "image": return <ImageSection data={data} />;
     case "gallery": return <GallerySection data={data} />;
+    case "image_gallery_grid": return <ImageGalleryGridSection data={data} />;
     case "video": return <VideoSection data={data} />;
     case "testimonials": return <TestimonialsSection data={data} />;
+    case "statistics": return <StatisticsSection data={data} />;
+    case "programs_services": return <ProgramsServicesSection data={data} />;
     case "faqs": return <FaqsSection data={data} />;
     case "social_links": return <SocialLinksSection data={data} />;
     case "contact_info": return <ContactInfoSection data={data} />;
+    case "contact_information": return <ContactInformationSection data={data} />;
     case "hours": return <HoursSection data={data} />;
     case "cta": return <CtaSection data={data} />;
+    case "call_to_action": return <CallToActionSection data={data} />;
     case "map": return <MapSection data={data} />;
     case "form": return <FormSection data={data} />;
     case "kis_content": return <KisContentSection section={section} />;
