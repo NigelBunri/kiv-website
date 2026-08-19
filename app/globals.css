@@ -1653,3 +1653,5 @@ textarea { resize: vertical; }
 .wb-buy .field-error { font-size: .85rem; color: #b42318; margin: .35rem 0 0; }
 .wb-cta { text-align: center; }
 .wb-form input { display: block; width: 100%; margin: .35rem 0 1rem; padding: .6rem .75rem; border-radius: .5rem; border: 1px solid rgba(0, 0, 0, .15); }
+.wb-embed-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius-md, .75rem); overflow: hidden; }
+.wb-embed-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }

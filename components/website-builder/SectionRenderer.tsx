@@ -281,6 +281,42 @@ function MapSection({ data }: { data: Data }) {
 }
 
 
+// Mirrors apps.websites.embeds._PROVIDER_URL_PATTERNS on the backend —
+// re-validated here too (not just trusted from the API response) since
+// this directly controls an iframe src; a stale/malformed record should
+// never render, not just fail to have been saved in the first place.
+const EMBED_URL_PATTERNS: Record<string, RegExp> = {
+  youtube: /^https:\/\/www\.youtube(-nocookie)?\.com\/embed\/[\w-]+/,
+  vimeo: /^https:\/\/player\.vimeo\.com\/video\/\d+/,
+  calendly: /^https:\/\/calendly\.com\/[\w./-]+/,
+  google_maps: /^https:\/\/www\.google\.com\/maps\/embed/,
+  google_calendar: /^https:\/\/calendar\.google\.com\/calendar\/embed/,
+  spotify: /^https:\/\/open\.spotify\.com\/embed\//,
+  loom: /^https:\/\/www\.loom\.com\/embed\/[\w-]+/,
+};
+
+function EmbedSection({ data }: { data: Data }) {
+  const provider = str(data, "provider");
+  const url = str(data, "url");
+  const pattern = EMBED_URL_PATTERNS[provider];
+  if (!pattern || !pattern.test(url)) return null;
+  return (
+    <section className="wb-section wb-embed">
+      {str(data, "title") && <h2>{str(data, "title")}</h2>}
+      <div className="wb-embed-frame">
+        <iframe
+          src={url}
+          title={str(data, "title") || provider}
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
+    </section>
+  );
+}
+
 function KisContentSection({ section }: { section: WebsiteBuilderSection }) {
   const items = section.resolved_items ?? [];
   if (!items.length) return null;
@@ -341,6 +377,7 @@ export function SectionRenderer({
     case "cta": return <CtaSection data={data} />;
     case "call_to_action": return <CallToActionSection data={data} />;
     case "map": return <MapSection data={data} />;
+    case "embed": return <EmbedSection data={data} />;
     case "form":
       return siteSlug && pageSlug
         ? <PublicFormSection data={data} sectionId={section.id} siteSlug={siteSlug} pageSlug={pageSlug} />
