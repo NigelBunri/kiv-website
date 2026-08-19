@@ -70,6 +70,7 @@ export type WebsiteBuilderSection = {
   resolved_items?: WebsiteBuilderKisContentItem[];
   has_more?: boolean;
   resolved_video?: WebsiteBuilderResolvedKisVideo | null;
+  responsive?: { hidden_on?: Array<"mobile" | "desktop"> };
 };
 
 export type WebsiteBuilderSite = {

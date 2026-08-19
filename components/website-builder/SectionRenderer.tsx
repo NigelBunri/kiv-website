@@ -1,3 +1,4 @@
+import { cloneElement, isValidElement } from "react";
 import type { WebsiteBuilderSection } from "@/lib/website-builder-api";
 import { PublicFormSection } from "./PublicFormSection";
 import { PublicKisContentGrid } from "./PublicKisContentGrid";
@@ -360,12 +361,10 @@ function KisContentSection({ section, siteSlug, pageSlug }: { section: WebsiteBu
   );
 }
 
-export function SectionRenderer({
+function renderSectionByType({
   section, siteSlug, pageSlug,
 }: {
   section: WebsiteBuilderSection;
-  /** Only `form` sections need these — used to build the submit proxy
-   * URL (/api/website-forms/[siteSlug]/[pageSlug]/[sectionId]). */
   siteSlug?: string;
   pageSlug?: string;
 }) {
@@ -399,4 +398,26 @@ export function SectionRenderer({
     case "kis_content": return <KisContentSection section={section} siteSlug={siteSlug || ""} pageSlug={pageSlug || ""} />;
     default: return null;
   }
+}
+
+function responsiveClassName(hiddenOn: Array<"mobile" | "desktop"> | undefined): string {
+  if (!hiddenOn || !hiddenOn.length) return "";
+  return hiddenOn.map((bp) => (bp === "mobile" ? "wb-hide-mobile" : "wb-hide-desktop")).join(" ");
+}
+
+export function SectionRenderer({
+  section, siteSlug, pageSlug,
+}: {
+  section: WebsiteBuilderSection;
+  /** Only `form` sections need these — used to build the submit proxy
+   * URL (/api/website-forms/[siteSlug]/[pageSlug]/[sectionId]). */
+  siteSlug?: string;
+  pageSlug?: string;
+}) {
+  const rendered = renderSectionByType({ section, siteSlug, pageSlug });
+  if (!isValidElement(rendered)) return rendered;
+  const extraClassName = responsiveClassName(section.responsive?.hidden_on);
+  if (!extraClassName) return rendered;
+  const existingClassName = (rendered.props as { className?: string }).className || "";
+  return cloneElement(rendered, { className: `${existingClassName} ${extraClassName}`.trim() } as Record<string, unknown>);
 }
