@@ -68,6 +68,7 @@ export type WebsiteBuilderSection = {
   type: string;
   data: Record<string, unknown>;
   resolved_items?: WebsiteBuilderKisContentItem[];
+  has_more?: boolean;
   resolved_video?: WebsiteBuilderResolvedKisVideo | null;
 };
 

@@ -1,6 +1,6 @@
 import type { WebsiteBuilderSection } from "@/lib/website-builder-api";
-import { BuyButton } from "./BuyButton";
 import { PublicFormSection } from "./PublicFormSection";
+import { PublicKisContentGrid } from "./PublicKisContentGrid";
 
 // One renderer per section type, dispatched by `type`. Kept in a single
 // file deliberately — these are small, purely presentational blocks over
@@ -337,7 +337,7 @@ function KisVideoSection({ section }: { section: WebsiteBuilderSection }) {
   );
 }
 
-function KisContentSection({ section }: { section: WebsiteBuilderSection }) {
+function KisContentSection({ section, siteSlug, pageSlug }: { section: WebsiteBuilderSection; siteSlug: string; pageSlug: string }) {
   const items = section.resolved_items ?? [];
   if (!items.length) return null;
   const heading = str(section.data, "heading");
@@ -347,21 +347,14 @@ function KisContentSection({ section }: { section: WebsiteBuilderSection }) {
   return (
     <section className="wb-section wb-kis-content">
       {heading && <h2>{heading}</h2>}
-      <div className="wb-kis-content-grid">
-        {items.map((item) => (
-          <div key={item.id} className="wb-kis-content-card">
-            {item.image_url && (
-              <a href={item.deep_link || undefined}>
-                <img src={item.image_url} alt={item.title} />
-              </a>
-            )}
-            <h3>{item.title}</h3>
-            {item.description && <p>{item.description}</p>}
-            {item.price_display && <p className="wb-price">{item.price_display}</p>}
-            <BuyButton targetType={targetType} item={item} shopId={item.shop_id} />
-          </div>
-        ))}
-      </div>
+      <PublicKisContentGrid
+        items={items}
+        hasMore={Boolean(section.has_more)}
+        targetType={targetType}
+        siteSlug={siteSlug}
+        pageSlug={pageSlug}
+        sectionId={section.id}
+      />
       {ctaLabel && ctaLink && <a className="wb-button" href={ctaLink}>{ctaLabel}</a>}
     </section>
   );
@@ -403,7 +396,7 @@ export function SectionRenderer({
       return siteSlug && pageSlug
         ? <PublicFormSection data={data} sectionId={section.id} siteSlug={siteSlug} pageSlug={pageSlug} />
         : null;
-    case "kis_content": return <KisContentSection section={section} />;
+    case "kis_content": return <KisContentSection section={section} siteSlug={siteSlug || ""} pageSlug={pageSlug || ""} />;
     default: return null;
   }
 }
