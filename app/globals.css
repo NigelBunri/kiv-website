@@ -1884,6 +1884,67 @@ textarea { resize: vertical; }
 .wb-hero-subheadline { font-size: clamp(1.05rem, 1.6vw, 1.25rem); opacity: .92; margin: .75rem 0 1.75rem; line-height: 1.5; }
 .wb-hero .wb-button { padding: .9rem 2rem; box-shadow: 0 10px 24px rgba(40, 29, 11, .18); }
 
+/* Hero — alternate designs (SECTION_VARIANTS.hero_banner) */
+.wb-hero-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+.wb-hero-split-image { order: 1; width: 100%; height: 100%; min-height: 16rem; border-radius: var(--radius-md, .9rem); object-fit: cover; box-shadow: var(--shadow-lg, 0 22px 50px rgba(40, 29, 11, .14)); }
+.wb-hero-split-copy { order: 2; }
+.wb-hero-split--reverse .wb-hero-split-image { order: 2; }
+.wb-hero-split--reverse .wb-hero-split-copy { order: 1; }
+.wb-hero-split-copy h1 { font-size: clamp(2rem, 4vw, 3rem); text-wrap: balance; }
+.wb-hero-split-copy .wb-hero-subheadline { opacity: .85; }
+@media (max-width: 760px) {
+  .wb-hero-split { grid-template-columns: 1fr; }
+  .wb-hero-split-image, .wb-hero-split--reverse .wb-hero-split-image { order: 1 !important; }
+  .wb-hero-split-copy, .wb-hero-split--reverse .wb-hero-split-copy { order: 2 !important; }
+}
+
+.wb-hero-bottomcard {
+  position: relative;
+  isolation: isolate;
+  background-size: cover;
+  background-position: center;
+  min-height: clamp(20rem, 45vw, 30rem);
+  display: flex;
+  align-items: flex-end;
+  border-radius: 0;
+  margin: 0 calc(-1 * clamp(1.25rem, 5vw, 5rem));
+  padding: 0 clamp(1.5rem, 5vw, 3rem) clamp(1.5rem, 4vw, 2.5rem);
+}
+.wb-hero-bottomcard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(28, 23, 15, 0) 40%, rgba(28, 23, 15, .75) 100%);
+}
+.wb-hero-bottomcard-inner {
+  max-width: 34rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border-radius: var(--radius-md, 1rem);
+  background: rgba(255, 253, 248, .94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-lg, 0 22px 50px rgba(40, 29, 11, .18));
+}
+.wb-hero-bottomcard-inner h1 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); color: var(--ink); }
+.wb-hero-bottomcard-inner .wb-hero-subheadline { color: var(--ink-soft); opacity: 1; }
+
+.wb-hero-minimal { text-align: center; padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(2.5rem, 5vw, 3.5rem); }
+.wb-hero-minimal-strip {
+  height: clamp(9rem, 20vw, 14rem);
+  border-radius: var(--radius-md, .9rem);
+  background-size: cover;
+  background-position: center;
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+.wb-hero-minimal-copy h1 { font-size: clamp(1.9rem, 3.6vw, 2.8rem); max-width: 36rem; margin-left: auto; margin-right: auto; }
+.wb-hero-minimal-copy .wb-hero-subheadline { max-width: 34rem; margin-left: auto; margin-right: auto; opacity: .8; }
+
 .wb-button {
   display: inline-block;
   padding: .75rem 1.5rem;
@@ -1984,6 +2045,61 @@ textarea { resize: vertical; }
 .wb-about--reverse { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
 .wb-about--reverse .wb-about-image { order: 2; }
 .wb-about-image { width: 100%; border-radius: var(--radius-md, .75rem); object-fit: cover; aspect-ratio: 4 / 3; }
+
+/* About — alternate designs (SECTION_VARIANTS.about) */
+.wb-about-stack { text-align: center; max-width: 40rem; margin: 0 auto; }
+.wb-about-stack-image {
+  width: 9rem;
+  height: 9rem;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 1.5rem;
+  box-shadow: var(--shadow-lg, 0 22px 50px rgba(40, 29, 11, .14));
+  border: 3px solid var(--cream, #fff7e7);
+}
+.wb-about-stack-copy p { color: var(--ink-soft); }
+
+.wb-about-overlap { position: relative; padding-bottom: clamp(3rem, 6vw, 5rem); }
+.wb-about-overlap-image { width: 100%; max-height: 26rem; border-radius: var(--radius-md, 1rem); object-fit: cover; display: block; }
+.wb-about-overlap-card {
+  position: relative;
+  margin: -3.5rem clamp(0rem, 6vw, 3rem) 0 auto;
+  max-width: 26rem;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  border-radius: var(--radius-md, 1rem);
+  background: var(--surface, #fff);
+  box-shadow: var(--shadow-lg, 0 22px 50px rgba(40, 29, 11, .18));
+}
+@media (max-width: 640px) {
+  .wb-about-overlap-card { margin-top: -2rem; margin-left: 1rem; margin-right: 1rem; }
+}
+
+.wb-about-quote {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+.wb-about-quote-copy { padding-left: clamp(1.25rem, 2.5vw, 1.75rem); border-left: 3px solid var(--gold, #b88a2d); }
+.wb-about-quote-copy h2 { font-style: italic; }
+.wb-about-quote-image { width: 100%; border-radius: var(--radius-md, .75rem); object-fit: cover; aspect-ratio: 1 / 1; }
+@media (max-width: 760px) {
+  .wb-about-quote { grid-template-columns: 1fr; }
+  .wb-about-quote-image { order: -1; aspect-ratio: 16 / 9; }
+}
+
+.wb-about-banner { position: relative; isolation: isolate; margin: 0 calc(-1 * clamp(1.25rem, 5vw, 5rem)); }
+.wb-about-banner-image { min-height: clamp(16rem, 34vw, 22rem); background-size: cover; background-position: center; }
+.wb-about-banner-copy {
+  position: relative;
+  margin-top: -4.5rem;
+  max-width: 36rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.5rem, 5vw, 3rem);
+  background: linear-gradient(0deg, rgba(255, 253, 248, .98) 60%, rgba(255, 253, 248, 0) 100%);
+}
+@media (max-width: 640px) {
+  .wb-about-banner-copy { margin-top: -3rem; }
+}
 .wb-stats-grid {
   display: grid;
   gap: 1.25rem;

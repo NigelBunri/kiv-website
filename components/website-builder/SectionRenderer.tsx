@@ -41,30 +41,143 @@ function HeroSection({ data }: { data: Data }) {
 // SECTION_TYPES) rather than translated into this file's hero/text/
 // gallery/cta/contact_info shapes — so these read the RN field names
 // directly.
-function HeroBannerSection({ data }: { data: Data }) {
+// Each section type's alternate visual designs — the RN Website Builder
+// editor's design-picker modal offers exactly these keys (see
+// src/components/section-builder/sectionVariants.ts, which must be kept
+// in lockstep with this map and with apps.websites.models.SECTION_VARIANTS
+// on the backend). "classic" is always variant 1 and is the design every
+// section had before variants existed, so old sections with no `variant`
+// field keep rendering byte-identical to before.
+export const SECTION_VARIANTS: Record<string, string[]> = {
+  hero_banner: ["classic", "split_left", "split_right", "bottom_card", "minimal_banner"],
+  about: ["classic", "centered_stack", "card_overlap", "bordered_quote", "full_width_banner"],
+};
+
+function resolveVariant(type: string, variant: string | undefined): string {
+  const options = SECTION_VARIANTS[type];
+  if (!options) return "classic";
+  return variant && options.includes(variant) ? variant : options[0];
+}
+
+function HeroBannerSection({ data, variant }: { data: Data; variant?: string }) {
   const image = str(data, "backgroundImageUrl");
+  const title = str(data, "title");
+  const subtitle = str(data, "subtitle");
+  const ctaText = str(data, "ctaText");
+  const ctaLink = str(data, "ctaLink");
+  const cta = ctaText && ctaLink ? <a className="wb-button" href={ctaLink}>{ctaText}</a> : null;
+  const resolved = resolveVariant("hero_banner", variant);
+
+  if (resolved === "split_left" || resolved === "split_right") {
+    return (
+      <section className={`wb-section wb-hero-split${resolved === "split_right" ? " wb-hero-split--reverse" : ""}`}>
+        {image && <img className="wb-hero-split-image" src={image} alt="" />}
+        <div className="wb-hero-split-copy">
+          {title && <h1>{title}</h1>}
+          {subtitle && <p className="wb-hero-subheadline">{subtitle}</p>}
+          {cta}
+        </div>
+      </section>
+    );
+  }
+
+  if (resolved === "bottom_card") {
+    return (
+      <section className="wb-section wb-hero-bottomcard" style={image ? { backgroundImage: `url(${image})` } : undefined}>
+        <div className="wb-hero-bottomcard-inner">
+          {title && <h1>{title}</h1>}
+          {subtitle && <p className="wb-hero-subheadline">{subtitle}</p>}
+          {cta}
+        </div>
+      </section>
+    );
+  }
+
+  if (resolved === "minimal_banner") {
+    return (
+      <section className="wb-section wb-hero-minimal">
+        {image && <div className="wb-hero-minimal-strip" style={{ backgroundImage: `url(${image})` }} />}
+        <div className="wb-hero-minimal-copy">
+          {title && <h1>{title}</h1>}
+          {subtitle && <p className="wb-hero-subheadline">{subtitle}</p>}
+          {cta}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="wb-section wb-hero" style={image ? { backgroundImage: `url(${image})` } : undefined}>
       <div className="wb-hero-inner">
-        {str(data, "title") && <h1>{str(data, "title")}</h1>}
-        {str(data, "subtitle") && <p className="wb-hero-subheadline">{str(data, "subtitle")}</p>}
-        {str(data, "ctaText") && str(data, "ctaLink") && (
-          <a className="wb-button" href={str(data, "ctaLink")}>{str(data, "ctaText")}</a>
-        )}
+        {title && <h1>{title}</h1>}
+        {subtitle && <p className="wb-hero-subheadline">{subtitle}</p>}
+        {cta}
       </div>
     </section>
   );
 }
 
-function AboutSection({ data }: { data: Data }) {
+function AboutSection({ data, variant }: { data: Data; variant?: string }) {
   const image = str(data, "imageUrl");
+  const title = str(data, "title");
+  const description = str(data, "description");
+  const resolved = resolveVariant("about", variant);
+
+  if (resolved === "centered_stack") {
+    return (
+      <section className="wb-section wb-about-stack">
+        {image && <img className="wb-about-stack-image" src={image} alt="" />}
+        <div className="wb-about-stack-copy">
+          {title && <h2>{title}</h2>}
+          {description && <p>{description}</p>}
+        </div>
+      </section>
+    );
+  }
+
+  if (resolved === "card_overlap") {
+    return (
+      <section className="wb-section wb-about-overlap">
+        {image && <img className="wb-about-overlap-image" src={image} alt="" />}
+        <div className="wb-about-overlap-card">
+          {title && <h2>{title}</h2>}
+          {description && <p>{description}</p>}
+        </div>
+      </section>
+    );
+  }
+
+  if (resolved === "bordered_quote") {
+    return (
+      <section className="wb-section wb-about-quote">
+        <div className="wb-about-quote-copy">
+          {title && <h2>{title}</h2>}
+          {description && <p>{description}</p>}
+        </div>
+        {image && <img className="wb-about-quote-image" src={image} alt="" />}
+      </section>
+    );
+  }
+
+  if (resolved === "full_width_banner") {
+    return (
+      <section className="wb-section wb-about-banner">
+        {image && <div className="wb-about-banner-image" style={{ backgroundImage: `url(${image})` }} />}
+        <div className="wb-about-banner-copy">
+          {title && <h2>{title}</h2>}
+          {description && <p>{description}</p>}
+        </div>
+      </section>
+    );
+  }
+
   const reverse = data.layout === "image_right";
   return (
     <section className={`wb-section wb-about${reverse ? " wb-about--reverse" : ""}`}>
       {image && <img className="wb-about-image" src={image} alt="" />}
       <div className="wb-about-copy">
-        {str(data, "title") && <h2>{str(data, "title")}</h2>}
-        {str(data, "description") && <p>{str(data, "description")}</p>}
+        {title && <h2>{title}</h2>}
+        {description && <p>{description}</p>}
       </div>
     </section>
   );
@@ -371,9 +484,9 @@ function renderSectionByType({
   const data = section.data || {};
   switch (section.type) {
     case "hero": return <HeroSection data={data} />;
-    case "hero_banner": return <HeroBannerSection data={data} />;
+    case "hero_banner": return <HeroBannerSection data={data} variant={section.variant} />;
     case "text": return <TextSection data={data} />;
-    case "about": return <AboutSection data={data} />;
+    case "about": return <AboutSection data={data} variant={section.variant} />;
     case "image": return <ImageSection data={data} />;
     case "gallery": return <GallerySection data={data} />;
     case "image_gallery_grid": return <ImageGalleryGridSection data={data} />;

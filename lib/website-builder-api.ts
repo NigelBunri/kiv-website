@@ -71,6 +71,11 @@ export type WebsiteBuilderSection = {
   has_more?: boolean;
   resolved_video?: WebsiteBuilderResolvedKisVideo | null;
   responsive?: { hidden_on?: Array<"mobile" | "desktop"> };
+  /** Which of the section type's alternate visual designs to render —
+   * see SECTION_VARIANTS in SectionRenderer.tsx. Absent/unrecognized
+   * falls back to "classic" (the original single design each type had
+   * before variants existed), so old sections keep rendering unchanged. */
+  variant?: string;
 };
 
 export type WebsiteBuilderSite = {
