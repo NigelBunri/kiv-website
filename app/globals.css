@@ -1580,7 +1580,11 @@ textarea { resize: vertical; }
    tokens regardless of an owner's custom palette (consistent KIV-hosted
    framing, like a platform chrome) — only the content area and buttons
    pick up --wb-*. */
-.wb-site { display: flex; flex-direction: column; min-height: 100vh; }
+/* overflow-x:hidden guards against the full-bleed sections' width:100vw
+   (.wb-hero/.wb-slideshow/.wb-hero-bottomcard/.wb-about-banner) causing
+   a horizontal scrollbar on platforms where 100vw includes the vertical
+   scrollbar's own width. */
+.wb-site { display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
 .wb-page {
   flex: 1;
   max-width: 72rem;
@@ -1858,6 +1862,13 @@ textarea { resize: vertical; }
     box-shadow: -20px 0 50px rgba(20, 15, 6, .18);
     transform: translateX(100%);
     transition: transform 320ms cubic-bezier(.22, 1, .36, 1);
+    /* Without this, links could render past the panel's fixed bottom
+       edge with no background behind them instead of scrolling inside
+       it — happens whenever the link list is taller than the
+       available height (short viewports, landscape phones, or just
+       enough nav pages). */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .wb-site-nav--mobile.wb-site-nav--open { transform: translateX(0); }
 
@@ -1901,6 +1912,16 @@ textarea { resize: vertical; }
 }
 
 /* ---------- Hero ---------- */
+/* True edge-to-edge breakout — width:100vw + self-centering margin/
+   transform, NOT a negative margin sized off .wb-page's own padding
+   (that old approach could only ever cancel .wb-page's padding, never
+   its max-width: 72rem cap, so full-bleed sections stayed boxed in on
+   any screen wider than ~72rem plus padding). */
+.wb-full-bleed {
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
 .wb-hero {
   position: relative;
   isolation: isolate;
@@ -1908,7 +1929,9 @@ textarea { resize: vertical; }
   background-position: center;
   border-radius: 0;
   padding: clamp(4rem, 10vw, 7rem) clamp(1.5rem, 5vw, 3rem);
-  margin: 0 calc(-1 * clamp(1.25rem, 5vw, 5rem));
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
 }
 .wb-hero[style*="background-image"]::before {
   content: "";
@@ -1951,7 +1974,9 @@ textarea { resize: vertical; }
   display: flex;
   align-items: flex-end;
   border-radius: 0;
-  margin: 0 calc(-1 * clamp(1.25rem, 5vw, 5rem));
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
   padding: 0 clamp(1.5rem, 5vw, 3rem) clamp(1.5rem, 4vw, 2.5rem);
 }
 .wb-hero-bottomcard::before {
@@ -1985,7 +2010,7 @@ textarea { resize: vertical; }
 .wb-hero-minimal-copy .wb-hero-subheadline { max-width: 34rem; margin-left: auto; margin-right: auto; opacity: .8; }
 
 /* ---------- Slideshow ---------- */
-.wb-slideshow { position: relative; padding: 0; margin: 0 calc(-1 * clamp(1.25rem, 5vw, 5rem)); overflow: hidden; }
+.wb-slideshow { position: relative; padding: 0; width: 100vw; margin-left: 50%; transform: translateX(-50%); overflow: hidden; }
 .wb-slideshow-track { position: relative; height: clamp(22rem, 55vw, 34rem); }
 .wb-slideshow-slide {
   position: absolute;
@@ -2270,7 +2295,7 @@ textarea { resize: vertical; }
   .wb-about-quote-image { order: -1; aspect-ratio: 16 / 9; }
 }
 
-.wb-about-banner { position: relative; isolation: isolate; margin: 0 calc(-1 * clamp(1.25rem, 5vw, 5rem)); }
+.wb-about-banner { position: relative; isolation: isolate; width: 100vw; margin-left: 50%; transform: translateX(-50%); }
 .wb-about-banner-image { min-height: clamp(16rem, 34vw, 22rem); background-size: cover; background-position: center; }
 .wb-about-banner-copy {
   position: relative;
