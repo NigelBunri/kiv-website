@@ -6,6 +6,9 @@ import { WebsiteHeader } from "./WebsiteHeader";
 import { WebsiteFooter } from "./WebsiteFooter";
 import { BuyButton } from "./BuyButton";
 import { OpenInApp } from "./OpenInApp";
+import { PublicProductGallery } from "./PublicProductGallery";
+import { PublicVariantSwatches } from "./PublicVariantSwatches";
+import { PublicStickyBuyBar } from "./PublicStickyBuyBar";
 
 const TARGET_TYPE_LABEL: Record<string, string> = {
   product: "Product",
@@ -34,29 +37,24 @@ export function WebsiteItemDetailView({
         <Link href={`/page/${site.slug}`} className="wb-item-detail-back">← Back to {site.name}</Link>
         <div className="wb-item-detail-layout">
           <div className="wb-item-detail-media">
-            {gallery.length > 0 ? (
-              <>
-                <img className="wb-item-detail-hero-image" src={gallery[0]} alt={item.title} />
-                {gallery.length > 1 && (
-                  <div className="wb-item-detail-gallery">
-                    {gallery.slice(1).map((url, i) => (
-                      <img key={i} src={url} alt={`${item.title} — ${i + 2}`} />
-                    ))}
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="wb-item-detail-media-placeholder" aria-hidden="true" />
-            )}
+            <PublicProductGallery images={gallery} alt={item.title} />
           </div>
           <div className="wb-item-detail-info">
             <span className="wb-item-detail-kicker">{TARGET_TYPE_LABEL[targetType] || "Item"}</span>
             <h1>{item.title}</h1>
-            {item.price_display && (
-              <p className="wb-item-detail-price">
-                {item.price_display}
-                {item.compare_at_price_display && <s className="wb-item-detail-compare-price">{item.compare_at_price_display}</s>}
-              </p>
+            {targetType === "product" && item.variants && item.variants.length > 0 ? (
+              <PublicVariantSwatches
+                variants={item.variants}
+                basePriceDisplay={item.price_display || ""}
+                baseCompareAtPriceDisplay={item.compare_at_price_display}
+              />
+            ) : (
+              item.price_display && (
+                <p className="wb-item-detail-price">
+                  {item.price_display}
+                  {item.compare_at_price_display && <s className="wb-item-detail-compare-price">{item.compare_at_price_display}</s>}
+                </p>
+              )
             )}
             {targetType === "product" && item.in_stock === false && <p className="wb-item-detail-stock wb-item-detail-stock--out">Out of stock</p>}
             {targetType === "course" && item.institution_name && <p className="wb-item-detail-meta">Offered by {item.institution_name}</p>}
@@ -72,6 +70,7 @@ export function WebsiteItemDetailView({
               <BuyButton targetType={targetType} item={item} shopId={item.shop_id} />
               <OpenInApp deepLink={item.deep_link} />
             </div>
+            <PublicStickyBuyBar targetType={targetType} item={item} shopId={item.shop_id} priceDisplay={item.price_display} />
           </div>
         </div>
       </main>

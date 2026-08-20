@@ -85,7 +85,7 @@ export type WebsiteBuilderSite = {
   branding: Record<string, unknown>;
   seo: WebsiteBuilderSeo;
   canonical_url: string;
-  pages: { slug: string; title: string; is_home: boolean }[];
+  pages: { slug: string; title: string; is_home: boolean; description?: string; preview_image_url?: string }[];
   updated_at: string | null;
 };
 
@@ -99,6 +99,15 @@ export type WebsiteBuilderPage = {
   updated_at: string | null;
 };
 
+export type WebsiteBuilderProductVariant = {
+  id: string;
+  name: string;
+  price_display: string;
+  compare_at_price_display?: string;
+  in_stock: boolean;
+  options: Record<string, string>;
+};
+
 export type WebsiteBuilderKisContentDetail = WebsiteBuilderKisContentItem & {
   gallery?: string[];
   compare_at_price_display?: string;
@@ -110,6 +119,9 @@ export type WebsiteBuilderKisContentDetail = WebsiteBuilderKisContentItem & {
   service_type?: string;
   negotiable?: boolean;
   quote_required?: boolean;
+  /** Product only — display/preview only, see resolve_product_detail's
+   * docstring on the backend for why this doesn't affect checkout yet. */
+  variants?: WebsiteBuilderProductVariant[];
 };
 
 export type WebsiteBuilderSitemapPlan = {

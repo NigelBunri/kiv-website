@@ -1725,6 +1725,45 @@ textarea { resize: vertical; }
 .wb-site-nav--desktop a[aria-current="page"] { color: var(--ink, #1c170f); font-weight: 800; }
 .wb-site-nav--desktop a[aria-current="page"]::after { transform: scaleX(1); }
 
+/* Mega-menu flyout — appears under a nav item on hover/focus when that
+   page has a description or preview image set (WebsiteHeader.tsx). */
+.wb-site-nav-item { position: relative; }
+.wb-site-nav-flyout {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, .5rem);
+  z-index: 60;
+  width: 20rem;
+  padding-top: .75rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms var(--ease, ease), transform 180ms var(--ease, ease);
+}
+.wb-site-nav-item:hover .wb-site-nav-flyout,
+.wb-site-nav-item:focus-within .wb-site-nav-flyout {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+.wb-site-nav-flyout-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-md, 1rem);
+  background: var(--surface, #fff);
+  border: 1px solid var(--line-soft, #f1e7cf);
+  box-shadow: var(--shadow-lg, 0 22px 50px rgba(40, 29, 11, .18));
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+}
+.wb-site-nav-flyout-image { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.wb-site-nav-flyout-image--placeholder { background: linear-gradient(135deg, var(--gold-soft, #f2e0b3), var(--cream-2, #f8efdb)); }
+.wb-site-nav-flyout-copy { display: flex; flex-direction: column; gap: .3rem; padding: 1rem 1.1rem 1.1rem; }
+.wb-site-nav-flyout-title { font-family: var(--font-serif), Georgia, serif; font-weight: 700; font-size: 1rem; color: var(--ink, #1c170f); }
+.wb-site-nav-flyout-description { font-size: .85rem; color: var(--ink-soft, #56493a); line-height: 1.5; }
+.wb-site-nav-flyout-cta { font-size: .8rem; font-weight: 700; color: var(--gold-strong, #704d10); margin-top: .25rem; }
+
 .wb-site-header-tools { display: flex; align-items: center; gap: 1rem; margin-left: auto; flex-shrink: 0; }
 .wb-site-header-tools .header-button {
   min-height: auto;
@@ -2067,14 +2106,41 @@ textarea { resize: vertical; }
 .wb-carousel-arrow--next { right: -.4rem; }
 @media (max-width: 640px) { .wb-carousel-arrow { display: none; } }
 
-.wb-kis-content-list { display: flex; flex-direction: column; gap: 1rem; }
-.wb-kis-content-list .wb-kis-content-card { flex-direction: row; align-items: stretch; }
-.wb-kis-content-list .wb-kis-content-card img { width: 9rem; aspect-ratio: 1 / 1; flex-shrink: 0; }
-.wb-kis-content-list .wb-kis-content-card > a:first-child { flex-shrink: 0; }
-.wb-kis-content-list .wb-kis-content-card h3 { margin-top: 0; }
+.wb-kis-content-list { display: flex; flex-direction: column; gap: 1.25rem; }
+.wb-kis-content-card--list {
+  flex-direction: row;
+  align-items: stretch;
+}
+.wb-kis-content-card-media { flex-shrink: 0; display: block; }
+.wb-kis-content-card-media img { width: 10rem; height: 100%; aspect-ratio: 1 / 1; }
+.wb-kis-content-card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  flex: 1;
+  min-width: 0;
+  padding: 1.25rem 1.5rem;
+  gap: .35rem;
+}
+.wb-kis-content-card-body h3 { margin: 0; }
+.wb-kis-content-card-body p { margin: 0; }
+.wb-kis-content-card-body .wb-price { margin-top: .15rem; }
+.wb-kis-content-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem;
+  margin-top: .85rem;
+  width: 100%;
+}
+.wb-kis-content-card-actions .wb-open-in-app { width: auto; margin: 0; flex: 0 0 auto; }
+.wb-kis-content-card-actions .wb-buy { padding: 0; margin: 0; flex: 0 0 auto; }
 @media (max-width: 560px) {
-  .wb-kis-content-list .wb-kis-content-card { flex-direction: column; }
-  .wb-kis-content-list .wb-kis-content-card img { width: 100%; aspect-ratio: 4 / 3; }
+  .wb-kis-content-card--list { flex-direction: column; }
+  .wb-kis-content-card-media img { width: 100%; aspect-ratio: 4 / 3; }
+  .wb-kis-content-card-body { align-items: stretch; padding: 1rem 1.1rem; }
+  .wb-kis-content-card-actions { flex-direction: column; align-items: stretch; }
 }
 
 /* Product/service/course cards — real card treatment: border, radius,
@@ -2273,8 +2339,37 @@ textarea { resize: vertical; }
   border-radius: var(--radius-md, 1rem);
   background: var(--cream-2, #f8efdb);
 }
-.wb-item-detail-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: .6rem; margin-top: .6rem; }
-.wb-item-detail-gallery img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: .6rem; }
+/* Product gallery — click-to-swap thumbnails + cursor-tracked hover zoom
+   (PublicProductGallery.tsx). */
+.wb-product-gallery-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-md, 1rem);
+  cursor: zoom-in;
+}
+.wb-product-gallery-frame .wb-item-detail-hero-image { border-radius: var(--radius-md, 1rem); display: block; }
+.wb-product-gallery-zoom {
+  position: absolute;
+  inset: 0;
+  background-size: 200%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  opacity: 1;
+}
+.wb-product-gallery-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: .6rem; margin-top: .75rem; }
+.wb-product-gallery-thumb {
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: .6rem;
+  overflow: hidden;
+  cursor: pointer;
+  background: none;
+  transition: border-color 150ms var(--ease, ease), opacity 150ms var(--ease, ease);
+  opacity: .7;
+}
+.wb-product-gallery-thumb img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+.wb-product-gallery-thumb:hover { opacity: 1; }
+.wb-product-gallery-thumb--active { border-color: var(--gold, #b88a2d); opacity: 1; }
 .wb-item-detail-kicker {
   display: inline-block;
   text-transform: uppercase;
@@ -2286,6 +2381,28 @@ textarea { resize: vertical; }
 }
 .wb-item-detail-info h1 { font-family: var(--font-serif), Georgia, serif; font-size: clamp(1.7rem, 3vw, 2.4rem); margin: 0 0 .75rem; text-wrap: balance; }
 .wb-item-detail-price { font-size: 1.4rem; font-weight: 800; color: var(--gold-strong, #704d10); margin: 0 0 .5rem; }
+
+/* Variant swatches (size/color etc.) — display/preview only, see
+   PublicVariantSwatches.tsx's docstring on why checkout isn't wired. */
+.wb-variant-swatches { margin: 0 0 1rem; display: flex; flex-direction: column; gap: .85rem; }
+.wb-variant-swatch-group { display: flex; flex-direction: column; gap: .4rem; }
+.wb-variant-swatch-label { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-soft, #56493a); }
+.wb-variant-swatch-row { display: flex; flex-wrap: wrap; gap: .5rem; }
+.wb-variant-swatch {
+  padding: .5rem 1rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--line, #e9dcc0);
+  background: var(--surface, #fff);
+  color: var(--ink, #1c170f);
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 150ms var(--ease, ease), background 150ms var(--ease, ease), color 150ms var(--ease, ease);
+}
+.wb-variant-swatch:hover { border-color: var(--gold, #b88a2d); }
+.wb-variant-swatch--active { border-color: var(--gold-strong, #704d10); background: var(--gold-strong, #704d10); color: #fff; }
+.wb-variant-swatch-price { margin-top: .1rem; }
+.wb-variant-swatch-hint { font-size: .82rem; color: var(--ink-soft, #56493a); opacity: .8; margin: -.3rem 0 0; }
 .wb-item-detail-compare-price { margin-left: .6rem; font-size: 1rem; font-weight: 600; color: var(--ink-soft, #56493a); opacity: .7; }
 .wb-item-detail-meta { color: var(--ink-soft, #56493a); font-size: .95rem; margin: 0 0 .35rem; }
 .wb-item-detail-stock--out { color: var(--danger, #b42318); font-weight: 700; }
@@ -2302,6 +2419,40 @@ textarea { resize: vertical; }
 .wb-item-detail-actions { margin-top: 1.75rem; display: flex; flex-direction: column; gap: .75rem; align-items: flex-start; }
 .wb-item-detail-actions .wb-buy { margin-top: 0; }
 .wb-item-detail-actions .wb-open-in-app { width: auto; margin: 0; padding: .8rem 1.5rem; }
+
+/* Sticky buy bar — appears once the page's own action row scrolls out
+   of view (PublicStickyBuyBar.tsx). */
+.wb-sticky-buy-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 55;
+  background: rgba(255, 253, 248, .96);
+  border-top: 1px solid var(--line-soft, #e9dcc0);
+  box-shadow: 0 -12px 30px rgba(40, 29, 11, .1);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transform: translateY(100%);
+  transition: transform 220ms var(--ease, ease);
+}
+.wb-sticky-buy-bar--visible { transform: translateY(0); }
+.wb-sticky-buy-bar-inner {
+  max-width: var(--content-max, 72rem);
+  margin: 0 auto;
+  padding: .75rem clamp(1.25rem, 4vw, 2.5rem);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.wb-sticky-buy-bar-image { width: 2.75rem; height: 2.75rem; border-radius: .5rem; object-fit: cover; flex-shrink: 0; }
+.wb-sticky-buy-bar-copy { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.wb-sticky-buy-bar-title { font-weight: 700; font-size: .92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wb-sticky-buy-bar-price { font-size: .85rem; color: var(--gold-strong, #704d10); font-weight: 700; }
+.wb-sticky-buy-bar-action { flex-shrink: 0; }
+.wb-sticky-buy-bar-action .wb-buy { margin: 0; padding: 0; }
+.wb-sticky-buy-bar-action .wb-button { padding: .65rem 1.4rem; }
+@media (max-width: 480px) { .wb-sticky-buy-bar-copy { display: none; } }
 @media (max-width: 760px) {
   .wb-item-detail-layout { grid-template-columns: 1fr; }
   .wb-item-detail-media { position: static; }

@@ -85,10 +85,39 @@ export function WebsiteHeader({ site, currentSlug }: { site: WebsiteBuilderSite;
           {site.pages.map((p) => {
             const slug = p.is_home ? "home" : p.slug;
             const href = p.is_home ? `/page/${site.slug}` : `/page/${site.slug}/${p.slug}`;
+            // Only pages with a real description or preview image get the
+            // mega-menu flyout treatment on hover/focus — everything else
+            // stays a plain link rather than showing an empty panel. Both
+            // fields come from that page's own SEO settings (already
+            // owner-editable), not new invented content.
+            const hasFlyout = Boolean(p.description || p.preview_image_url);
+            if (!hasFlyout) {
+              return (
+                <Link key={p.slug} href={href} aria-current={slug === currentSlug ? "page" : undefined}>
+                  {p.title}
+                </Link>
+              );
+            }
             return (
-              <Link key={p.slug} href={href} aria-current={slug === currentSlug ? "page" : undefined}>
-                {p.title}
-              </Link>
+              <div key={p.slug} className="wb-site-nav-item">
+                <Link href={href} aria-current={slug === currentSlug ? "page" : undefined}>
+                  {p.title}
+                </Link>
+                <div className="wb-site-nav-flyout" role="menu">
+                  <Link href={href} className="wb-site-nav-flyout-card" onClick={closeNav}>
+                    {p.preview_image_url ? (
+                      <img src={p.preview_image_url} alt="" className="wb-site-nav-flyout-image" />
+                    ) : (
+                      <div className="wb-site-nav-flyout-image wb-site-nav-flyout-image--placeholder" aria-hidden="true" />
+                    )}
+                    <div className="wb-site-nav-flyout-copy">
+                      <span className="wb-site-nav-flyout-title">{p.title}</span>
+                      {p.description ? <span className="wb-site-nav-flyout-description">{p.description}</span> : null}
+                      <span className="wb-site-nav-flyout-cta">Explore →</span>
+                    </div>
+                  </Link>
+                </div>
+              </div>
             );
           })}
         </nav>

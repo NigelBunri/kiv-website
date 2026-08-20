@@ -86,6 +86,32 @@ export function PublicKisContentGrid({
     );
   });
 
+  // List mode needs its own DOM shape — everything but the image grouped
+  // into one body column so it can be vertically centered and padded as
+  // a unit, rather than laid out as loose flex siblings next to the
+  // image (which is what grid/carousel's flat structure above does).
+  const listCards = items.map((item) => {
+    const href = hasDetailPage ? `/page/${siteSlug}/item/${targetType}/${item.id}` : item.deep_link || undefined;
+    return (
+      <div key={item.id} className="wb-kis-content-card wb-kis-content-card--list">
+        {item.image_url && (
+          <a href={href} className="wb-kis-content-card-media">
+            <img src={item.image_url} alt={item.title} />
+          </a>
+        )}
+        <div className="wb-kis-content-card-body">
+          <a href={href} className="wb-kis-content-card-title-link"><h3>{item.title}</h3></a>
+          {item.description && <p>{item.description}</p>}
+          {item.price_display && <p className="wb-price">{item.price_display}</p>}
+          <div className="wb-kis-content-card-actions">
+            <OpenInApp deepLink={item.deep_link} />
+            <BuyButton targetType={targetType} item={item} shopId={item.shop_id} />
+          </div>
+        </div>
+      </div>
+    );
+  });
+
   return (
     <>
       {displayMode === "carousel" ? (
@@ -99,7 +125,7 @@ export function PublicKisContentGrid({
           )}
         </div>
       ) : displayMode === "list" ? (
-        <div className="wb-kis-content-list">{cards}</div>
+        <div className="wb-kis-content-list">{listCards}</div>
       ) : (
         <div className="wb-kis-content-grid" style={{ "--wb-grid-columns": Math.max(1, Math.min(6, columns)) } as React.CSSProperties}>{cards}</div>
       )}
