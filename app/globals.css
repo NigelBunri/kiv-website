@@ -1619,9 +1619,15 @@ textarea { resize: vertical; }
   box-shadow: 0 12px 30px rgba(40, 29, 11, .06);
 }
 
-.wb-site-brand { display: inline-flex; align-items: center; gap: .75rem; text-decoration: none; color: var(--ink, #1c170f); min-width: 0; flex-shrink: 0; }
+/* min-width: 0 here (both on the flex item and its shrinking child below)
+   is load-bearing, not decorative — without it a flex item's default
+   min-width:auto refuses to shrink below its content's natural width, so
+   a long institution name never actually truncates and instead pushes
+   the hamburger toggle off-canvas on narrow screens. */
+.wb-site-brand { position: relative; display: inline-flex; align-items: center; gap: .6rem; min-width: 0; flex-shrink: 1; }
+.wb-site-brand-link { display: inline-flex; flex-shrink: 0; text-decoration: none; }
 .wb-site-brand-mark { width: 2.4rem; height: 2.4rem; border-radius: .6rem; object-fit: cover; flex-shrink: 0; transition: transform var(--fast, 200ms) var(--ease, ease); }
-.wb-site-brand:hover .wb-site-brand-mark { transform: scale(1.04); }
+.wb-site-brand-link:hover .wb-site-brand-mark { transform: scale(1.04); }
 .wb-site-brand-mark--letter {
   display: grid;
   place-items: center;
@@ -1631,7 +1637,59 @@ textarea { resize: vertical; }
   font-weight: 700;
   font-size: 1.05rem;
 }
-.wb-site-brand-name { font-family: var(--font-serif), Georgia, serif; font-weight: 700; font-size: 1.1rem; letter-spacing: -.005em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wb-site-brand-name {
+  min-width: 0;
+  max-width: 12rem;
+  flex-shrink: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-family: var(--font-serif), Georgia, serif;
+  color: var(--ink, #1c170f);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -.005em;
+  cursor: pointer;
+  text-align: left;
+}
+.wb-site-brand-tooltip {
+  position: absolute;
+  top: calc(100% + .6rem);
+  left: 0;
+  z-index: 55;
+  max-width: 16rem;
+  padding: .6rem .85rem;
+  border-radius: .7rem;
+  background: var(--ink, #1c170f);
+  color: var(--cream, #fff7e7);
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: .95rem;
+  font-weight: 700;
+  line-height: 1.35;
+  box-shadow: 0 14px 30px rgba(20, 15, 6, .25);
+  animation: wb-brand-tooltip-in 160ms var(--ease, ease);
+}
+.wb-site-brand-tooltip::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 1.1rem;
+  border: 6px solid transparent;
+  border-bottom-color: var(--ink, #1c170f);
+}
+@keyframes wb-brand-tooltip-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 760px) {
+  .wb-site-brand-name { max-width: 7.5rem; font-size: 1rem; }
+}
+@media (max-width: 380px) {
+  .wb-site-brand-name { max-width: 5.5rem; }
+}
 
 /* Desktop nav — a sliding pill indicator behind the active/hovered link
    rather than a flat background swap, and an underline that grows in on

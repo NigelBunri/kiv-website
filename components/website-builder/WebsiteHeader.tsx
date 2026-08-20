@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { WebsiteBuilderSite } from "@/lib/website-builder-api";
 import { UserMenu } from "@/components/UserMenu";
@@ -20,6 +20,8 @@ import { UserMenu } from "@/components/UserMenu";
 export function WebsiteHeader({ site, currentSlug }: { site: WebsiteBuilderSite; currentSlug: string }) {
   const [navOpen, setNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [nameExpanded, setNameExpanded] = useState(false);
+  const brandRef = useRef<HTMLDivElement>(null);
   const logoUrl = typeof site.branding?.logo_url === "string" ? (site.branding.logo_url as string) : "";
   const initial = (site.name || "?").trim().charAt(0).toUpperCase() || "?";
   const homeHref = `/page/${site.slug}`;
@@ -31,6 +33,20 @@ export function WebsiteHeader({ site, currentSlug }: { site: WebsiteBuilderSite;
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Long institution names get truncated on narrow screens (see
+  // .wb-site-brand-name's max-width in globals.css) so they don't crowd
+  // out the hamburger toggle — tapping the truncated name reveals the
+  // full name in a small popover instead of just cutting it off with no
+  // way to read the rest.
+  useEffect(() => {
+    if (!nameExpanded) return;
+    const onOutside = (e: MouseEvent) => {
+      if (brandRef.current && !brandRef.current.contains(e.target as Node)) setNameExpanded(false);
+    };
+    document.addEventListener("click", onOutside);
+    return () => document.removeEventListener("click", onOutside);
+  }, [nameExpanded]);
 
   // A full-screen mobile panel needs the page itself locked so it can't
   // scroll behind the overlay.
@@ -45,14 +61,24 @@ export function WebsiteHeader({ site, currentSlug }: { site: WebsiteBuilderSite;
 
   return (
     <header className={`wb-site-header${scrolled ? " wb-site-header--scrolled" : ""}${navOpen ? " wb-site-header--nav-open" : ""}`}>
-      <Link href={homeHref} className="wb-site-brand" onClick={closeNav}>
-        {logoUrl ? (
-          <img src={logoUrl} alt="" className="wb-site-brand-mark" />
-        ) : (
-          <span className="wb-site-brand-mark wb-site-brand-mark--letter" aria-hidden="true">{initial}</span>
-        )}
-        <span className="wb-site-brand-name">{site.name}</span>
-      </Link>
+      <div className="wb-site-brand" ref={brandRef}>
+        <Link href={homeHref} className="wb-site-brand-link" onClick={closeNav} aria-label={`${site.name} — home`}>
+          {logoUrl ? (
+            <img src={logoUrl} alt="" className="wb-site-brand-mark" />
+          ) : (
+            <span className="wb-site-brand-mark wb-site-brand-mark--letter" aria-hidden="true">{initial}</span>
+          )}
+        </Link>
+        <button
+          type="button"
+          className="wb-site-brand-name"
+          onClick={() => setNameExpanded((prev) => !prev)}
+          aria-expanded={nameExpanded}
+        >
+          {site.name}
+        </button>
+        {nameExpanded && <div className="wb-site-brand-tooltip" role="tooltip">{site.name}</div>}
+      </div>
 
       {hasPages && (
         <nav className="wb-site-nav wb-site-nav--desktop" aria-label={`${site.name} pages`}>
