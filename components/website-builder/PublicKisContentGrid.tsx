@@ -14,6 +14,14 @@ type Props = {
   sectionId: string;
 };
 
+// Only these target types have an on-site detail page (see
+// resolve_kis_content_item_detail's _DETAIL_RESOLVERS on the backend) —
+// everything else (health_service, broadcast_channel, post, event,
+// testimonial) has no on-site checkout surface and goes straight to the
+// app instead, same as the deep_link already used for their OpenInApp
+// button.
+const DETAIL_PAGE_TARGET_TYPES = new Set(["product", "course", "shop_service"]);
+
 export function PublicKisContentGrid({ items: initialItems, hasMore: initialHasMore, targetType, siteSlug, pageSlug, sectionId }: Props) {
   const [items, setItems] = useState(initialItems);
   const [hasMore, setHasMore] = useState(initialHasMore);
@@ -35,23 +43,28 @@ export function PublicKisContentGrid({ items: initialItems, hasMore: initialHasM
     }
   }
 
+  const hasDetailPage = DETAIL_PAGE_TARGET_TYPES.has(targetType);
+
   return (
     <>
       <div className="wb-kis-content-grid">
-        {items.map((item) => (
-          <div key={item.id} className="wb-kis-content-card">
-            {item.image_url && (
-              <a href={item.deep_link || undefined}>
-                <img src={item.image_url} alt={item.title} />
-              </a>
-            )}
-            <h3>{item.title}</h3>
-            {item.description && <p>{item.description}</p>}
-            {item.price_display && <p className="wb-price">{item.price_display}</p>}
-            <OpenInApp deepLink={item.deep_link} />
-            <BuyButton targetType={targetType} item={item} shopId={item.shop_id} />
-          </div>
-        ))}
+        {items.map((item) => {
+          const href = hasDetailPage ? `/page/${siteSlug}/item/${targetType}/${item.id}` : item.deep_link || undefined;
+          return (
+            <div key={item.id} className="wb-kis-content-card">
+              {item.image_url && (
+                <a href={href}>
+                  <img src={item.image_url} alt={item.title} />
+                </a>
+              )}
+              <a href={href} className="wb-kis-content-card-title-link"><h3>{item.title}</h3></a>
+              {item.description && <p>{item.description}</p>}
+              {item.price_display && <p className="wb-price">{item.price_display}</p>}
+              <OpenInApp deepLink={item.deep_link} />
+              <BuyButton targetType={targetType} item={item} shopId={item.shop_id} />
+            </div>
+          );
+        })}
       </div>
       {hasMore && (
         <button type="button" className="wb-button wb-load-more" onClick={loadMore} disabled={loading}>

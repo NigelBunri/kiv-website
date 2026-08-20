@@ -94,6 +94,19 @@ export type WebsiteBuilderPage = {
   updated_at: string | null;
 };
 
+export type WebsiteBuilderKisContentDetail = WebsiteBuilderKisContentItem & {
+  gallery?: string[];
+  compare_at_price_display?: string;
+  in_stock?: boolean;
+  categories?: string[];
+  duration_minutes?: number;
+  seat_limit?: number | null;
+  institution_name?: string;
+  service_type?: string;
+  negotiable?: boolean;
+  quote_required?: boolean;
+};
+
 export type WebsiteBuilderSitemapPlan = {
   indexing_enabled: boolean;
   robots: string;
@@ -120,4 +133,11 @@ export async function fetchWebsitePage(siteSlug: string, pageSlug: string, previ
 
 export async function fetchWebsiteSitemapPlan(): Promise<WebsiteBuilderSitemapPlan | null> {
   return fetchJson<WebsiteBuilderSitemapPlan>(`${apiBase()}/api/v1/websites/public/sitemap-plan/`);
+}
+
+export async function fetchWebsiteKisContentDetail(
+  siteSlug: string, targetType: string, itemId: string,
+): Promise<{ item: WebsiteBuilderKisContentDetail; site: { slug: string; name: string } } | null> {
+  const url = `${apiBase()}/api/v1/websites/public/sites/${encodeURIComponent(siteSlug)}/kis-content/${encodeURIComponent(targetType)}/${encodeURIComponent(itemId)}/`;
+  return fetchJson<{ item: WebsiteBuilderKisContentDetail; site: { slug: string; name: string } }>(url);
 }
