@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Libre_Baskerville } from "next/font/google";
-import { CriticalStyles } from "@/components/CriticalStyles";
+import "./globals.css";
 import { OrganizationJsonLd, WebsiteJsonLd } from "@/components/StructuredData";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ScrollProgress } from "@/components/ScrollProgress";
@@ -74,7 +74,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={`${inter.variable} ${serif.variable}`}>
-        <CriticalStyles />
         <OrganizationJsonLd />
         <WebsiteJsonLd />
         <ScrollProgress />
