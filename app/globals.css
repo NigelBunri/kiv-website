@@ -1945,6 +1945,65 @@ textarea { resize: vertical; }
 .wb-hero-minimal-copy h1 { font-size: clamp(1.9rem, 3.6vw, 2.8rem); max-width: 36rem; margin-left: auto; margin-right: auto; }
 .wb-hero-minimal-copy .wb-hero-subheadline { max-width: 34rem; margin-left: auto; margin-right: auto; opacity: .8; }
 
+/* ---------- Slideshow ---------- */
+.wb-slideshow { position: relative; padding: 0; margin: 0 calc(-1 * clamp(1.25rem, 5vw, 5rem)); overflow: hidden; }
+.wb-slideshow-track { position: relative; height: clamp(22rem, 55vw, 34rem); }
+.wb-slideshow-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 700ms var(--ease, ease);
+  pointer-events: none;
+}
+.wb-slideshow-slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(28, 23, 15, .45) 0%, rgba(28, 23, 15, .25) 45%, rgba(28, 23, 15, .55) 100%);
+}
+.wb-slideshow-slide--active { opacity: 1; pointer-events: auto; z-index: 1; }
+.wb-slideshow-copy { position: relative; z-index: 2; max-width: 42rem; text-align: center; padding: 0 1.5rem; color: #fff7e7; }
+.wb-slideshow-copy h1 { font-size: clamp(2.1rem, 4.5vw, 3.4rem); text-wrap: balance; }
+.wb-slideshow-copy .wb-hero-subheadline { color: #fff7e7; }
+.wb-slideshow-dots { position: absolute; left: 0; right: 0; bottom: 1.25rem; display: flex; justify-content: center; gap: .5rem; z-index: 3; }
+.wb-slideshow-dot {
+  width: .55rem;
+  height: .55rem;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, .45);
+  cursor: pointer;
+  padding: 0;
+  transition: background 200ms var(--ease, ease), transform 200ms var(--ease, ease);
+}
+.wb-slideshow-dot--active { background: #fff; transform: scale(1.25); }
+
+/* ---------- Promo bar ---------- */
+.wb-promo-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .55rem 1rem;
+  text-align: center;
+  background: linear-gradient(90deg, var(--ink, #1c170f), #322a1b);
+  color: var(--gold-soft, #f2e0b3);
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+.wb-promo-bar-message { display: inline-block; animation: wb-promo-fade 400ms var(--ease, ease); }
+.wb-promo-bar-link { color: inherit; text-decoration: none; }
+.wb-promo-bar-link:hover { text-decoration: underline; }
+@keyframes wb-promo-fade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .wb-button {
   display: inline-block;
   padding: .75rem 1.5rem;
@@ -1966,6 +2025,57 @@ textarea { resize: vertical; }
 .wb-testimonials-grid blockquote { margin: 0; padding: 1.25rem; border-radius: var(--radius-md, .75rem); background: rgba(0, 0, 0, .03); }
 .wb-faqs details { padding: .75rem 0; border-bottom: 1px solid rgba(0, 0, 0, .08); }
 .wb-social-links { display: flex; flex-wrap: wrap; gap: 1rem; }
+
+/* kis_content — carousel/list display modes (PublicKisContentGrid.tsx);
+   grid mode overrides the shared auto-fit rule above with the editor's
+   configured column count on wide screens. */
+.wb-kis-content-grid { grid-template-columns: repeat(var(--wb-grid-columns, 3), minmax(0, 1fr)); }
+@media (max-width: 900px) { .wb-kis-content-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .wb-kis-content-grid { grid-template-columns: 1fr; } }
+
+.wb-kis-content-carousel-wrap { position: relative; }
+.wb-kis-content-carousel {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 1px;
+  padding-bottom: .5rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.wb-kis-content-carousel::-webkit-scrollbar { display: none; }
+.wb-kis-content-carousel > .wb-kis-content-card { flex: 0 0 clamp(13rem, 32vw, 17rem); scroll-snap-align: start; }
+.wb-carousel-arrow {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft, #e9dcc0);
+  background: var(--surface, #fff);
+  color: var(--ink, #1c170f);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm, 0 4px 14px rgba(40, 29, 11, .12));
+  transition: background 150ms var(--ease, ease), transform 150ms var(--ease, ease);
+}
+.wb-carousel-arrow:hover { background: var(--cream-2, #f8efdb); transform: translateY(-50%) scale(1.06); }
+.wb-carousel-arrow--prev { left: -.4rem; }
+.wb-carousel-arrow--next { right: -.4rem; }
+@media (max-width: 640px) { .wb-carousel-arrow { display: none; } }
+
+.wb-kis-content-list { display: flex; flex-direction: column; gap: 1rem; }
+.wb-kis-content-list .wb-kis-content-card { flex-direction: row; align-items: stretch; }
+.wb-kis-content-list .wb-kis-content-card img { width: 9rem; aspect-ratio: 1 / 1; flex-shrink: 0; }
+.wb-kis-content-list .wb-kis-content-card > a:first-child { flex-shrink: 0; }
+.wb-kis-content-list .wb-kis-content-card h3 { margin-top: 0; }
+@media (max-width: 560px) {
+  .wb-kis-content-list .wb-kis-content-card { flex-direction: column; }
+  .wb-kis-content-list .wb-kis-content-card img { width: 100%; aspect-ratio: 4 / 3; }
+}
 
 /* Product/service/course cards — real card treatment: border, radius,
    shadow, image area, hover lift. Previously these were plain text

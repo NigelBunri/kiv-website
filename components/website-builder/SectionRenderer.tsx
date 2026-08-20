@@ -2,6 +2,8 @@ import { cloneElement, isValidElement } from "react";
 import type { WebsiteBuilderSection } from "@/lib/website-builder-api";
 import { PublicFormSection } from "./PublicFormSection";
 import { PublicKisContentGrid } from "./PublicKisContentGrid";
+import { PublicSlideshow } from "./PublicSlideshow";
+import { PublicPromoBar } from "./PublicPromoBar";
 
 // One renderer per section type, dispatched by `type`. Kept in a single
 // file deliberately — these are small, purely presentational blocks over
@@ -458,6 +460,9 @@ function KisContentSection({ section, siteSlug, pageSlug }: { section: WebsiteBu
   const ctaLabel = str(section.data, "cta_label");
   const ctaLink = str(section.data, "cta_deep_link");
   const targetType = str(section.data, "target_type");
+  const presentation = (section.data.presentation && typeof section.data.presentation === "object" ? section.data.presentation : {}) as Data;
+  const displayMode = presentation.display_mode === "carousel" || presentation.display_mode === "list" ? presentation.display_mode : "grid";
+  const columns = typeof presentation.columns === "number" ? presentation.columns : 3;
   return (
     <section className="wb-section wb-kis-content">
       {heading && <h2>{heading}</h2>}
@@ -468,6 +473,8 @@ function KisContentSection({ section, siteSlug, pageSlug }: { section: WebsiteBu
         siteSlug={siteSlug}
         pageSlug={pageSlug}
         sectionId={section.id}
+        displayMode={displayMode}
+        columns={columns}
       />
       {ctaLabel && ctaLink && <a className="wb-button" href={ctaLink}>{ctaLabel}</a>}
     </section>
@@ -509,6 +516,8 @@ function renderSectionByType({
         ? <PublicFormSection data={data} sectionId={section.id} siteSlug={siteSlug} pageSlug={pageSlug} />
         : null;
     case "kis_content": return <KisContentSection section={section} siteSlug={siteSlug || ""} pageSlug={pageSlug || ""} />;
+    case "slideshow": return <PublicSlideshow data={data} />;
+    case "promo_bar": return <PublicPromoBar data={data} />;
     default: return null;
   }
 }

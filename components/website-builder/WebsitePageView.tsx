@@ -5,12 +5,21 @@ import { AnalyticsBeacon } from "./AnalyticsBeacon";
 import { SectionRenderer } from "./SectionRenderer";
 import { WebsiteHeader } from "./WebsiteHeader";
 import { WebsiteFooter } from "./WebsiteFooter";
+import { PublicPromoBar } from "./PublicPromoBar";
 
 // Shared render body for both app/page/[siteSlug]/page.tsx (Home) and
 // app/page/[siteSlug]/[pageSlug]/page.tsx (everything else) — same
 // backend payload shape, same rendering, only the fetch call differs.
 export function WebsitePageView({ site, page }: { site: WebsiteBuilderSite; page: WebsiteBuilderPage }) {
   const pageUrlSlug = page.is_home ? "home" : page.slug;
+
+  // A leading promo_bar renders above the sticky header (the pattern
+  // most ecommerce sites use — the bar scrolls away, the nav stays
+  // pinned) instead of inline with the rest of the sections. Only the
+  // FIRST section qualifies — a promo_bar anywhere else in the list
+  // renders normally, in place, via SectionRenderer's regular dispatch.
+  const leadingPromoBar = page.sections[0]?.type === "promo_bar" ? page.sections[0] : null;
+  const bodySections = leadingPromoBar ? page.sections.slice(1) : page.sections;
 
   const itemJsonLd = page.sections
     .filter((s) => s.type === "kis_content")
@@ -30,9 +39,10 @@ export function WebsitePageView({ site, page }: { site: WebsiteBuilderSite; page
         <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdSafeStringify(block) }} />
       ))}
       <AnalyticsBeacon siteSlug={site.slug} pageSlug={pageUrlSlug} />
+      {leadingPromoBar ? <PublicPromoBar data={leadingPromoBar.data || {}} /> : null}
       <WebsiteHeader site={site} currentSlug={pageUrlSlug} />
       <main className="wb-page">
-        {page.sections.map((section) => (
+        {bodySections.map((section) => (
           <SectionRenderer key={section.id} section={section} siteSlug={site.slug} pageSlug={pageUrlSlug} />
         ))}
       </main>
