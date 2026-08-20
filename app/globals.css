@@ -2137,10 +2137,16 @@ textarea { resize: vertical; }
 .wb-kis-content-card-actions .wb-open-in-app { width: auto; margin: 0; flex: 0 0 auto; }
 .wb-kis-content-card-actions .wb-buy { padding: 0; margin: 0; flex: 0 0 auto; }
 @media (max-width: 560px) {
-  .wb-kis-content-card--list { flex-direction: column; }
-  .wb-kis-content-card-media img { width: 100%; aspect-ratio: 4 / 3; }
-  .wb-kis-content-card-body { align-items: stretch; padding: 1rem 1.1rem; }
-  .wb-kis-content-card-actions { flex-direction: column; align-items: stretch; }
+  /* Stays a compact row (image beside text) rather than stacking to a
+     tall column — stacking turned a short list into a long, heavy
+     scroll on phones, which read worse than the original layout it
+     was meant to fix. */
+  .wb-kis-content-card-media img { width: 6rem; aspect-ratio: 1 / 1; }
+  .wb-kis-content-card-body { padding: .85rem 1rem; gap: .25rem; }
+  .wb-kis-content-card-body h3 { font-size: .98rem; }
+  .wb-kis-content-card-body p { font-size: .85rem; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+  .wb-kis-content-card-actions { margin-top: .6rem; gap: .5rem; }
+  .wb-kis-content-card-actions .wb-button { padding: .5rem 1rem; font-size: .85rem; }
 }
 
 /* Product/service/course cards — real card treatment: border, radius,
