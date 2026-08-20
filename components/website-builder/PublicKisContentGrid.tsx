@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { BuyButton } from "./BuyButton";
+import { OpenInApp } from "./OpenInApp";
 import type { WebsiteBuilderKisContentItem } from "@/lib/website-builder-api";
 
 type Props = {
@@ -47,6 +48,7 @@ export function PublicKisContentGrid({ items: initialItems, hasMore: initialHasM
             <h3>{item.title}</h3>
             {item.description && <p>{item.description}</p>}
             {item.price_display && <p className="wb-price">{item.price_display}</p>}
+            <OpenInApp deepLink={item.deep_link} />
             <BuyButton targetType={targetType} item={item} shopId={item.shop_id} />
           </div>
         ))}
