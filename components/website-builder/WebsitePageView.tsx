@@ -6,6 +6,8 @@ import { SectionRenderer } from "./SectionRenderer";
 import { WebsiteHeader } from "./WebsiteHeader";
 import { WebsiteFooter } from "./WebsiteFooter";
 import { PublicPromoBar } from "./PublicPromoBar";
+import { CartProvider } from "./PublicCartProvider";
+import { PublicCartDrawer } from "./PublicCartDrawer";
 
 // Shared render body for both app/page/[siteSlug]/page.tsx (Home) and
 // app/page/[siteSlug]/[pageSlug]/page.tsx (everything else) — same
@@ -32,7 +34,9 @@ export function WebsitePageView({ site, page }: { site: WebsiteBuilderSite; page
     })
     .filter((block): block is Record<string, unknown> => block !== null);
 
-  return (
+  const isShop = site.owner_type === "shop";
+
+  const body = (
     <div className="wb-site" style={websiteBrandingStyle(site.branding)}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdSafeStringify(buildOrganizationJsonLd(site)) }} />
       {itemJsonLd.map((block, i) => (
@@ -47,6 +51,9 @@ export function WebsitePageView({ site, page }: { site: WebsiteBuilderSite; page
         ))}
       </main>
       <WebsiteFooter site={site} />
+      {isShop ? <PublicCartDrawer /> : null}
     </div>
   );
+
+  return isShop ? <CartProvider shopId={site.owner_id}>{body}</CartProvider> : body;
 }

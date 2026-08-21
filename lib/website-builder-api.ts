@@ -82,6 +82,9 @@ export type WebsiteBuilderSite = {
   slug: string;
   name: string;
   owner_type: string;
+  /** Only present/needed for owner_type=="shop" sites — scopes cart
+   * operations (see PublicCartProvider.tsx). */
+  owner_id: string;
   branding: Record<string, unknown>;
   seo: WebsiteBuilderSeo;
   canonical_url: string;

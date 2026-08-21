@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { BuyButton } from "./BuyButton";
 import { OpenInApp } from "./OpenInApp";
+import { PublicAddToCartButton } from "./PublicAddToCartButton";
 import type { WebsiteBuilderKisContentItem } from "@/lib/website-builder-api";
 
 type Props = {
@@ -82,6 +83,7 @@ export function PublicKisContentGrid({
         {item.price_display && <p className="wb-price">{item.price_display}</p>}
         <OpenInApp deepLink={item.deep_link} />
         <BuyButton targetType={targetType} item={item} shopId={item.shop_id} />
+        {targetType === "product" ? <PublicAddToCartButton productId={item.id} /> : null}
       </div>
     );
   });
@@ -106,6 +108,7 @@ export function PublicKisContentGrid({
           <div className="wb-kis-content-card-actions">
             <OpenInApp deepLink={item.deep_link} />
             <BuyButton targetType={targetType} item={item} shopId={item.shop_id} />
+            {targetType === "product" ? <PublicAddToCartButton productId={item.id} /> : null}
           </div>
         </div>
       </div>

@@ -9,6 +9,9 @@ import { OpenInApp } from "./OpenInApp";
 import { PublicProductGallery } from "./PublicProductGallery";
 import { PublicVariantSwatches } from "./PublicVariantSwatches";
 import { PublicStickyBuyBar } from "./PublicStickyBuyBar";
+import { CartProvider } from "./PublicCartProvider";
+import { PublicCartDrawer } from "./PublicCartDrawer";
+import { PublicAddToCartButton } from "./PublicAddToCartButton";
 
 const TARGET_TYPE_LABEL: Record<string, string> = {
   product: "Product",
@@ -28,7 +31,9 @@ export function WebsiteItemDetailView({
   const gallery = [item.image_url, ...(item.gallery || [])].filter(Boolean);
   const jsonLd = targetType === "product" ? buildProductJsonLd(item, site.canonical_url) : targetType === "course" ? buildCourseJsonLd(item, site.name) : null;
 
-  return (
+  const isShop = site.owner_type === "shop";
+
+  const body = (
     <div className="wb-site" style={websiteBrandingStyle(site.branding)}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdSafeStringify(buildOrganizationJsonLd(site)) }} />
       {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdSafeStringify(jsonLd) }} />}
@@ -68,6 +73,7 @@ export function WebsiteItemDetailView({
             )}
             <div className="wb-item-detail-actions">
               <BuyButton targetType={targetType} item={item} shopId={item.shop_id} />
+              {targetType === "product" ? <PublicAddToCartButton productId={item.id} /> : null}
               <OpenInApp deepLink={item.deep_link} />
             </div>
             <PublicStickyBuyBar targetType={targetType} item={item} shopId={item.shop_id} priceDisplay={item.price_display} />
@@ -75,6 +81,9 @@ export function WebsiteItemDetailView({
         </div>
       </main>
       <WebsiteFooter site={site} />
+      {isShop ? <PublicCartDrawer /> : null}
     </div>
   );
+
+  return isShop ? <CartProvider shopId={site.owner_id}>{body}</CartProvider> : body;
 }

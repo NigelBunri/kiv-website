@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { WebsiteBuilderSite } from "@/lib/website-builder-api";
 import { UserMenu } from "@/components/UserMenu";
+import { PublicCartIcon } from "./PublicCartIcon";
 
 // Every website-builder site gets this header — previously WebsitePageView
 // only rendered a bare, unstyled page-switcher <nav> and only when a site
@@ -124,6 +125,7 @@ export function WebsiteHeader({ site, currentSlug }: { site: WebsiteBuilderSite;
       )}
 
       <div className="wb-site-header-tools">
+        {site.owner_type === "shop" ? <PublicCartIcon /> : null}
         <UserMenu />
         <Link href="/download" className="wb-site-header-download">Get the app</Link>
         {hasPages && (
