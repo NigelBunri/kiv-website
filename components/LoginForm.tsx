@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { CountrySelect } from "./CountrySelect";
 
 type Step = "phone" | "code";
 
@@ -99,6 +100,10 @@ export function LoginForm() {
   return (
     <form className="public-form" onSubmit={requestCode} noValidate>
       <p className="form-note">Sign in with the KIS account you already use in the app — no new account needed.</p>
+      <label htmlFor="login-country">
+        Country
+        <CountrySelect id="login-country" value={country} onChange={setCountry} />
+      </label>
       <label>
         Phone number
         <input
@@ -110,16 +115,6 @@ export function LoginForm() {
           onChange={(e) => setPhone(e.target.value)}
           required
           autoFocus
-        />
-      </label>
-      <label>
-        Country
-        <input
-          name="country"
-          maxLength={2}
-          value={country}
-          onChange={(e) => setCountry(e.target.value.toUpperCase())}
-          placeholder="CM"
         />
       </label>
       <button className="button primary" type="submit" disabled={pending || !phone}>

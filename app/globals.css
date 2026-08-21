@@ -1410,7 +1410,7 @@ h3 { font-size: 1.3rem; }
   font-weight: 700;
   font-size: .94rem;
 }
-input, textarea {
+input, textarea, select {
   width: 100%;
   border: 1px solid #d8c79b;
   border-radius: var(--radius-sm);
@@ -1419,13 +1419,51 @@ input, textarea {
   background: var(--paper);
   color: var(--ink);
 }
-input:focus-visible, textarea:focus-visible { border-color: var(--focus); }
-input, textarea { transition: border-color var(--fast) var(--ease), box-shadow var(--fast) var(--ease), background-color var(--fast) var(--ease); }
-input:focus-visible, textarea:focus-visible {
+input:focus-visible, textarea:focus-visible, select:focus-visible { border-color: var(--focus); }
+input, textarea, select { transition: border-color var(--fast) var(--ease), box-shadow var(--fast) var(--ease), background-color var(--fast) var(--ease); }
+input:focus-visible, textarea:focus-visible, select:focus-visible {
   background: #fff;
   box-shadow: 0 0 0 4px rgba(28, 80, 168, .12);
 }
 textarea { resize: vertical; }
+
+/* Registration/login phone + password UI (RegisterForm.tsx/LoginForm.tsx) */
+.phone-input-row { display: flex; gap: .5rem; align-items: center; }
+.phone-dial-code {
+  flex-shrink: 0;
+  padding: .75rem .7rem;
+  border: 1px solid #d8c79b;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.password-checklist {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  padding: 0;
+  margin: -.4rem 0 0;
+  font-size: .82rem;
+  color: var(--ink-soft);
+}
+.password-checklist li::before { content: "○ "; }
+.password-checklist li.met { color: var(--success); font-weight: 700; }
+.password-checklist li.met::before { content: "✓ "; }
+.auth-tabs { max-width: 44rem; }
+.auth-tabs-switch { display: flex; gap: .5rem; margin-bottom: 1rem; }
+.auth-tabs-switch button {
+  flex: 1;
+  padding: .75rem 1rem;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-weight: 700;
+  cursor: pointer;
+}
+.auth-tabs-switch button.active { background: var(--ink); color: #fff; border-color: var(--ink); }
 .check-row {
   display: flex;
   align-items: flex-start;
