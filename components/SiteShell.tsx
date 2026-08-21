@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { nav, products, site, utilityRoutes } from "@/lib/site";
 import { UserMenu } from "./UserMenu";
+import { ScrollableTabNav, type TabNavItem } from "./ScrollableTabNav";
 
 function isActiveNavLink(pathname: string | null, href: string) {
   return pathname === href || pathname?.startsWith(`${href}/`) === true;
@@ -58,10 +59,23 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   const toggleRef = useRef<HTMLButtonElement>(null);
   useDismissableMenu(menuOpen, () => setMenuOpen(false), navRef, toggleRef);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previous; };
+  }, [menuOpen]);
+
   const [actionsOpen, setActionsOpen] = useState(false);
   const actionsRef = useRef<HTMLDivElement>(null);
   const actionsToggleRef = useRef<HTMLButtonElement>(null);
   useDismissableMenu(actionsOpen, () => setActionsOpen(false), actionsRef, actionsToggleRef);
+
+  const navItems: TabNavItem[] = nav.map((item) => ({
+    href: item.href,
+    label: item.label,
+    active: isActiveNavLink(pathname, item.href),
+  }));
 
   return (
     <>
@@ -79,7 +93,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           ref={toggleRef}
           className="menu-toggle"
           aria-expanded={menuOpen}
-          aria-controls="primary-navigation"
+          aria-controls="primary-navigation-mobile"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           onClick={() => setMenuOpen((open) => !open)}
         >
@@ -87,23 +101,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           <span className="menu-toggle-bar" />
           <span className="menu-toggle-bar" />
         </button>
-        <nav
-          id="primary-navigation"
-          ref={navRef}
-          className={menuOpen ? "primary-nav is-open" : "primary-nav"}
-          aria-label="Primary navigation"
-        >
-          {nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              aria-current={isActiveNavLink(pathname, item.href) ? "page" : undefined}
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <ScrollableTabNav items={navItems} ariaLabel="Primary navigation" trackClassName="primary-nav" />
         <div className="header-actions" aria-label="Primary actions">
           <button
             type="button"
@@ -130,6 +128,50 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <UserMenu />
           </div>
         </div>
+
+        {/* Mobile slide-in panel — .header-actions is display:none below the
+            collapse breakpoint (see globals.css), so "View KIS" / "Check
+            availability" / sign-in would otherwise be unreachable on
+            mobile; they're merged into this same panel as the page links
+            instead of living in a second, separate mobile menu. */}
+        <div
+          className={menuOpen ? "primary-nav-scrim primary-nav-scrim--open" : "primary-nav-scrim"}
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+        <nav
+          id="primary-navigation-mobile"
+          ref={navRef}
+          className={menuOpen ? "primary-nav-mobile primary-nav-mobile--open" : "primary-nav-mobile"}
+          aria-label="Primary navigation"
+        >
+          <button
+            type="button"
+            className="primary-nav-mobile-close"
+            onClick={() => setMenuOpen(false)}
+            aria-label="Close menu"
+          >
+            ✕
+          </button>
+          {nav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-current={isActiveNavLink(pathname, item.href) ? "page" : undefined}
+              onClick={() => setMenuOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <div className="primary-nav-mobile-divider" role="separator" />
+          <Link className="header-button header-button--gold" href="/products/kis" onClick={() => setMenuOpen(false)}>
+            View KIS <span aria-hidden="true">→</span>
+          </Link>
+          <Link className="header-button header-button--light" href="/download" onClick={() => setMenuOpen(false)}>
+            Check availability
+          </Link>
+          <UserMenu />
+        </nav>
       </header>
       <main id="main">{children}</main>
       <footer className="site-footer">

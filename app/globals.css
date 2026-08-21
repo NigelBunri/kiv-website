@@ -211,7 +211,8 @@ body::before {
   transition: transform var(--base) var(--ease), box-shadow var(--base) var(--ease);
 }
 .brand:hover .brand-mark { transform: translateY(-1px); box-shadow: var(--shadow-md); }
-.brand strong, .brand small { display: block; }
+.brand-text { min-width: 0; overflow: hidden; }
+.brand strong, .brand small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .brand strong { font-weight: 800; letter-spacing: -.005em; }
 .brand small { color: var(--ink-faint); font-size: .9rem; font-weight: 500; }
 
@@ -290,6 +291,53 @@ body::before {
   font-weight: 800;
   background: var(--cream-2);
 }
+
+/* Shared scrollable tab strip (ScrollableTabNav.tsx) — used for both the
+   main site's nav (trackClassName="primary-nav", 7 links) and the
+   storefront's page nav (trackClassName="wb-site-nav wb-site-nav--desktop").
+   Compound selectors (.scroll-tab-track.primary-nav /
+   .scroll-tab-track.wb-site-nav--desktop) so these structural overrides win
+   regardless of where each consumer's own link-styling rules sit in the
+   file — specificity decides it, not source order. */
+.scroll-tab-nav { position: relative; display: flex; align-items: center; min-width: 0; }
+.scroll-tab-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  cursor: grab;
+  touch-action: pan-x;
+}
+.scroll-tab-track:active { cursor: grabbing; }
+.scroll-tab-track::-webkit-scrollbar { display: none; }
+.scroll-tab-track > a,
+.scroll-tab-track > .scroll-tab-item { scroll-snap-align: start; flex-shrink: 0; white-space: nowrap; }
+.scroll-tab-track.primary-nav { flex-wrap: nowrap; max-width: min(44rem, 100%); }
+.scroll-tab-track.wb-site-nav--desktop { max-width: min(38rem, 100%); }
+.scroll-tab-track.has-fade-left { mask-image: linear-gradient(90deg, transparent 0, #000 2.2rem, #000 100%); }
+.scroll-tab-track.has-fade-right { mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 2.2rem), transparent 100%); }
+.scroll-tab-track.has-fade-left.has-fade-right {
+  mask-image: linear-gradient(90deg, transparent 0, #000 2.2rem, #000 calc(100% - 2.2rem), transparent 100%);
+}
+.scroll-tab-arrow {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft, #e9dcc0);
+  background: var(--surface, #fff);
+  color: var(--ink, #1c170f);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: var(--shadow-sm, 0 4px 12px rgba(40, 29, 11, .1));
+}
+.scroll-tab-arrow--left { margin-right: .3rem; }
+.scroll-tab-arrow--right { margin-left: .3rem; }
+.scroll-tab-arrow:hover { background: var(--cream-2, #f8efdb); }
 .header-actions {
   position: relative;
   display: inline-flex;
@@ -346,6 +394,13 @@ body::before {
 }
 .header-actions-menu.is-open { opacity: 1; transform: translateY(0); pointer-events: auto; }
 .header-actions-menu .header-button { width: 100%; }
+
+/* Mobile slide-in nav panel (SiteShell.tsx) — hidden entirely above the
+   980px collapse breakpoint; see the @media block below for its actual
+   open/closed positioning. Mirrors .wb-site-nav--mobile in the storefront
+   header (components/website-builder/WebsiteHeader.tsx). */
+.primary-nav-scrim { display: none; }
+.primary-nav-mobile { display: none; }
 
 /* ---------- Layout primitives ---------- */
 main { overflow: hidden; }
@@ -1525,28 +1580,92 @@ textarea { resize: vertical; }
      + tagline hidden), and the inline nav is replaced by a hamburger button
      that opens a dropdown panel — see components/SiteShell.tsx for the
      open/close state and the .is-open class it toggles. */
-  .brand-text { display: none; }
+  /* Progressive truncation, not an abrupt hide — the tagline goes first
+     (least essential), then the name itself ellipsizes tighter at each
+     smaller breakpoint below, and only disappears completely at the
+     380px breakpoint (mirrors .wb-site-brand-name's truncation scale in
+     the storefront header, just carried one step further since the main
+     site's brand has no tap-to-reveal tooltip). */
+  .brand-text { max-width: 11rem; }
+  .brand small { display: none; }
   .brand { min-width: 0; }
   .site-header { border-radius: 0; }
   .header-actions { display: none; }
   .menu-toggle { display: flex; }
-  .primary-nav {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    align-items: stretch;
-    gap: .3rem;
-    padding: .75rem clamp(1.25rem, 4vw, 3.5rem) 1.25rem;
-    background: var(--paper);
-    border-bottom: 1px solid var(--line-soft);
-    box-shadow: var(--shadow-md);
+  /* Desktop scrollable tab row is replaced entirely by the slide-in
+     .primary-nav-mobile panel below this breakpoint (mirrors
+     .wb-site-nav--desktop / .wb-site-nav--mobile in the storefront
+     header). Hiding just the inner .primary-nav track isn't enough: with
+     .site-header's justify-content:space-between, the now-empty outer
+     .scroll-tab-nav wrapper still claims the last flex slot, which pushes
+     the hamburger button (the item before it) into the middle of the
+     header instead of flush right. :has() (not the generic
+     .scroll-tab-nav class) scopes this to the primary-nav instance only —
+     the storefront's own .scroll-tab-nav (WebsiteHeader.tsx) sits inside
+     a margin-left:auto container and isn't affected by this at all. */
+  .scroll-tab-nav:has(.primary-nav) { display: none; }
+  .primary-nav { display: none; }
+
+  .primary-nav-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    background: rgba(20, 15, 6, .38);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 280ms var(--ease, ease);
   }
-  .primary-nav.is-open { display: flex; }
-  .primary-nav a { padding: .9rem 1rem; font-size: 1rem; }
-  .primary-nav a::after { display: none; }
+  .primary-nav-scrim--open { opacity: 1; pointer-events: auto; }
+
+  .primary-nav-mobile {
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: 0;
+    /* height (not top:0;bottom:0) so the panel reliably spans the full
+       screen even where a fixed element's bottom edge can misjudge the
+       viewport while mobile browser chrome (the address bar) is
+       animating in/out — 100dvh already accounts for that; 100vh is
+       just the fallback for browsers without dvh support. */
+    height: 100vh;
+    height: 100dvh;
+    z-index: 50;
+    width: min(80vw, 22rem);
+    flex-direction: column;
+    gap: .3rem;
+    padding: 6.5rem 1.25rem 2rem;
+    background: var(--paper);
+    box-shadow: -20px 0 50px rgba(20, 15, 6, .18);
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(.22, 1, .36, 1);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .primary-nav-mobile--open { transform: translateX(0); }
+  /* The panel's own z-index (50) sits above the header (10), so the
+     hamburger button that opened it is covered and can't be tapped again
+     to close — this button is the reachable way to close it instead of
+     only the backdrop tap. */
+  .primary-nav-mobile-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 999px;
+    border: 1px solid var(--line-soft);
+    background: var(--surface, #fff);
+    color: var(--ink);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .primary-nav-mobile-close:hover { background: var(--cream-2); }
+  .primary-nav-mobile a { padding: .9rem 1rem; font-size: 1rem; border-radius: .8rem; }
+  .primary-nav-mobile a:hover { background: var(--cream-2); }
+  .primary-nav-mobile-divider { height: 1px; margin: .5rem .25rem; background: var(--line-soft); flex-shrink: 0; }
+  .primary-nav-mobile .header-button { width: 100%; text-align: center; }
   .hero, .hero--visual, .availability-panel, .site-footer, .image-story, .image-story--reverse { grid-template-columns: 1fr; }
   .home-hero {
     min-height: auto;
@@ -1593,6 +1712,7 @@ textarea { resize: vertical; }
   .footer-nav-groups { grid-template-columns: 1fr; }
   .site-header { padding: .75rem 1rem; }
   .brand-mark { width: 3rem; height: 3rem; }
+  .brand-text { max-width: 6.5rem; }
   .home-hero { padding-top: 2.5rem; }
   .home-hero-actions { gap: .8rem; }
   .home-button { width: 100%; min-width: 0; }
@@ -1754,6 +1874,7 @@ textarea { resize: vertical; }
 }
 @media (max-width: 380px) {
   .wb-site-brand-name { max-width: 5.5rem; }
+  .brand-text { display: none; }
 }
 
 /* Desktop nav — a sliding pill indicator behind the active/hovered link
@@ -1791,25 +1912,26 @@ textarea { resize: vertical; }
 .wb-site-nav--desktop a[aria-current="page"]::after { transform: scaleX(1); }
 
 /* Mega-menu flyout — appears under a nav item on hover/focus when that
-   page has a description or preview image set (WebsiteHeader.tsx). */
+   page has a description or preview image set (WebsiteHeader.tsx). Fixed
+   positioning + JS-computed coordinates (not a plain absolute child of
+   .wb-site-nav-item) because the desktop nav now lives inside
+   ScrollableTabNav's horizontally-scrolling track: any element with
+   overflow-x:auto forces overflow-y to auto too (per spec, "visible"
+   can't be paired with a scrolling axis on the same box), which would
+   otherwise clip this dropdown before it ever became visible. Fixed
+   position escapes that ancestor's overflow entirely. */
 .wb-site-nav-item { position: relative; }
-.wb-site-nav-flyout {
-  position: absolute;
-  top: 100%;
-  left: 50%;
+.wb-site-nav-flyout--fixed {
+  position: fixed;
   transform: translate(-50%, .5rem);
   z-index: 60;
   width: 20rem;
   padding-top: .75rem;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 180ms var(--ease, ease), transform 180ms var(--ease, ease);
+  animation: wb-flyout-in 140ms var(--ease, ease);
 }
-.wb-site-nav-item:hover .wb-site-nav-flyout,
-.wb-site-nav-item:focus-within .wb-site-nav-flyout {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translate(-50%, 0);
+@keyframes wb-flyout-in {
+  from { opacity: 0; transform: translate(-50%, 0); }
+  to { opacity: 1; transform: translate(-50%, .5rem); }
 }
 .wb-site-nav-flyout-card {
   display: flex;
@@ -1913,7 +2035,8 @@ textarea { resize: vertical; }
     position: fixed;
     top: 0;
     right: 0;
-    bottom: 0;
+    height: 100vh;
+    height: 100dvh;
     z-index: 50;
     width: min(80vw, 22rem);
     flex-direction: column;
@@ -1932,6 +2055,24 @@ textarea { resize: vertical; }
     -webkit-overflow-scrolling: touch;
   }
   .wb-site-nav--mobile.wb-site-nav--open { transform: translateX(0); }
+
+  /* Same reasoning as .primary-nav-mobile-close: the panel's z-index (50)
+     covers the .wb-site-nav-toggle button that opened it, so it can't be
+     tapped again to close — this is the reachable close affordance. */
+  .wb-site-nav-mobile-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 999px;
+    border: 1px solid var(--line-soft, #f1e7cf);
+    background: var(--surface, #fff);
+    color: var(--ink, #1c170f);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .wb-site-nav-mobile-close:hover { background: var(--cream-2, #f8efdb); }
 
   .wb-site-nav--mobile a {
     padding: .95rem 1rem;
