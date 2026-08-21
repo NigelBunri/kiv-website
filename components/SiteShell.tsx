@@ -10,34 +10,35 @@ function isActiveNavLink(pathname: string | null, href: string) {
   return pathname === href || pathname?.startsWith(`${href}/`) === true;
 }
 
-export function SiteShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const navRef = useRef<HTMLElement>(null);
-  const toggleRef = useRef<HTMLButtonElement>(null);
-
-  // Escape key and click-outside both close the dropdown — standard
-  // expectations for any menu that overlays page content.
+// Escape key and click-outside both close a dropdown — standard
+// expectations for any menu that overlays page content. Shared by both
+// the primary nav toggle and the header actions menu below.
+function useDismissableMenu(
+  isOpen: boolean,
+  close: () => void,
+  panelRef: React.RefObject<HTMLElement | null>,
+  toggleRef: React.RefObject<HTMLButtonElement | null>,
+) {
   useEffect(() => {
-    if (!menuOpen) return;
+    if (!isOpen) return;
 
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setMenuOpen(false);
+      if (event.key === "Escape") close();
     }
     function onPointerDown(event: MouseEvent) {
       const target = event.target as Node;
-      // The toggle button itself must be excluded here, not just the nav —
+      // The toggle button itself must be excluded here, not just the panel —
       // mousedown fires (and bubbles to this document listener) BEFORE the
       // button's own onClick. Without this check, clicking the button to
       // close an open menu would: (1) this handler sees the button as
-      // "outside the nav" and closes it, then (2) the button's own onClick
+      // "outside the panel" and closes it, then (2) the button's own onClick
       // fires next and toggles the now-closed state back open — so the
       // button appeared to only ever open the menu, never close it.
       if (
-        navRef.current && !navRef.current.contains(target) &&
+        panelRef.current && !panelRef.current.contains(target) &&
         toggleRef.current && !toggleRef.current.contains(target)
       ) {
-        setMenuOpen(false);
+        close();
       }
     }
 
@@ -47,7 +48,20 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       document.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("mousedown", onPointerDown);
     };
-  }, [menuOpen]);
+  }, [isOpen, close, panelRef, toggleRef]);
+}
+
+export function SiteShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  useDismissableMenu(menuOpen, () => setMenuOpen(false), navRef, toggleRef);
+
+  const [actionsOpen, setActionsOpen] = useState(false);
+  const actionsRef = useRef<HTMLDivElement>(null);
+  const actionsToggleRef = useRef<HTMLButtonElement>(null);
+  useDismissableMenu(actionsOpen, () => setActionsOpen(false), actionsRef, actionsToggleRef);
 
   return (
     <>
@@ -91,9 +105,30 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
         <div className="header-actions" aria-label="Primary actions">
-          <Link className="header-button header-button--gold" href="/products/kis">View KIS <span aria-hidden="true">→</span></Link>
-          <Link className="header-button header-button--light" href="/download">Check availability</Link>
-          <UserMenu />
+          <button
+            type="button"
+            ref={actionsToggleRef}
+            className="header-button header-button--gold header-actions-toggle"
+            aria-expanded={actionsOpen}
+            aria-controls="header-actions-menu"
+            aria-haspopup="true"
+            onClick={() => setActionsOpen((open) => !open)}
+          >
+            Get Started <span aria-hidden="true">{actionsOpen ? "▲" : "▼"}</span>
+          </button>
+          <div
+            id="header-actions-menu"
+            ref={actionsRef}
+            className={actionsOpen ? "header-actions-menu is-open" : "header-actions-menu"}
+          >
+            <Link className="header-button header-button--gold" href="/products/kis" onClick={() => setActionsOpen(false)}>
+              View KIS <span aria-hidden="true">→</span>
+            </Link>
+            <Link className="header-button header-button--light" href="/download" onClick={() => setActionsOpen(false)}>
+              Check availability
+            </Link>
+            <UserMenu />
+          </div>
         </div>
       </header>
       <main id="main">{children}</main>
