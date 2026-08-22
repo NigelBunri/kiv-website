@@ -98,7 +98,14 @@ export function ScrollableTabNav({ items, ariaLabel, trackClassName }: Props) {
     const state = dragState.current;
     if (!el || !state?.dragging) return;
     const delta = event.clientX - state.startX;
-    if (Math.abs(delta) > 3) state.moved = true;
+    // A real click's mousedown-to-mouseup rarely lands at the exact same
+    // pixel — trackpads and high-DPI mice routinely report a few px of
+    // incidental movement even when the user meant a plain click. 3px was
+    // tight enough that ordinary clicks were misread as drags, which
+    // suppressed their navigation via onClickCapture below and made every
+    // tab in this nav effectively unclickable. 10px matches common
+    // click-vs-drag slop thresholds (e.g. Android's touch slop).
+    if (Math.abs(delta) > 10) state.moved = true;
     el.scrollLeft = state.startScrollLeft - delta;
   }
   function onPointerUp(event: React.PointerEvent<HTMLDivElement>) {

@@ -121,6 +121,9 @@ export function LoginForm() {
         {pending ? "Sending code…" : "Send code"}
       </button>
       {error ? <div className="form-status" role="status" aria-live="polite">{error}</div> : null}
+      <p className="form-note">
+        Have a pairing code from the app instead? <a href={`/pair?next=${encodeURIComponent(next)}`}>Use it here</a>.
+      </p>
     </form>
   );
 }
