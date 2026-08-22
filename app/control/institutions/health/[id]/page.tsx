@@ -2,11 +2,15 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import PartnerConnectPanel from "../../../PartnerConnectPanel";
+import HealthInstitutionWorkspace from "./HealthInstitutionWorkspace";
 
 type Institution = {
   id: string;
   name: string;
   institution_type: string;
+  timezone: string;
+  is_active: boolean;
+  can_manage: boolean;
   partner_id?: string | null;
   partner_name?: string | null;
 };
@@ -34,19 +38,24 @@ export default async function HealthInstitutionDetailPage({ params }: { params: 
   const allPartners: Partner[] = Array.isArray(partnersData?.results) ? partnersData.results : Array.isArray(partnersData) ? partnersData : [];
   const manageablePartners = allPartners.filter((partner) => partner.can_manage);
 
+  let services: { id: string; name: string; description?: string; is_active: boolean; base_cost_micro: number }[] = [];
+  if (institution.can_manage) {
+    const servicesRes = await fetch(`${kisApiBase()}/api/v1/health-ops/institutions/${encodeURIComponent(id)}/services/`, {
+      headers, cache: "no-store", signal: AbortSignal.timeout(15_000),
+    });
+    const servicesData = servicesRes.ok ? await servicesRes.json() : {};
+    services = Array.isArray(servicesData?.results) ? servicesData.results : [];
+  }
+
   return (
     <>
       <div className="control-header">
         <h1>{institution.name}</h1>
         <p>Health institution — {institution.institution_type}</p>
       </div>
-      <section className="control-section">
-        <h2>Institution details</h2>
-        <p className="control-note">
-          Editing name/type from the control panel isn&rsquo;t available yet — use the KIS app for
-          now. Connecting a partner organization works here.
-        </p>
-      </section>
+      {institution.can_manage ? (
+        <HealthInstitutionWorkspace initialInstitution={institution} initialServices={services} />
+      ) : null}
       <PartnerConnectPanel
         partnerApiPath={`/api/control/institutions/health/${institution.id}/partner`}
         initialPartnerId={institution.partner_id || null}
