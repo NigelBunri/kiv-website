@@ -1,0 +1,17 @@
+import { NextRequest } from "next/server";
+import { proxyToDjango } from "@/lib/controlProxy";
+
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string; courseId: string }> }) {
+  const { id, courseId } = await params;
+  return proxyToDjango(request, `/api/v1/broadcasts/education/institutions/${encodeURIComponent(id)}/courses/${encodeURIComponent(courseId)}/`, { method: "GET" });
+}
+
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string; courseId: string }> }) {
+  const { id, courseId } = await params;
+  return proxyToDjango(request, `/api/v1/broadcasts/education/institutions/${encodeURIComponent(id)}/courses/${encodeURIComponent(courseId)}/`, { method: "PATCH" });
+}
+
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string; courseId: string }> }) {
+  const { id, courseId } = await params;
+  return proxyToDjango(request, `/api/v1/broadcasts/education/institutions/${encodeURIComponent(id)}/courses/${encodeURIComponent(courseId)}/`, { method: "DELETE" });
+}

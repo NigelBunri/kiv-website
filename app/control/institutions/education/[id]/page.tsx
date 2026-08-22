@@ -46,7 +46,18 @@ export default async function EducationInstitutionDetailPage({ params }: { param
         <p>Education institution</p>
       </div>
       {canEdit ? (
-        <EducationInstitutionEditForm institutionId={institution.id} initialName={institution.name} initialDescription={institution.description || ""} />
+        <>
+          <EducationInstitutionEditForm institutionId={institution.id} initialName={institution.name} initialDescription={institution.description || ""} />
+          <section className="control-section">
+            <h2>Curriculum</h2>
+            <p>Create and manage courses, modules, lessons, and materials — including video uploads.</p>
+            <div className="control-actions">
+              <a href={`/control/institutions/education/${institution.id}/courses`} className="button primary">Manage courses</a>
+              <a href={`/control/institutions/education/${institution.id}/materials`} className="button">Manage materials</a>
+              <a href={`/control/institutions/education/${institution.id}/lessons`} className="button">Manage lessons</a>
+            </div>
+          </section>
+        </>
       ) : null}
       <PartnerConnectPanel
         partnerApiPath={`/api/control/institutions/education/${institution.id}/partner`}
