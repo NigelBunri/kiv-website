@@ -40,8 +40,14 @@ export function UserMenu() {
   }
 
   return (
-    <button type="button" className="header-button header-button--light" onClick={signOut} disabled={signingOut}>
-      {signingOut ? "Signing out…" : "Sign out"}
-    </button>
+    <>
+      {/* Always shown once signed in — /control itself shows an upgrade
+          message for tiers below Business Pro, so this link doesn't need
+          to know the viewer's tier just to decide whether to render. */}
+      <a className="header-button header-button--light" href="/control">Control panel</a>
+      <button type="button" className="header-button header-button--light" onClick={signOut} disabled={signingOut}>
+        {signingOut ? "Signing out…" : "Sign out"}
+      </button>
+    </>
   );
 }

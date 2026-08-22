@@ -2789,3 +2789,155 @@ textarea { resize: vertical; }
   .wb-item-detail-layout { grid-template-columns: 1fr; }
   .wb-item-detail-media { position: static; }
 }
+
+/* ---------- Control panel (Business Pro / Partner / Partner Pro + GO admin) ---------- */
+.control-shell {
+  display: grid;
+  grid-template-columns: 16rem 1fr;
+  min-height: 100vh;
+  background: var(--cream);
+}
+@media (max-width: 860px) {
+  .control-shell { grid-template-columns: 1fr; }
+}
+.control-sidebar {
+  border-right: 1px solid var(--line);
+  background: var(--paper);
+  padding: 1.75rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+@media (max-width: 860px) {
+  .control-sidebar { border-right: none; border-bottom: 1px solid var(--line); }
+}
+.control-sidebar-header {
+  display: grid;
+  gap: .2rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.control-sidebar-header strong { font-size: 1.05rem; color: var(--ink); }
+.control-tier-badge {
+  justify-self: start;
+  margin-top: .3rem;
+  padding: .2rem .6rem;
+  border-radius: var(--radius-full);
+  background: var(--gold-soft);
+  color: var(--gold-strong);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+.control-nav { display: flex; flex-direction: column; gap: .15rem; }
+.control-nav-heading {
+  margin: 1rem 0 .2rem;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.control-nav-link {
+  padding: .55rem .7rem;
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: .92rem;
+  transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.control-nav-link:hover { background: var(--cream-2); color: var(--ink); }
+.control-nav-link--active { background: var(--gold-soft); color: var(--gold-strong); }
+.control-content {
+  padding: 2rem clamp(1.25rem, 4vw, 3rem);
+  max-width: 64rem;
+}
+.control-header { display: grid; gap: .35rem; margin-bottom: 1.75rem; }
+.control-header h1 { margin: 0; font-size: 1.6rem; }
+.control-header p { margin: 0; color: var(--ink-soft); }
+.control-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+.control-stat-card {
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.control-stat-card span { display: block; font-size: .78rem; color: var(--ink-faint); font-weight: 600; }
+.control-stat-card strong { display: block; margin-top: .3rem; font-size: 1.5rem; color: var(--ink); }
+.control-section {
+  margin-bottom: 1.75rem;
+  padding: 1.5rem;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.control-section h2 { margin: 0 0 .25rem; font-size: 1.1rem; }
+.control-section > p:first-of-type { margin-top: 0; color: var(--ink-soft); }
+.control-list { display: grid; gap: .6rem; margin-top: 1rem; }
+.control-list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .85rem 1rem;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--fast) var(--ease), background var(--fast) var(--ease);
+}
+a.control-list-row:hover { border-color: var(--gold-soft); background: var(--cream-2); }
+.control-list-row-title { font-weight: 700; color: var(--ink); }
+.control-list-row-meta { font-size: .82rem; color: var(--ink-faint); margin-top: .15rem; }
+.control-badge {
+  padding: .2rem .55rem;
+  border-radius: var(--radius-full);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .03em;
+  white-space: nowrap;
+}
+.control-badge--active { background: rgba(31, 110, 70, .12); color: var(--success); }
+.control-badge--pending { background: var(--gold-soft); color: var(--gold-strong); }
+.control-badge--inactive { background: rgba(154, 51, 36, .1); color: var(--danger); }
+.control-empty { padding: 1.5rem; text-align: center; color: var(--ink-faint); }
+.control-form { display: grid; gap: 1rem; max-width: 32rem; }
+.control-form label { display: grid; gap: .35rem; font-size: .85rem; font-weight: 700; color: var(--ink); }
+.control-form input, .control-form textarea, .control-form select {
+  padding: .6rem .75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  background: var(--paper);
+  color: var(--ink);
+}
+.control-form input:focus, .control-form textarea:focus, .control-form select:focus {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+.control-actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: .5rem; }
+.control-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: .88rem; }
+.control-table th {
+  text-align: left;
+  padding: .6rem .75rem;
+  border-bottom: 2px solid var(--line);
+  color: var(--ink-faint);
+  font-size: .74rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.control-table td { padding: .65rem .75rem; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
+.control-table tr:hover td { background: var(--cream-2); }
+.control-note { font-size: .82rem; color: var(--ink-faint); margin-top: .5rem; }
+.control-error { color: var(--danger); font-size: .85rem; margin-top: .5rem; }
+.control-success { color: var(--success); font-size: .85rem; margin-top: .5rem; }
