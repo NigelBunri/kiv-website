@@ -4,7 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useControlProfile } from "./ControlContext";
 
-const NAV_ITEMS = [{ href: "/control", label: "Dashboard" }, { href: "/control/partner", label: "Partner organization" }];
+const NAV_ITEMS = [
+  { href: "/control", label: "Dashboard" },
+  { href: "/control/partner", label: "Partner organization" },
+  { href: "/control/channel", label: "Broadcast channel" },
+];
 
 const ADMIN_NAV_ITEMS = [
   { href: "/control/admin", label: "Overview" },
