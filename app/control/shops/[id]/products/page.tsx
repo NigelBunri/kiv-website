@@ -11,6 +11,7 @@ type Product = {
   sale_price?: string | number | null;
   stock_qty?: number;
   is_active: boolean;
+  image_url?: string;
 };
 
 export default async function ProductsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -55,6 +56,10 @@ export default async function ProductsPage({ params }: { params: Promise<{ id: s
           <div className="control-list">
             {products.map((p) => (
               <a key={p.id} href={`/control/shops/${id}/products/${p.id}`} className="control-list-row">
+                {p.image_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={p.image_url} alt={p.name} style={{ width: "56px", height: "56px", objectFit: "cover", borderRadius: "8px" }} />
+                ) : null}
                 <div>
                   <div className="control-list-row-title">{p.name}</div>
                   <div className="control-list-row-meta">

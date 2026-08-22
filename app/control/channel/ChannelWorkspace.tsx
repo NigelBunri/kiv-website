@@ -126,7 +126,15 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
           <label>Display name<input value={channel.display_name} onChange={(e) => setChannel({ ...channel, display_name: e.target.value })} required /></label>
           <label>Description<textarea rows={3} value={channel.description || ""} onChange={(e) => setChannel({ ...channel, description: e.target.value })} /></label>
           <label>Avatar URL<input type="url" value={channel.avatar_url || ""} onChange={(e) => setChannel({ ...channel, avatar_url: e.target.value })} placeholder="https://…" /></label>
+          {channel.avatar_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={channel.avatar_url} alt="Channel avatar" style={{ width: "72px", height: "72px", borderRadius: "50%", objectFit: "cover" }} />
+          ) : null}
           <label>Banner URL<input type="url" value={channel.banner_url || ""} onChange={(e) => setChannel({ ...channel, banner_url: e.target.value })} placeholder="https://…" /></label>
+          {channel.banner_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={channel.banner_url} alt="Channel banner" style={{ width: "100%", maxWidth: "480px", maxHeight: "160px", objectFit: "cover", borderRadius: "8px" }} />
+          ) : null}
           <div className="control-actions">
             <button type="submit" className="button primary" disabled={saving}>{saving ? "Saving…" : "Save changes"}</button>
           </div>

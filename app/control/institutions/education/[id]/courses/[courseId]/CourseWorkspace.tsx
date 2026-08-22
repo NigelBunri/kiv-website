@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import MediaPreview from "@/app/control/MediaPreview";
 
 type Course = {
   id: string;
@@ -36,7 +37,7 @@ type Module = {
 };
 
 type Lesson = { id: string; title: string; status: string };
-type Material = { id: string; title: string; kind: string; status: string };
+type Material = { id: string; title: string; kind: string; status: string; safe_resource_url?: string };
 
 const MATERIAL_KIND_OPTIONS = [
   { value: "video", label: "Video" },
@@ -339,6 +340,7 @@ export default function CourseWorkspace({
                   <div className="control-list-row-title">{m.title}</div>
                   <div className="control-list-row-meta">{m.kind}</div>
                 </div>
+                <MediaPreview kind={m.kind} url={m.safe_resource_url} title={m.title} />
               </div>
             ))}
           </div>

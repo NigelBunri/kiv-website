@@ -2,8 +2,9 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import MaterialCreateForm from "./MaterialCreateForm";
+import MediaPreview from "@/app/control/MediaPreview";
 
-type Material = { id: string; title: string; kind: string; status: string };
+type Material = { id: string; title: string; kind: string; status: string; safe_resource_url?: string };
 type Course = { id: string; title: string };
 
 export default async function MaterialsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -44,6 +45,7 @@ export default async function MaterialsPage({ params }: { params: Promise<{ id: 
                   <div className="control-list-row-title">{m.title}</div>
                   <div className="control-list-row-meta">{m.kind}</div>
                 </div>
+                <MediaPreview kind={m.kind} url={m.safe_resource_url} title={m.title} />
                 <span className={`control-badge control-badge--${m.status === "published" ? "active" : m.status === "archived" ? "inactive" : "pending"}`}>{m.status}</span>
               </div>
             ))}

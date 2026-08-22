@@ -32,6 +32,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           sale_price: product.sale_price != null ? String(product.sale_price) : "",
           stock_qty: product.stock_qty ?? 0,
           is_active: Boolean(product.is_active),
+          image_url: product.image_url || "",
         }}
       />
     </>
