@@ -48,6 +48,14 @@ export default async function ShopDetailPage({ params }: { params: Promise<{ id:
         <p>Shop</p>
       </div>
       <ShopEditForm shopId={shop.id} initialName={shop.name} initialDescription={shop.description || ""} />
+      <section className="control-section">
+        <h2>Marketplace</h2>
+        <p>Manage products and incoming orders for this shop.</p>
+        <div className="control-actions">
+          <a href={`/control/shops/${shop.id}/products`} className="button primary">Manage products</a>
+          <a href={`/control/shops/${shop.id}/orders`} className="button">View orders</a>
+        </div>
+      </section>
       <PartnerConnectPanel
         partnerApiPath={`/api/control/shops/${shop.id}/partner`}
         initialPartnerId={shop.partner_id || null}
