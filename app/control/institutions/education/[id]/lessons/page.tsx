@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
@@ -43,10 +44,10 @@ export default async function LessonsPage({ params }: { params: Promise<{ id: st
         ) : (
           <div className="control-list">
             {lessons.map((l) => (
-              <div key={l.id} className="control-list-row">
+              <Link key={l.id} href={`/control/institutions/education/${id}/lessons/${l.id}`} className="control-list-row">
                 <div className="control-list-row-title">{l.title}</div>
                 <span className={`control-badge control-badge--${l.status === "published" ? "active" : l.status === "archived" ? "inactive" : "pending"}`}>{l.status}</span>
-              </div>
+              </Link>
             ))}
           </div>
         )}

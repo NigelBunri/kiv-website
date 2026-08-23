@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
@@ -42,7 +43,7 @@ export default async function MaterialsPage({ params }: { params: Promise<{ id: 
             {materials.map((m) => (
               <div key={m.id} className="control-list-row">
                 <div>
-                  <div className="control-list-row-title">{m.title}</div>
+                  <Link href={`/control/institutions/education/${id}/materials/${m.id}`} className="control-list-row-title">{m.title}</Link>
                   <div className="control-list-row-meta">{m.kind}</div>
                 </div>
                 <MediaPreview kind={m.kind} url={m.safe_resource_url} title={m.title} />

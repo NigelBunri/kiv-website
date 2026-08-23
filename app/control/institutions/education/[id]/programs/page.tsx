@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
@@ -35,13 +36,13 @@ export default async function ProgramsPage({ params }: { params: Promise<{ id: s
         ) : (
           <div className="control-list">
             {programs.map((program) => (
-              <div key={program.id} className="control-list-row">
+              <Link key={program.id} href={`/control/institutions/education/${id}/programs/${program.id}`} className="control-list-row">
                 <div>
                   <div className="control-list-row-title">{program.title}</div>
                   <div className="control-list-row-meta">{program.code}</div>
                 </div>
                 <span className={`control-badge control-badge--${program.status === "published" ? "active" : program.status === "archived" ? "inactive" : "pending"}`}>{program.status}</span>
-              </div>
+              </Link>
             ))}
           </div>
         )}

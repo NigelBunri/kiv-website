@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
@@ -35,13 +36,13 @@ export default async function EventsPage({ params }: { params: Promise<{ id: str
         ) : (
           <div className="control-list">
             {events.map((e) => (
-              <div key={e.id} className="control-list-row">
+              <Link key={e.id} href={`/control/institutions/education/${id}/events/${e.id}`} className="control-list-row">
                 <div>
                   <div className="control-list-row-title">{e.title}</div>
                   <div className="control-list-row-meta">{new Date(e.starts_at).toLocaleString()}</div>
                 </div>
                 <span className={`control-badge control-badge--${e.status === "published" ? "active" : e.status === "archived" ? "inactive" : "pending"}`}>{e.status}</span>
-              </div>
+              </Link>
             ))}
           </div>
         )}
