@@ -46,6 +46,8 @@ export default async function PartnerProfilePage() {
         <a href="/control/partner/roles" className="button">Roles &amp; permissions</a>
         <a href="/control/partner/reports" className="button">Reports</a>
         <a href="/control/partner/verification" className="button">Verification</a>
+        <a href="/control/partner/settings" className="button">Settings</a>
+        <a href="/control/partner/policy" className="button">Enterprise policy</a>
       </div>
       <OrganizationProfileForm partnerId={manageable.id} initialProfile={profile} />
     </>

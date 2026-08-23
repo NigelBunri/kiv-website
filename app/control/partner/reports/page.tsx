@@ -60,6 +60,8 @@ export default async function PartnerReportsPage() {
         <a href="/control/partner/profile" className="button">Organization profile</a>
         <a href="/control/partner/roles" className="button">Roles &amp; permissions</a>
         <a href="/control/partner/verification" className="button">Verification</a>
+        <a href="/control/partner/settings" className="button">Settings</a>
+        <a href="/control/partner/policy" className="button">Enterprise policy</a>
       </div>
 
       {!summary ? (

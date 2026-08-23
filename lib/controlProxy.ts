@@ -13,14 +13,14 @@ import { authHeaders, getValidSession, kisApiBase, setSessionCookie } from "@/li
 export async function proxyToDjango(
   request: NextRequest,
   djangoPath: string,
-  options: { method?: "GET" | "POST" | "PATCH" | "DELETE"; forwardBody?: boolean } = {},
+  options: { method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE"; forwardBody?: boolean } = {},
 ): Promise<NextResponse> {
   const auth = await getValidSession();
   if (!auth) {
     return NextResponse.json({ success: false, message: "Not signed in.", requiresLogin: true }, { status: 401 });
   }
   const { session, refreshed } = auth;
-  const method = options.method || (request.method as "GET" | "POST" | "PATCH" | "DELETE");
+  const method = options.method || (request.method as "GET" | "POST" | "PATCH" | "PUT" | "DELETE");
   const shouldForwardBody = options.forwardBody ?? (method !== "GET" && method !== "DELETE");
   let body: string | undefined;
   if (shouldForwardBody) {

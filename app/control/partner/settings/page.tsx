@@ -1,10 +1,10 @@
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
-import InvitesManager, { type InviteEntry } from "./InvitesManager";
+import SettingsCatalog, { type CatalogSection } from "./SettingsCatalog";
 
 type PartnerListRow = { id: string; name: string; can_manage: boolean };
 
-export default async function PartnerInvitesPage() {
+export default async function PartnerSettingsPage() {
   const result = await fetchControlProfile();
   if (!result) return null;
   const { session } = result;
@@ -19,37 +19,38 @@ export default async function PartnerInvitesPage() {
     return (
       <>
         <div className="control-header">
-          <h1>Invites</h1>
+          <h1>Settings</h1>
         </div>
         <div className="control-empty">
-          You don&rsquo;t manage a partner organization yet. Create or join one from the KIS app to manage invites here.
+          You don&rsquo;t manage a partner organization yet. Create or join one from the KIS app to manage its settings here.
         </div>
       </>
     );
   }
 
-  const invitesRes = await fetch(`${kisApiBase()}/api/v1/partners/${manageable.id}/invites/`, {
+  const catalogRes = await fetch(`${kisApiBase()}/api/v1/partners/${manageable.id}/settings-catalog/`, {
     headers, cache: "no-store", signal: AbortSignal.timeout(15_000),
   });
-  const invites: InviteEntry[] = invitesRes.ok ? await invitesRes.json() : [];
+  const catalogData = catalogRes.ok ? await catalogRes.json() : {};
+  const sections: CatalogSection[] = Array.isArray(catalogData?.sections) ? catalogData.sections : [];
 
   return (
     <>
       <div className="control-header">
-        <h1>{manageable.name} — Invites</h1>
-        <p>Create invite codes and share them with people to join your partner organization. Codes are redeemed in the KIS app.</p>
+        <h1>{manageable.name} — Settings</h1>
+        <p>Turn features on or off for your organization.</p>
       </div>
       <div className="control-actions">
         <a href="/control/partner" className="button">Organization overview</a>
         <a href="/control/partner/team" className="button">Team</a>
+        <a href="/control/partner/invites" className="button">Invites</a>
         <a href="/control/partner/profile" className="button">Organization profile</a>
         <a href="/control/partner/roles" className="button">Roles &amp; permissions</a>
         <a href="/control/partner/reports" className="button">Reports</a>
         <a href="/control/partner/verification" className="button">Verification</a>
-        <a href="/control/partner/settings" className="button">Settings</a>
         <a href="/control/partner/policy" className="button">Enterprise policy</a>
       </div>
-      <InvitesManager partnerId={manageable.id} initialInvites={Array.isArray(invites) ? invites : []} />
+      <SettingsCatalog partnerId={manageable.id} initialSections={sections} />
     </>
   );
 }
