@@ -51,6 +51,11 @@ export default async function PartnerOrganizationPage() {
         <p>Partner organization</p>
       </div>
 
+      <div className="control-actions">
+        <a href="/control/partner/team" className="button primary">Team</a>
+        <a href="/control/partner/invites" className="button">Invites</a>
+      </div>
+
       {detail.description ? (
         <section className="control-section">
           <h2>About</h2>
