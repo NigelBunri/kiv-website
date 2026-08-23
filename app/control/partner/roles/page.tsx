@@ -51,6 +51,7 @@ export default async function PartnerRolesPage() {
         <a href="/control/partner/invites" className="button">Invites</a>
         <a href="/control/partner/profile" className="button">Organization profile</a>
         <a href="/control/partner/reports" className="button">Reports</a>
+        <a href="/control/partner/verification" className="button">Verification</a>
       </div>
       <RolesManager
         partnerId={manageable.id}

@@ -59,6 +59,7 @@ export default async function PartnerReportsPage() {
         <a href="/control/partner/invites" className="button">Invites</a>
         <a href="/control/partner/profile" className="button">Organization profile</a>
         <a href="/control/partner/roles" className="button">Roles &amp; permissions</a>
+        <a href="/control/partner/verification" className="button">Verification</a>
       </div>
 
       {!summary ? (

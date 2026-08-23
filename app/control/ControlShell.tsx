@@ -18,6 +18,7 @@ const ADMIN_NAV_ITEMS = [
   { href: "/control/admin/moderation", label: "Moderation" },
   { href: "/control/admin/audit", label: "Audit trail" },
   { href: "/control/admin/security", label: "Suspicious activity" },
+  { href: "/control/admin/verification", label: "Verification queue" },
 ];
 
 export default function ControlShell({ children }: { children: React.ReactNode }) {
