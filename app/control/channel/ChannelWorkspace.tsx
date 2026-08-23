@@ -9,6 +9,12 @@ type Channel = {
   description?: string;
   avatar_url?: string;
   banner_url?: string;
+  // Server-computed — see apps/broadcasts/serializers.py's
+  // _resolve_channel_avatar. The avatar shown anywhere in the app/website
+  // always comes from these, never the raw avatar_url above.
+  avatar_kind?: "logo" | "photo" | "initials";
+  avatar_display_url?: string;
+  avatar_initials?: string;
 };
 
 type Content = {
@@ -42,7 +48,7 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
       const res = await fetch(`/api/control/channel/${channel.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ display_name: channel.display_name, description: channel.description, avatar_url: channel.avatar_url, banner_url: channel.banner_url }),
+        body: JSON.stringify({ display_name: channel.display_name, description: channel.description, banner_url: channel.banner_url }),
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.message || "Unable to save changes.");
@@ -125,11 +131,24 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
         <form className="control-form" onSubmit={saveBranding}>
           <label>Display name<input value={channel.display_name} onChange={(e) => setChannel({ ...channel, display_name: e.target.value })} required /></label>
           <label>Description<textarea rows={3} value={channel.description || ""} onChange={(e) => setChannel({ ...channel, description: e.target.value })} /></label>
-          <label>Avatar URL<input type="url" value={channel.avatar_url || ""} onChange={(e) => setChannel({ ...channel, avatar_url: e.target.value })} placeholder="https://…" /></label>
-          {channel.avatar_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={channel.avatar_url} alt="Channel avatar" style={{ width: "72px", height: "72px", borderRadius: "50%", objectFit: "cover" }} />
-          ) : null}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            {channel.avatar_kind === "photo" && channel.avatar_display_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={channel.avatar_display_url} alt="Channel avatar" style={{ width: "56px", height: "56px", borderRadius: "50%", objectFit: "cover" }} />
+            ) : channel.avatar_kind === "logo" && channel.avatar_display_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={channel.avatar_display_url} alt="KIS" style={{ width: "56px", height: "56px", borderRadius: "50%", objectFit: "contain" }} />
+            ) : (
+              <div style={{ width: "56px", height: "56px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--gold, #caa24a)", color: "#111", fontWeight: 800 }}>
+                {channel.avatar_initials || "KC"}
+              </div>
+            )}
+            <p className="control-note" style={{ margin: 0 }}>
+              Your channel&rsquo;s avatar is automatic — your own profile photo (or initials if you haven&rsquo;t set
+              one), an institution&rsquo;s logo for an org-owned channel, or the official KIS mark if this is GO&rsquo;s
+              own channel. There&rsquo;s nothing to upload here.
+            </p>
+          </div>
           <label>Banner URL<input type="url" value={channel.banner_url || ""} onChange={(e) => setChannel({ ...channel, banner_url: e.target.value })} placeholder="https://…" /></label>
           {channel.banner_url ? (
             // eslint-disable-next-line @next/next/no-img-element

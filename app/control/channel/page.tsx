@@ -10,6 +10,9 @@ type Channel = {
   description?: string;
   avatar_url?: string;
   banner_url?: string;
+  avatar_kind?: "logo" | "photo" | "initials";
+  avatar_display_url?: string;
+  avatar_initials?: string;
   subscriber_count?: number;
 };
 
