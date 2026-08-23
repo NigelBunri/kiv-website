@@ -75,6 +75,8 @@ export default async function EducationInstitutionDetailPage({ params }: { param
               <a href={`/control/institutions/education/${institution.id}/materials`} className="button">Manage materials</a>
               <a href={`/control/institutions/education/${institution.id}/lessons`} className="button">Manage lessons</a>
               <a href={`/control/institutions/education/${institution.id}/enrollments`} className="button">Enrollment requests</a>
+              <a href={`/control/institutions/education/${institution.id}/staff`} className="button">Manage staff</a>
+              <a href={`/control/institutions/education/${institution.id}/bookings`} className="button">Manage bookings</a>
             </div>
           </section>
           <PayoutAccountConnectPanel
