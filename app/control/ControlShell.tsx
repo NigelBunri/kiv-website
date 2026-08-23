@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { href: "/control", label: "Dashboard" },
   { href: "/control/partner", label: "Partner organization" },
   { href: "/control/channel", label: "Broadcast channel" },
+  { href: "/control/billing", label: "Billing" },
 ];
 
 const ADMIN_NAV_ITEMS = [
@@ -15,6 +16,8 @@ const ADMIN_NAV_ITEMS = [
   { href: "/control/admin/users", label: "Users" },
   { href: "/control/admin/partners", label: "Partners" },
   { href: "/control/admin/moderation", label: "Moderation" },
+  { href: "/control/admin/audit", label: "Audit trail" },
+  { href: "/control/admin/security", label: "Suspicious activity" },
 ];
 
 export default function ControlShell({ children }: { children: React.ReactNode }) {

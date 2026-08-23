@@ -45,7 +45,7 @@ export default async function ChannelPage() {
   // No status filter — the channel manager (this user) sees both draft and
   // published content by default; Django only restricts to published for
   // non-managers.
-  const [contentsRes, detailRes] = await Promise.all([
+  const [contentsRes, detailRes, analyticsRes] = await Promise.all([
     fetch(`${kisApiBase()}/api/v1/broadcasts/channels/${encodeURIComponent(channel.id)}/contents/`, {
       headers, cache: "no-store", signal: AbortSignal.timeout(15_000),
     }),
@@ -55,10 +55,15 @@ export default async function ChannelPage() {
     fetch(`${kisApiBase()}/api/v1/broadcasts/channels/${encodeURIComponent(channel.id)}/`, {
       headers, cache: "no-store", signal: AbortSignal.timeout(15_000),
     }),
+    fetch(`${kisApiBase()}/api/v1/broadcasts/channels/${encodeURIComponent(channel.id)}/analytics/`, {
+      headers, cache: "no-store", signal: AbortSignal.timeout(15_000),
+    }),
   ]);
   const contentsData = contentsRes.ok ? await contentsRes.json() : {};
   const contents = Array.isArray(contentsData?.results) ? contentsData.results : [];
   const detail: Channel = detailRes.ok ? await detailRes.json() : channel;
+  const analyticsData = analyticsRes.ok ? await analyticsRes.json() : {};
+  const analyticsSummary: Record<string, number> = analyticsData?.summary || {};
 
   return (
     <>
@@ -66,6 +71,18 @@ export default async function ChannelPage() {
         <h1>{channel.display_name}</h1>
         <p>@{channel.handle} · {channel.subscriber_count || 0} subscribers</p>
       </div>
+      {Object.keys(analyticsSummary).length > 0 ? (
+        <section className="control-section">
+          <h2>Analytics</h2>
+          <div className="control-stat-grid">
+            <div className="control-stat-card"><span>Views</span><strong>{analyticsSummary.views ?? 0}</strong></div>
+            <div className="control-stat-card"><span>Unique viewers</span><strong>{analyticsSummary.unique_viewers ?? 0}</strong></div>
+            <div className="control-stat-card"><span>Published posts</span><strong>{analyticsSummary.published_count ?? 0}</strong></div>
+            <div className="control-stat-card"><span>Reactions</span><strong>{analyticsSummary.reactions ?? 0}</strong></div>
+            <div className="control-stat-card"><span>Comments</span><strong>{analyticsSummary.comments ?? 0}</strong></div>
+          </div>
+        </section>
+      ) : null}
       <ChannelWorkspace channel={{ ...channel, ...detail }} initialContents={contents} />
     </>
   );
