@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 type Membership = {
   id: string;
@@ -132,7 +133,13 @@ export default function StaffWorkspace({ institutionId, initialMemberships }: { 
             {memberships.map((member) => (
               <div key={member.id} className="control-list-row">
                 <div>
-                  <div className="control-list-row-title">{member.display_name || member.phone || member.email || "Member"}</div>
+                  <div className="control-list-row-title">
+                    {member.role === "student" && member.status === "active" ? (
+                      <Link href={`/control/institutions/education/${institutionId}/staff/${member.id}`}>{member.display_name || member.phone || member.email || "Member"}</Link>
+                    ) : (
+                      member.display_name || member.phone || member.email || "Member"
+                    )}
+                  </div>
                   <div className="control-list-row-meta">{member.title ? `${member.title} · ` : ""}{member.role} · {member.status}</div>
                 </div>
                 {member.role === "owner" ? (
