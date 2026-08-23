@@ -62,10 +62,11 @@ export default async function HealthInstitutionDetailPage({ params }: { params: 
       ) : null}
       {institution.can_manage ? (
         <section className="control-section">
-          <h2>Staff</h2>
-          <p>Add staff members and manage their roles.</p>
+          <h2>Staff &amp; scheduling</h2>
+          <p>Add staff members, assign roles, and configure booking availability.</p>
           <div className="control-actions">
             <a href={`/control/institutions/health/${institution.id}/staff`} className="button primary">Manage staff</a>
+            <a href={`/control/institutions/health/${institution.id}/availability`} className="button">Manage availability</a>
           </div>
         </section>
       ) : null}
