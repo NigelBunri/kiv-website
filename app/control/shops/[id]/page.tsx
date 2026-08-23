@@ -57,6 +57,7 @@ export default async function ShopDetailPage({ params }: { params: Promise<{ id:
         <div className="control-actions">
           <a href={`/control/shops/${shop.id}/products`} className="button primary">Manage products</a>
           <a href={`/control/shops/${shop.id}/services`} className="button">Manage services</a>
+          <a href={`/control/shops/${shop.id}/members`} className="button">Manage team</a>
           <a href={`/control/shops/${shop.id}/orders`} className="button">View orders</a>
         </div>
       </section>
