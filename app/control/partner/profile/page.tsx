@@ -1,10 +1,10 @@
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
-import InvitesManager, { type InviteEntry } from "./InvitesManager";
+import OrganizationProfileForm, { type OrganizationProfile } from "./OrganizationProfileForm";
 
 type PartnerListRow = { id: string; name: string; can_manage: boolean };
 
-export default async function PartnerInvitesPage() {
+export default async function PartnerProfilePage() {
   const result = await fetchControlProfile();
   if (!result) return null;
   const { session } = result;
@@ -19,34 +19,34 @@ export default async function PartnerInvitesPage() {
     return (
       <>
         <div className="control-header">
-          <h1>Invites</h1>
+          <h1>Organization profile</h1>
         </div>
         <div className="control-empty">
-          You don&rsquo;t manage a partner organization yet. Create or join one from the KIS app to manage invites here.
+          You don&rsquo;t manage a partner organization yet. Create or join one from the KIS app to edit its profile here.
         </div>
       </>
     );
   }
 
-  const invitesRes = await fetch(`${kisApiBase()}/api/v1/partners/${manageable.id}/invites/`, {
+  const profileRes = await fetch(`${kisApiBase()}/api/v1/partners/${manageable.id}/organization-profile/`, {
     headers, cache: "no-store", signal: AbortSignal.timeout(15_000),
   });
-  const invites: InviteEntry[] = invitesRes.ok ? await invitesRes.json() : [];
+  const profile: OrganizationProfile = profileRes.ok ? await profileRes.json() : { display_name: manageable.name };
 
   return (
     <>
       <div className="control-header">
-        <h1>{manageable.name} — Invites</h1>
-        <p>Create invite codes and share them with people to join your partner organization. Codes are redeemed in the KIS app.</p>
+        <h1>{manageable.name} — Organization profile</h1>
+        <p>Public details about your organization — mission, contact info, and branding.</p>
       </div>
       <div className="control-actions">
         <a href="/control/partner" className="button">Organization overview</a>
         <a href="/control/partner/team" className="button">Team</a>
-        <a href="/control/partner/profile" className="button">Organization profile</a>
+        <a href="/control/partner/invites" className="button">Invites</a>
         <a href="/control/partner/roles" className="button">Roles &amp; permissions</a>
         <a href="/control/partner/reports" className="button">Reports</a>
       </div>
-      <InvitesManager partnerId={manageable.id} initialInvites={Array.isArray(invites) ? invites : []} />
+      <OrganizationProfileForm partnerId={manageable.id} initialProfile={profile} />
     </>
   );
 }

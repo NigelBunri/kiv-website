@@ -1,16 +1,9 @@
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
+import OrganizationLinksPanel, { type OrganizationLink } from "./OrganizationLinksPanel";
 
 type PartnerListRow = { id: string; name: string; avatar_url?: string; can_manage: boolean };
 type PartnerDetail = { id: string; name: string; description?: string; avatar_url?: string };
-type OrganizationLink = { id: string; owner_type: string; owner_id: string; name: string; exists: boolean };
-
-const OWNER_TYPE_LABELS: Record<string, string> = {
-  shop: "Shop",
-  health_institution: "Health institution",
-  education_institution: "Education institution",
-  broadcast_channel: "Broadcast channel",
-};
 
 export default async function PartnerOrganizationPage() {
   const result = await fetchControlProfile();
@@ -54,6 +47,9 @@ export default async function PartnerOrganizationPage() {
       <div className="control-actions">
         <a href="/control/partner/team" className="button primary">Team</a>
         <a href="/control/partner/invites" className="button">Invites</a>
+        <a href="/control/partner/profile" className="button">Organization profile</a>
+        <a href="/control/partner/roles" className="button">Roles &amp; permissions</a>
+        <a href="/control/partner/reports" className="button">Reports</a>
       </div>
 
       {detail.description ? (
@@ -63,34 +59,7 @@ export default async function PartnerOrganizationPage() {
         </section>
       ) : null}
 
-      <section className="control-section">
-        <h2>Linked organizations</h2>
-        <p>
-          Shops, institutions, and channels this partner&rsquo;s owner has personally linked to
-          this profile. This is separate from delegated management — see each shop or
-          institution&rsquo;s own page for that.
-        </p>
-        {organizations.length === 0 ? (
-          <div className="control-empty">No organizations linked yet.</div>
-        ) : (
-          <table className="control-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              {organizations.map((link) => (
-                <tr key={link.id}>
-                  <td>{link.exists ? link.name : <em>No longer exists</em>}</td>
-                  <td>{OWNER_TYPE_LABELS[link.owner_type] || link.owner_type}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </section>
+      <OrganizationLinksPanel partnerId={manageable.id} initialOrganizations={organizations} />
     </>
   );
 }
