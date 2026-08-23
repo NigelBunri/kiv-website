@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import ServiceEditForm from "./ServiceEditForm";
+import { BackLink } from "@/app/control/BackLink";
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ id: string; serviceId: string }> }) {
   const { id, serviceId } = await params;
@@ -22,6 +23,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
   return (
     <>
+      <BackLink href={`/control/shops/${id}/services`} label="Back to services" />
       <div className="control-header">
         <h1>{service.name}</h1>
         <p>Service</p>

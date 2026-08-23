@@ -3,6 +3,7 @@ import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import AssessmentWorkspace from "./AssessmentWorkspace";
 import SubmissionsPanel from "./SubmissionsPanel";
+import { BackLink } from "@/app/control/BackLink";
 
 export default async function AssessmentDetailPage({ params }: { params: Promise<{ id: string; assessmentId: string }> }) {
   const { id, assessmentId } = await params;
@@ -20,6 +21,7 @@ export default async function AssessmentDetailPage({ params }: { params: Promise
 
   return (
     <>
+      <BackLink href={`/control/institutions/education/${id}/assessments`} label="Back to assessments" />
       <div className="control-header">
         <h1>{data?.assessment?.title || "Assessment"}</h1>
         <p>Manage this assessment&rsquo;s details, questions, and submissions.</p>

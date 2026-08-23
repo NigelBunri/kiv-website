@@ -3,6 +3,7 @@ import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import AccessRequestsList from "./AccessRequestsList";
 import EnrollmentsList from "./EnrollmentsList";
+import { BackLink } from "@/app/control/BackLink";
 
 type AccessRequest = {
   id: string;
@@ -37,6 +38,7 @@ export default async function EnrollmentsPage({ params }: { params: Promise<{ id
 
   return (
     <>
+      <BackLink href={`/control/institutions/education/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Enrollment requests</h1>
         <p>Approve or reject requests to join restricted courses, and manage existing enrollments.</p>

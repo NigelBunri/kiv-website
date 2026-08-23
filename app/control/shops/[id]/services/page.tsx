@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import ServiceCreateForm from "./ServiceCreateForm";
+import { BackLink } from "@/app/control/BackLink";
 
 type Service = {
   id: string;
@@ -44,6 +45,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ id: s
 
   return (
     <>
+      <BackLink href={`/control/shops/${id}`} label="Back to shop" />
       <div className="control-header">
         <h1>Services — {shop.name}</h1>
         <p>Create and manage bookable services for this shop.</p>

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import StaffWorkspace from "./StaffWorkspace";
+import { BackLink } from "@/app/control/BackLink";
 
 type BlobMember = {
   id: string;
@@ -61,6 +62,7 @@ export default async function HealthStaffPage({ params }: { params: Promise<{ id
 
   return (
     <>
+      <BackLink href={`/control/institutions/health/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Staff — {institution.name}</h1>
         <p>Add, remove, and assign roles for this institution&rsquo;s staff.</p>

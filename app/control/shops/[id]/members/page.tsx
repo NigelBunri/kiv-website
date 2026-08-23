@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import MembersWorkspace from "./MembersWorkspace";
+import { BackLink } from "@/app/control/BackLink";
 
 type Member = {
   id: string;
@@ -37,6 +38,7 @@ export default async function ShopMembersPage({ params }: { params: Promise<{ id
 
   return (
     <>
+      <BackLink href={`/control/shops/${id}`} label="Back to shop" />
       <div className="control-header">
         <h1>Team — {shop.name}</h1>
         <p>Add staff, assign roles, and manage who can help run this shop.</p>

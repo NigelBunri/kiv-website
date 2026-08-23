@@ -4,6 +4,7 @@ import { fetchControlProfile } from "@/lib/controlAuth";
 import EducationInstitutionEditForm from "./EducationInstitutionEditForm";
 import PartnerConnectPanel from "../../../PartnerConnectPanel";
 import PayoutAccountConnectPanel from "../../../PayoutAccountConnectPanel";
+import { BackLink } from "@/app/control/BackLink";
 
 type Institution = {
   id: string;
@@ -49,6 +50,7 @@ export default async function EducationInstitutionDetailPage({ params }: { param
 
   return (
     <>
+      <BackLink href="/control/institutions/education" label="All institutions" />
       <div className="control-header">
         <h1>{institution.name}</h1>
         <p>Education institution</p>

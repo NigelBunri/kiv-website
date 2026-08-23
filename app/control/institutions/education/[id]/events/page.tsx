@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import EventCreateForm from "./EventCreateForm";
+import { BackLink } from "@/app/control/BackLink";
 
 type EducationEvent = { id: string; title: string; starts_at: string; ends_at: string; status: string };
 
@@ -22,6 +23,7 @@ export default async function EventsPage({ params }: { params: Promise<{ id: str
 
   return (
     <>
+      <BackLink href={`/control/institutions/education/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Events</h1>
         <p>One-off events for your institution — open days, webinars, graduations.</p>

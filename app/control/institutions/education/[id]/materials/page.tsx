@@ -4,6 +4,7 @@ import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import MaterialCreateForm from "./MaterialCreateForm";
 import MediaPreview from "@/app/control/MediaPreview";
+import { BackLink } from "@/app/control/BackLink";
 
 type Material = { id: string; title: string; kind: string; status: string; safe_resource_url?: string };
 type Course = { id: string; title: string };
@@ -27,6 +28,7 @@ export default async function MaterialsPage({ params }: { params: Promise<{ id: 
 
   return (
     <>
+      <BackLink href={`/control/institutions/education/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Materials</h1>
         <p>Videos, documents, slides, and links — attach these to course modules from a course&rsquo;s page.</p>

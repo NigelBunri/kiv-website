@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import AvailabilityWorkspace from "./AvailabilityWorkspace";
+import { BackLink } from "@/app/control/BackLink";
 
 export default async function HealthAvailabilityPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -65,6 +66,7 @@ export default async function HealthAvailabilityPage({ params }: { params: Promi
 
   return (
     <>
+      <BackLink href={`/control/institutions/health/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Availability — {institution.name}</h1>
         <p>Set day-by-day booking status, time slots, and per-service scheduling.</p>

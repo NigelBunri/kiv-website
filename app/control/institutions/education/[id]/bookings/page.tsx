@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import BookingsList from "./BookingsList";
+import { BackLink } from "@/app/control/BackLink";
 
 type Booking = {
   id: string;
@@ -29,6 +30,7 @@ export default async function EducationBookingsPage({ params }: { params: Promis
 
   return (
     <>
+      <BackLink href={`/control/institutions/education/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Bookings</h1>
         <p>Paid seat reservations against your courses, class sessions, and events.</p>

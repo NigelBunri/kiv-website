@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import AssessmentCreateForm from "./AssessmentCreateForm";
+import { BackLink } from "@/app/control/BackLink";
 
 type Assessment = { id: string; title: string; assessment_type: string; status: string };
 
@@ -22,6 +23,7 @@ export default async function AssessmentsPage({ params }: { params: Promise<{ id
 
   return (
     <>
+      <BackLink href={`/control/institutions/education/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Assessments</h1>
         <p>Exams and quizzes — multiple choice, theory, or mixed.</p>

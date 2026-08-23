@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import ProgramWorkspace from "./ProgramWorkspace";
+import { BackLink } from "@/app/control/BackLink";
 
 export default async function ProgramDetailPage({ params }: { params: Promise<{ id: string; programId: string }> }) {
   const { id, programId } = await params;
@@ -19,6 +20,7 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
 
   return (
     <>
+      <BackLink href={`/control/institutions/education/${id}/programs`} label="Back to programs" />
       <div className="control-header">
         <h1>{data?.program?.title || "Program"}</h1>
         <p>Manage this program&rsquo;s details.</p>

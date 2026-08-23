@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import StaffWorkspace from "./StaffWorkspace";
+import { BackLink } from "@/app/control/BackLink";
 
 type Membership = {
   id: string;
@@ -30,6 +31,7 @@ export default async function EducationStaffPage({ params }: { params: Promise<{
 
   return (
     <>
+      <BackLink href={`/control/institutions/education/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Staff</h1>
         <p>Add staff, assign roles, and approve join requests.</p>

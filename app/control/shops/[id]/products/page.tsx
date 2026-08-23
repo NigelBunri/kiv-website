@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import ProductCreateForm from "./ProductCreateForm";
+import { BackLink } from "@/app/control/BackLink";
 
 type Product = {
   id: string;
@@ -44,6 +45,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ id: s
 
   return (
     <>
+      <BackLink href={`/control/shops/${id}`} label="Back to shop" />
       <div className="control-header">
         <h1>Products — {shop.name}</h1>
         <p>Create and manage this shop&rsquo;s marketplace listings.</p>

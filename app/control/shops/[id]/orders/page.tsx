@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import OrdersList from "./OrdersList";
+import { BackLink } from "@/app/control/BackLink";
 
 type Order = {
   id: string;
@@ -32,6 +33,7 @@ export default async function OrdersPage({ params }: { params: Promise<{ id: str
 
   return (
     <>
+      <BackLink href={`/control/shops/${id}`} label="Back to shop" />
       <div className="control-header">
         <h1>Orders — {shop.name}</h1>
         <p>Incoming marketplace orders for this shop.</p>

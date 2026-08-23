@@ -5,6 +5,7 @@ import ShopEditForm from "./ShopEditForm";
 import LandingPageForm from "./LandingPageForm";
 import PartnerConnectPanel from "../../PartnerConnectPanel";
 import PayoutAccountConnectPanel from "../../PayoutAccountConnectPanel";
+import { BackLink } from "@/app/control/BackLink";
 
 type ShopDetail = {
   id: string;
@@ -56,6 +57,7 @@ export default async function ShopDetailPage({ params }: { params: Promise<{ id:
 
   return (
     <>
+      <BackLink href="/control/shops" label="All shops" />
       <div className="control-header">
         <h1>{shop.name}</h1>
         <p>Shop</p>

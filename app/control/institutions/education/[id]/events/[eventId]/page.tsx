@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import EventWorkspace from "./EventWorkspace";
+import { BackLink } from "@/app/control/BackLink";
 
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string; eventId: string }> }) {
   const { id, eventId } = await params;
@@ -19,6 +20,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
   return (
     <>
+      <BackLink href={`/control/institutions/education/${id}/events`} label="Back to events" />
       <div className="control-header">
         <h1>{data?.event?.title || "Event"}</h1>
         <p>Manage this event&rsquo;s schedule and details.</p>

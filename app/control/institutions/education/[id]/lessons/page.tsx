@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import LessonCreateForm from "./LessonCreateForm";
+import { BackLink } from "@/app/control/BackLink";
 
 type Lesson = { id: string; title: string; status: string };
 type Course = { id: string; title: string };
@@ -26,6 +27,7 @@ export default async function LessonsPage({ params }: { params: Promise<{ id: st
 
   return (
     <>
+      <BackLink href={`/control/institutions/education/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Lessons</h1>
         <p>Text-based lesson content — attach these to course modules from a course&rsquo;s page.</p>

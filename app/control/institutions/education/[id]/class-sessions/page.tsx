@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import ClassSessionCreateForm from "./ClassSessionCreateForm";
+import { BackLink } from "@/app/control/BackLink";
 
 type ClassSession = { id: string; title: string; starts_at: string; ends_at: string; delivery_mode: string; status: string };
 
@@ -22,6 +23,7 @@ export default async function ClassSessionsPage({ params }: { params: Promise<{ 
 
   return (
     <>
+      <BackLink href={`/control/institutions/education/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Class sessions</h1>
         <p>Scheduled live/online class meetings.</p>

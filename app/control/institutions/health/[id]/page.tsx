@@ -4,6 +4,7 @@ import { fetchControlProfile } from "@/lib/controlAuth";
 import PartnerConnectPanel from "../../../PartnerConnectPanel";
 import PayoutAccountConnectPanel from "../../../PayoutAccountConnectPanel";
 import HealthInstitutionWorkspace from "./HealthInstitutionWorkspace";
+import { BackLink } from "@/app/control/BackLink";
 
 type Institution = {
   id: string;
@@ -53,6 +54,7 @@ export default async function HealthInstitutionDetailPage({ params }: { params: 
 
   return (
     <>
+      <BackLink href="/control/institutions/health" label="All institutions" />
       <div className="control-header">
         <h1>{institution.name}</h1>
         <p>Health institution — {institution.institution_type}</p>

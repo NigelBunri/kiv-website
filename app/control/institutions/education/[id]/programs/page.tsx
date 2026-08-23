@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import ProgramCreateForm from "./ProgramCreateForm";
+import { BackLink } from "@/app/control/BackLink";
 
 type Program = { id: string; title: string; code?: string; status: string };
 
@@ -22,6 +23,7 @@ export default async function ProgramsPage({ params }: { params: Promise<{ id: s
 
   return (
     <>
+      <BackLink href={`/control/institutions/education/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Programs</h1>
         <p>Group related courses together under a program.</p>

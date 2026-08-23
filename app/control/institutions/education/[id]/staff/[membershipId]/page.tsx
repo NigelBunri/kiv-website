@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
+import { BackLink } from "@/app/control/BackLink";
 
 type Submission = {
   id: string;
@@ -36,6 +37,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
 
   return (
     <>
+      <BackLink href={`/control/institutions/education/${id}/staff`} label="Back to staff" />
       <div className="control-header">
         <h1>{membership.display_name || "Student"}</h1>
         <p>{membership.phone || membership.email}</p>

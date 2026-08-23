@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import LessonWorkspace from "./LessonWorkspace";
+import { BackLink } from "@/app/control/BackLink";
 
 export default async function LessonDetailPage({ params }: { params: Promise<{ id: string; lessonId: string }> }) {
   const { id, lessonId } = await params;
@@ -21,6 +22,7 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
 
   return (
     <>
+      <BackLink href={`/control/institutions/education/${id}/lessons`} label="Back to lessons" />
       <div className="control-header">
         <h1>{data?.lesson?.title || "Lesson"}</h1>
         <p>Manage this lesson&rsquo;s content and settings.</p>
