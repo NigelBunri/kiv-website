@@ -49,6 +49,7 @@ export default async function PartnerSettingsPage() {
         <a href="/control/partner/reports" className="button">Reports</a>
         <a href="/control/partner/verification" className="button">Verification</a>
         <a href="/control/partner/policy" className="button">Enterprise policy</a>
+        <a href="/control/partner/access" className="button">Access governance</a>
       </div>
       <SettingsCatalog partnerId={manageable.id} initialSections={sections} />
     </>

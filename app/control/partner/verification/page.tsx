@@ -50,6 +50,7 @@ export default async function PartnerVerificationPage() {
         <a href="/control/partner/reports" className="button">Reports</a>
         <a href="/control/partner/settings" className="button">Settings</a>
         <a href="/control/partner/policy" className="button">Enterprise policy</a>
+        <a href="/control/partner/access" className="button">Access governance</a>
       </div>
       <VerificationPanel partnerId={manageable.id} initialStatus={initialStatus} />
     </>

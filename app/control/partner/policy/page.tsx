@@ -63,6 +63,7 @@ export default async function PartnerPolicyPage() {
         <a href="/control/partner/reports" className="button">Reports</a>
         <a href="/control/partner/verification" className="button">Verification</a>
         <a href="/control/partner/settings" className="button">Feature settings</a>
+        <a href="/control/partner/access" className="button">Access governance</a>
       </div>
       <PolicyEditor partnerId={manageable.id} initialSettings={settings} />
     </>
