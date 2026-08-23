@@ -68,20 +68,36 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
   // ---- New post ----
   const [postTitle, setPostTitle] = useState("");
   const [postText, setPostText] = useState("");
+  const [postFile, setPostFile] = useState<File | null>(null);
   const [creatingPost, setCreatingPost] = useState(false);
+  const [postProgress, setPostProgress] = useState("");
   async function createPost(event: React.FormEvent) {
     event.preventDefault();
     setCreatingPost(true);
     setMessage(null);
     try {
-      const data = await postJson(`/api/control/channel/${channel.id}/contents`, { title: postTitle, text_plain: postText });
+      const body: Record<string, unknown> = { title: postTitle, text_plain: postText };
+      if (postFile) {
+        setPostProgress("Uploading…");
+        const formData = new FormData();
+        formData.set("attachment", postFile, postFile.name);
+        const uploadRes = await fetch(`/api/control/channel/${channel.id}/attachment`, { method: "POST", body: formData });
+        const uploadData = await uploadRes.json();
+        if (!uploadData.success) throw new Error(uploadData.message || "Unable to upload file.");
+        const attachment = uploadData.data?.attachment;
+        setPostProgress("Publishing…");
+        body.content_type = attachment?.media_type || "image";
+        body.attachments = attachment ? [attachment] : [];
+      }
+      const data = await postJson(`/api/control/channel/${channel.id}/contents`, body);
       setContents((prev) => [data, ...prev]);
-      setPostTitle(""); setPostText("");
+      setPostTitle(""); setPostText(""); setPostFile(null);
       setMessage({ kind: "success", text: "Draft created — publish it below when ready." });
     } catch (error: unknown) {
       setMessage({ kind: "error", text: error instanceof Error ? error.message : "Unable to create post." });
     } finally {
       setCreatingPost(false);
+      setPostProgress("");
     }
   }
 
@@ -173,12 +189,13 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
 
       <section className="control-section">
         <h2>New post</h2>
-        <p>Text posts publish immediately to your channel. Video and live content are still managed from the app for now.</p>
+        <p>Attach an image or video, or leave it blank for a text-only post. Live content is still managed from the app for now.</p>
         <form className="control-form" onSubmit={createPost}>
           <label>Title<input value={postTitle} onChange={(e) => setPostTitle(e.target.value)} required /></label>
           <label>Text<textarea rows={4} value={postText} onChange={(e) => setPostText(e.target.value)} /></label>
+          <label>Image or video (optional)<input type="file" accept="image/*,video/*" onChange={(e) => setPostFile(e.target.files?.[0] || null)} /></label>
           <div className="control-actions">
-            <button type="submit" className="button primary" disabled={creatingPost || !postTitle.trim()}>{creatingPost ? "Creating…" : "Create draft"}</button>
+            <button type="submit" className="button primary" disabled={creatingPost || !postTitle.trim()}>{creatingPost ? (postProgress || "Creating…") : "Create draft"}</button>
           </div>
         </form>
       </section>
