@@ -9,6 +9,9 @@ import { useControlProfile } from "./ControlContext";
 const NAV_ITEMS = [
   { href: "/control", label: "Dashboard" },
   { href: "/control/partner", label: "Partner organization" },
+  { href: "/control/institutions/health", label: "Health institutions" },
+  { href: "/control/institutions/education", label: "Education institutions" },
+  { href: "/control/shops", label: "Market shops" },
   { href: "/control/channel", label: "Broadcast channel" },
   { href: "/control/billing", label: "Billing" },
 ];
@@ -51,7 +54,7 @@ export default function ControlShell({ children }: { children: React.ReactNode }
         <Link
           key={item.href}
           href={item.href}
-          className={`control-nav-link${pathname === item.href ? " control-nav-link--active" : ""}`}
+          className={`control-nav-link${pathname === item.href || (item.href !== "/control" && pathname.startsWith(`${item.href}/`)) ? " control-nav-link--active" : ""}`}
         >
           {item.label}
         </Link>
