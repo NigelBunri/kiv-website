@@ -2921,6 +2921,7 @@ textarea { resize: vertical; }
   letter-spacing: .04em;
 }
 .control-nav { display: flex; flex-direction: column; gap: .15rem; }
+.control-nav-group { display: flex; flex-direction: column; gap: .15rem; }
 .control-nav-heading {
   margin: 1rem 0 .2rem;
   font-size: .72rem;
