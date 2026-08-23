@@ -10,6 +10,10 @@ type Institution = {
   name: string;
   description: string;
   owner: string;
+  institution_type?: string;
+  membership_policy?: string;
+  contact_email?: string;
+  contact_phone?: string;
   payout_account_status?: string;
   payout_account_name?: string;
   payout_bank_last4?: string;
@@ -51,7 +55,15 @@ export default async function EducationInstitutionDetailPage({ params }: { param
       </div>
       {canEdit ? (
         <>
-          <EducationInstitutionEditForm institutionId={institution.id} initialName={institution.name} initialDescription={institution.description || ""} />
+          <EducationInstitutionEditForm
+            institutionId={institution.id}
+            initialName={institution.name}
+            initialDescription={institution.description || ""}
+            initialInstitutionType={institution.institution_type}
+            initialMembershipPolicy={institution.membership_policy}
+            initialContactEmail={institution.contact_email}
+            initialContactPhone={institution.contact_phone}
+          />
           <section className="control-section">
             <h2>Curriculum</h2>
             <p>Create and manage courses, modules, lessons, and materials — including video uploads.</p>
