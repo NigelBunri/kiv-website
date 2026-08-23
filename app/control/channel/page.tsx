@@ -19,6 +19,12 @@ type Channel = {
   payout_bank_last4?: string;
 };
 
+function formatWatchTime(seconds: number): string {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+}
+
 export default async function ChannelPage() {
   const result = await fetchControlProfile();
   if (!result) return null;
@@ -77,12 +83,22 @@ export default async function ChannelPage() {
           <div className="control-stat-grid">
             <div className="control-stat-card"><span>Views</span><strong>{analyticsSummary.views ?? 0}</strong></div>
             <div className="control-stat-card"><span>Unique viewers</span><strong>{analyticsSummary.unique_viewers ?? 0}</strong></div>
+            <div className="control-stat-card"><span>Watch time</span><strong>{formatWatchTime(analyticsSummary.watch_time_seconds ?? 0)}</strong></div>
             <div className="control-stat-card"><span>Published posts</span><strong>{analyticsSummary.published_count ?? 0}</strong></div>
             <div className="control-stat-card"><span>Reactions</span><strong>{analyticsSummary.reactions ?? 0}</strong></div>
             <div className="control-stat-card"><span>Comments</span><strong>{analyticsSummary.comments ?? 0}</strong></div>
+            <div className="control-stat-card"><span>Saves</span><strong>{analyticsSummary.saves ?? 0}</strong></div>
+            <div className="control-stat-card"><span>Shares</span><strong>{analyticsSummary.shares ?? 0}</strong></div>
           </div>
         </section>
       ) : null}
+      <section className="control-section">
+        <h2>Manage</h2>
+        <div className="control-actions">
+          <a href="/control/channel/revenue" className="button primary">Revenue &amp; payouts</a>
+          <a href="/control/channel/moderation" className="button">Moderation</a>
+        </div>
+      </section>
       <ChannelWorkspace channel={{ ...channel, ...detail }} initialContents={contents} />
     </>
   );

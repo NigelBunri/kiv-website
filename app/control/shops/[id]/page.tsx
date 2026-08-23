@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import ShopEditForm from "./ShopEditForm";
+import LandingPageForm from "./LandingPageForm";
 import PartnerConnectPanel from "../../PartnerConnectPanel";
 import PayoutAccountConnectPanel from "../../PayoutAccountConnectPanel";
 
@@ -15,6 +16,15 @@ type ShopDetail = {
   payout_bank_last4?: string;
   partner_id?: string | null;
   partner_name?: string | null;
+  landing_page?: {
+    headline?: string;
+    subheadline?: string;
+    hero_image_url?: string;
+    hero_cta_text?: string;
+    hero_cta_url?: string;
+  };
+  landing_is_public?: boolean;
+  landing_is_published?: boolean;
 };
 
 type Partner = { id: string; name: string; can_manage: boolean };
@@ -51,6 +61,18 @@ export default async function ShopDetailPage({ params }: { params: Promise<{ id:
         <p>Shop</p>
       </div>
       <ShopEditForm shopId={shop.id} initialName={shop.name} initialDescription={shop.description || ""} />
+      <LandingPageForm
+        shopId={shop.id}
+        initialLandingPage={{
+          headline: shop.landing_page?.headline,
+          subheadline: shop.landing_page?.subheadline,
+          hero_image_url: shop.landing_page?.hero_image_url,
+          hero_cta_text: shop.landing_page?.hero_cta_text,
+          hero_cta_url: shop.landing_page?.hero_cta_url,
+          is_public: shop.landing_is_public,
+          is_published: shop.landing_is_published,
+        }}
+      />
       <section className="control-section">
         <h2>Marketplace</h2>
         <p>Manage products and incoming orders for this shop.</p>
