@@ -4,52 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { nav, products, site, utilityRoutes } from "@/lib/site";
+import { useDismissableMenu } from "@/lib/useDismissableMenu";
 import { UserMenu } from "./UserMenu";
 import { ScrollableTabNav, type TabNavItem } from "./ScrollableTabNav";
 
 function isActiveNavLink(pathname: string | null, href: string) {
   return pathname === href || pathname?.startsWith(`${href}/`) === true;
-}
-
-// Escape key and click-outside both close a dropdown — standard
-// expectations for any menu that overlays page content. Shared by both
-// the primary nav toggle and the header actions menu below.
-function useDismissableMenu(
-  isOpen: boolean,
-  close: () => void,
-  panelRef: React.RefObject<HTMLElement | null>,
-  toggleRef: React.RefObject<HTMLButtonElement | null>,
-) {
-  useEffect(() => {
-    if (!isOpen) return;
-
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") close();
-    }
-    function onPointerDown(event: MouseEvent) {
-      const target = event.target as Node;
-      // The toggle button itself must be excluded here, not just the panel —
-      // mousedown fires (and bubbles to this document listener) BEFORE the
-      // button's own onClick. Without this check, clicking the button to
-      // close an open menu would: (1) this handler sees the button as
-      // "outside the panel" and closes it, then (2) the button's own onClick
-      // fires next and toggles the now-closed state back open — so the
-      // button appeared to only ever open the menu, never close it.
-      if (
-        panelRef.current && !panelRef.current.contains(target) &&
-        toggleRef.current && !toggleRef.current.contains(target)
-      ) {
-        close();
-      }
-    }
-
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("mousedown", onPointerDown);
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("mousedown", onPointerDown);
-    };
-  }, [isOpen, close, panelRef, toggleRef]);
 }
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
