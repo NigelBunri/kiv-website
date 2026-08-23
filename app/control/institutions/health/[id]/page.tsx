@@ -61,6 +61,15 @@ export default async function HealthInstitutionDetailPage({ params }: { params: 
         <HealthInstitutionWorkspace initialInstitution={institution} initialServices={services} />
       ) : null}
       {institution.can_manage ? (
+        <section className="control-section">
+          <h2>Staff</h2>
+          <p>Add staff members and manage their roles.</p>
+          <div className="control-actions">
+            <a href={`/control/institutions/health/${institution.id}/staff`} className="button primary">Manage staff</a>
+          </div>
+        </section>
+      ) : null}
+      {institution.can_manage ? (
         <PayoutAccountConnectPanel
           apiPath={`/api/control/institutions/health/${institution.id}/payout`}
           initialStatus={institution.payout_account_status}
