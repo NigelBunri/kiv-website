@@ -14,6 +14,9 @@ type Channel = {
   avatar_display_url?: string;
   avatar_initials?: string;
   subscriber_count?: number;
+  payout_account_status?: string;
+  payout_account_name?: string;
+  payout_bank_last4?: string;
 };
 
 export default async function ChannelPage() {
@@ -42,11 +45,20 @@ export default async function ChannelPage() {
   // No status filter — the channel manager (this user) sees both draft and
   // published content by default; Django only restricts to published for
   // non-managers.
-  const contentsRes = await fetch(`${kisApiBase()}/api/v1/broadcasts/channels/${encodeURIComponent(channel.id)}/contents/`, {
-    headers, cache: "no-store", signal: AbortSignal.timeout(15_000),
-  });
+  const [contentsRes, detailRes] = await Promise.all([
+    fetch(`${kisApiBase()}/api/v1/broadcasts/channels/${encodeURIComponent(channel.id)}/contents/`, {
+      headers, cache: "no-store", signal: AbortSignal.timeout(15_000),
+    }),
+    // The list endpoint above uses the public summary serializer (no
+    // payout fields, even gated) — payout status only exists on the
+    // detail serializer's owner/manager-gated fields.
+    fetch(`${kisApiBase()}/api/v1/broadcasts/channels/${encodeURIComponent(channel.id)}/`, {
+      headers, cache: "no-store", signal: AbortSignal.timeout(15_000),
+    }),
+  ]);
   const contentsData = contentsRes.ok ? await contentsRes.json() : {};
   const contents = Array.isArray(contentsData?.results) ? contentsData.results : [];
+  const detail: Channel = detailRes.ok ? await detailRes.json() : channel;
 
   return (
     <>
@@ -54,7 +66,7 @@ export default async function ChannelPage() {
         <h1>{channel.display_name}</h1>
         <p>@{channel.handle} · {channel.subscriber_count || 0} subscribers</p>
       </div>
-      <ChannelWorkspace channel={channel} initialContents={contents} />
+      <ChannelWorkspace channel={{ ...channel, ...detail }} initialContents={contents} />
     </>
   );
 }

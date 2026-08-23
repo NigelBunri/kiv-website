@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import PayoutAccountConnectPanel from "@/app/control/PayoutAccountConnectPanel";
 
 type Channel = {
   id: string;
@@ -15,6 +16,9 @@ type Channel = {
   avatar_kind?: "logo" | "photo" | "initials";
   avatar_display_url?: string;
   avatar_initials?: string;
+  payout_account_status?: string;
+  payout_account_name?: string;
+  payout_bank_last4?: string;
 };
 
 type Content = {
@@ -159,6 +163,13 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
           </div>
         </form>
       </section>
+
+      <PayoutAccountConnectPanel
+        apiPath={`/api/control/channel/${channel.id}/payout`}
+        initialStatus={channel.payout_account_status}
+        initialName={channel.payout_account_name}
+        initialBankLast4={channel.payout_bank_last4}
+      />
 
       <section className="control-section">
         <h2>New post</h2>

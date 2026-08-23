@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import PartnerConnectPanel from "../../../PartnerConnectPanel";
+import PayoutAccountConnectPanel from "../../../PayoutAccountConnectPanel";
 import HealthInstitutionWorkspace from "./HealthInstitutionWorkspace";
 
 type Institution = {
@@ -11,6 +12,9 @@ type Institution = {
   timezone: string;
   is_active: boolean;
   can_manage: boolean;
+  payout_account_status?: string;
+  payout_account_name?: string;
+  payout_bank_last4?: string;
   partner_id?: string | null;
   partner_name?: string | null;
 };
@@ -55,6 +59,14 @@ export default async function HealthInstitutionDetailPage({ params }: { params: 
       </div>
       {institution.can_manage ? (
         <HealthInstitutionWorkspace initialInstitution={institution} initialServices={services} />
+      ) : null}
+      {institution.can_manage ? (
+        <PayoutAccountConnectPanel
+          apiPath={`/api/control/institutions/health/${institution.id}/payout`}
+          initialStatus={institution.payout_account_status}
+          initialName={institution.payout_account_name}
+          initialBankLast4={institution.payout_bank_last4}
+        />
       ) : null}
       <PartnerConnectPanel
         partnerApiPath={`/api/control/institutions/health/${institution.id}/partner`}

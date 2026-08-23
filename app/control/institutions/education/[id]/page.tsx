@@ -3,12 +3,16 @@ import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import EducationInstitutionEditForm from "./EducationInstitutionEditForm";
 import PartnerConnectPanel from "../../../PartnerConnectPanel";
+import PayoutAccountConnectPanel from "../../../PayoutAccountConnectPanel";
 
 type Institution = {
   id: string;
   name: string;
   description: string;
   owner: string;
+  payout_account_status?: string;
+  payout_account_name?: string;
+  payout_bank_last4?: string;
   partner_id?: string | null;
   partner_name?: string | null;
 };
@@ -53,10 +57,20 @@ export default async function EducationInstitutionDetailPage({ params }: { param
             <p>Create and manage courses, modules, lessons, and materials — including video uploads.</p>
             <div className="control-actions">
               <a href={`/control/institutions/education/${institution.id}/courses`} className="button primary">Manage courses</a>
+              <a href={`/control/institutions/education/${institution.id}/programs`} className="button">Manage programs</a>
+              <a href={`/control/institutions/education/${institution.id}/class-sessions`} className="button">Manage class sessions</a>
+              <a href={`/control/institutions/education/${institution.id}/events`} className="button">Manage events</a>
               <a href={`/control/institutions/education/${institution.id}/materials`} className="button">Manage materials</a>
               <a href={`/control/institutions/education/${institution.id}/lessons`} className="button">Manage lessons</a>
+              <a href={`/control/institutions/education/${institution.id}/enrollments`} className="button">Enrollment requests</a>
             </div>
           </section>
+          <PayoutAccountConnectPanel
+            apiPath={`/api/control/education/institutions/${institution.id}/payout`}
+            initialStatus={institution.payout_account_status}
+            initialName={institution.payout_account_name}
+            initialBankLast4={institution.payout_bank_last4}
+          />
         </>
       ) : null}
       <PartnerConnectPanel

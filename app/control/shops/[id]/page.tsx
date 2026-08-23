@@ -3,6 +3,7 @@ import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import ShopEditForm from "./ShopEditForm";
 import PartnerConnectPanel from "../../PartnerConnectPanel";
+import PayoutAccountConnectPanel from "../../PayoutAccountConnectPanel";
 
 type ShopDetail = {
   id: string;
@@ -10,6 +11,8 @@ type ShopDetail = {
   description: string;
   owner: string;
   payout_account_status?: string;
+  payout_account_name?: string;
+  payout_bank_last4?: string;
   partner_id?: string | null;
   partner_name?: string | null;
 };
@@ -56,6 +59,12 @@ export default async function ShopDetailPage({ params }: { params: Promise<{ id:
           <a href={`/control/shops/${shop.id}/orders`} className="button">View orders</a>
         </div>
       </section>
+      <PayoutAccountConnectPanel
+        apiPath={`/api/control/shops/${shop.id}/payout`}
+        initialStatus={shop.payout_account_status}
+        initialName={shop.payout_account_name}
+        initialBankLast4={shop.payout_bank_last4}
+      />
       <PartnerConnectPanel
         partnerApiPath={`/api/control/shops/${shop.id}/partner`}
         initialPartnerId={shop.partner_id || null}
