@@ -21,9 +21,10 @@ export default async function ProductsPage({ params }: { params: Promise<{ id: s
   const { profile, session } = result;
   const headers = authHeaders(session);
 
-  const [shopRes, productsRes] = await Promise.all([
+  const [shopRes, productsRes, categoriesRes] = await Promise.all([
     fetch(`${kisApiBase()}/api/v1/commerce/shops/${encodeURIComponent(id)}/`, { headers, cache: "no-store", signal: AbortSignal.timeout(15_000) }),
     fetch(`${kisApiBase()}/api/v1/commerce/products/?shop=${encodeURIComponent(id)}`, { headers, cache: "no-store", signal: AbortSignal.timeout(15_000) }),
+    fetch(`${kisApiBase()}/api/v1/commerce/product-categories/?category_type=product`, { headers, cache: "no-store", signal: AbortSignal.timeout(15_000) }),
   ]);
   if (!shopRes.ok) notFound();
   const shop = await shopRes.json();
@@ -38,6 +39,8 @@ export default async function ProductsPage({ params }: { params: Promise<{ id: s
   }
   const productsData = productsRes.ok ? await productsRes.json() : {};
   const products: Product[] = Array.isArray(productsData?.results) ? productsData.results : Array.isArray(productsData) ? productsData : [];
+  const categoriesData = categoriesRes.ok ? await categoriesRes.json() : {};
+  const categories = Array.isArray(categoriesData?.results) ? categoriesData.results : Array.isArray(categoriesData) ? categoriesData : [];
 
   return (
     <>
@@ -46,7 +49,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ id: s
         <p>Create and manage this shop&rsquo;s marketplace listings.</p>
       </div>
 
-      <ProductCreateForm shopId={id} />
+      <ProductCreateForm shopId={id} categories={categories} />
 
       <section className="control-section">
         <h2>All products</h2>

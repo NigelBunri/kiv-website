@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+type Category = { id: string; name: string };
+
 async function postJson(url: string, body?: unknown) {
   const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
   const data = await res.json();
@@ -10,7 +12,7 @@ async function postJson(url: string, body?: unknown) {
   return data.data;
 }
 
-export default function ProductCreateForm({ shopId }: { shopId: string }) {
+export default function ProductCreateForm({ shopId, categories }: { shopId: string; categories: Category[] }) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [sku, setSku] = useState("");
@@ -18,10 +20,18 @@ export default function ProductCreateForm({ shopId }: { shopId: string }) {
   const [price, setPrice] = useState("");
   const [stockQty, setStockQty] = useState("");
   const [inventoryType, setInventoryType] = useState("physical");
+  const [categoryIds, setCategoryIds] = useState<string[]>([]);
+  const [brand, setBrand] = useState("");
+  const [condition, setCondition] = useState("");
+  const [isFeatured, setIsFeatured] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [creating, setCreating] = useState(false);
   const [progress, setProgress] = useState("");
   const [message, setMessage] = useState<{ kind: "error" | "success"; text: string } | null>(null);
+
+  function toggleCategory(id: string) {
+    setCategoryIds((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
+  }
 
   async function handleCreate(event: React.FormEvent) {
     event.preventDefault();
@@ -55,6 +65,10 @@ export default function ProductCreateForm({ shopId }: { shopId: string }) {
           inventory_type: inventoryType,
           stock_qty: stockQty ? Number(stockQty) : 0,
           is_active: true,
+          is_featured: isFeatured,
+          catalog_category_ids: categoryIds,
+          brand,
+          condition,
           main_image_media_id: mainImageMediaId,
         }),
       });
@@ -62,6 +76,7 @@ export default function ProductCreateForm({ shopId }: { shopId: string }) {
       if (!data.success) throw new Error(data.message || "Unable to create product.");
       const newId = data.data?.id;
       setName(""); setSku(""); setDescription(""); setPrice(""); setStockQty(""); setImageFile(null);
+      setCategoryIds([]); setBrand(""); setCondition(""); setIsFeatured(false);
       setMessage({ kind: "success", text: "Product created." });
       router.refresh();
       if (newId) router.push(`/control/shops/${shopId}/products/${newId}`);
@@ -80,6 +95,16 @@ export default function ProductCreateForm({ shopId }: { shopId: string }) {
         <label>Name<input value={name} onChange={(e) => setName(e.target.value)} required /></label>
         <label>SKU<input value={sku} onChange={(e) => setSku(e.target.value)} /></label>
         <label>Description<textarea rows={3} value={description} onChange={(e) => setDescription(e.target.value)} /></label>
+        {categories.length > 0 ? (
+          <fieldset>
+            <legend>Categories</legend>
+            {categories.map((c) => (
+              <label key={c.id} style={{ display: "block" }}>
+                <input type="checkbox" checked={categoryIds.includes(c.id)} onChange={() => toggleCategory(c.id)} /> {c.name}
+              </label>
+            ))}
+          </fieldset>
+        ) : null}
         <label>Main image<input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] || null)} /></label>
         <label>Price<input type="number" min={0} step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} required /></label>
         <label>
@@ -93,6 +118,11 @@ export default function ProductCreateForm({ shopId }: { shopId: string }) {
         {inventoryType === "physical" ? (
           <label>Stock quantity<input type="number" min={0} value={stockQty} onChange={(e) => setStockQty(e.target.value)} /></label>
         ) : null}
+        <label>Brand<input value={brand} onChange={(e) => setBrand(e.target.value)} /></label>
+        <label>Condition<input value={condition} onChange={(e) => setCondition(e.target.value)} placeholder="New, used, refurbished…" /></label>
+        <label>
+          <input type="checkbox" checked={isFeatured} onChange={(e) => setIsFeatured(e.target.checked)} /> Featured
+        </label>
         <div className="control-actions">
           <button type="submit" className="button primary" disabled={creating || !name.trim() || !price}>
             {creating ? (progress || "Creating…") : "Create product"}

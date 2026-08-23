@@ -97,6 +97,7 @@ export default async function ChannelPage() {
         <div className="control-actions">
           <a href="/control/channel/revenue" className="button primary">Revenue &amp; payouts</a>
           <a href="/control/channel/moderation" className="button">Moderation</a>
+          <a href="/control/channel/playlists" className="button">Playlists</a>
         </div>
       </section>
       <ChannelWorkspace channel={{ ...channel, ...detail }} initialContents={contents} />

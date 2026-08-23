@@ -13,7 +13,7 @@ const INSTITUTION_TYPE_OPTIONS = [
 ];
 
 type Institution = { id: string; name: string; institution_type: string; timezone: string; is_active: boolean };
-type Service = { id: string; name: string; description?: string; is_active: boolean; base_cost_micro: number };
+type Service = { id: string; name: string; description?: string; is_active: boolean; base_cost_micro: number; requires_assessment?: boolean };
 
 async function postJson(url: string, body: unknown) {
   const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
@@ -59,19 +59,31 @@ export default function HealthInstitutionWorkspace({ initialInstitution, initial
   const [serviceName, setServiceName] = useState("");
   const [serviceDescription, setServiceDescription] = useState("");
   const [serviceCostKisc, setServiceCostKisc] = useState("");
+  const [serviceRequiresAssessment, setServiceRequiresAssessment] = useState(false);
+  const [serviceAssessmentSchema, setServiceAssessmentSchema] = useState("");
   const [creatingService, setCreatingService] = useState(false);
   async function createService(event: React.FormEvent) {
     event.preventDefault();
     setCreatingService(true);
     setMessage(null);
     try {
+      let assessmentSchema: unknown = undefined;
+      if (serviceAssessmentSchema.trim()) {
+        try {
+          assessmentSchema = JSON.parse(serviceAssessmentSchema);
+        } catch {
+          throw new Error("Assessment schema must be valid JSON.");
+        }
+      }
       const data = await postJson(`/api/control/institutions/health/${institution.id}/services`, {
         name: serviceName,
         description: serviceDescription,
         base_cost_kisc: serviceCostKisc || undefined,
+        requires_assessment: serviceRequiresAssessment,
+        assessment_schema: assessmentSchema,
       });
       setServices((prev) => [...prev, data.service]);
-      setServiceName(""); setServiceDescription(""); setServiceCostKisc("");
+      setServiceName(""); setServiceDescription(""); setServiceCostKisc(""); setServiceRequiresAssessment(false); setServiceAssessmentSchema("");
       setMessage({ kind: "success", text: "Service added." });
     } catch (error: unknown) {
       setMessage({ kind: "error", text: error instanceof Error ? error.message : "Unable to add service." });
@@ -88,6 +100,23 @@ export default function HealthInstitutionWorkspace({ initialInstitution, initial
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ is_active: !service.is_active }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || "Unable to update service.");
+      setServices((prev) => prev.map((s) => (s.id === service.id ? data.data.service : s)));
+    } catch (error: unknown) {
+      setMessage({ kind: "error", text: error instanceof Error ? error.message : "Unable to update service." });
+    } finally {
+      setBusyServiceId(null);
+    }
+  }
+  async function toggleRequiresAssessment(service: Service) {
+    setBusyServiceId(service.id);
+    try {
+      const res = await fetch(`/api/control/institutions/health/services/${service.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requires_assessment: !service.requires_assessment }),
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.message || "Unable to update service.");
@@ -145,6 +174,12 @@ export default function HealthInstitutionWorkspace({ initialInstitution, initial
           <label>Name<input value={serviceName} onChange={(e) => setServiceName(e.target.value)} required /></label>
           <label>Description<textarea rows={2} value={serviceDescription} onChange={(e) => setServiceDescription(e.target.value)} /></label>
           <label>Cost (KISC)<input type="number" min={0} step="0.01" value={serviceCostKisc} onChange={(e) => setServiceCostKisc(e.target.value)} /></label>
+          <label>
+            <input type="checkbox" checked={serviceRequiresAssessment} onChange={(e) => setServiceRequiresAssessment(e.target.checked)} /> Requires a pre-booking assessment
+          </label>
+          {serviceRequiresAssessment ? (
+            <label>Assessment schema (JSON, optional)<textarea rows={3} value={serviceAssessmentSchema} onChange={(e) => setServiceAssessmentSchema(e.target.value)} placeholder='{"questions": [...]}' /></label>
+          ) : null}
           <div className="control-actions">
             <button type="submit" className="button primary" disabled={creatingService || !serviceName.trim()}>{creatingService ? "Adding…" : "Add service"}</button>
           </div>
@@ -161,8 +196,12 @@ export default function HealthInstitutionWorkspace({ initialInstitution, initial
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   <span className={`control-badge control-badge--${service.is_active ? "active" : "inactive"}`}>{service.is_active ? "active" : "inactive"}</span>
+                  {service.requires_assessment ? <span className="control-badge control-badge--pending">assessment required</span> : null}
                   <button type="button" className="button" onClick={() => toggleServiceActive(service)} disabled={busyServiceId === service.id}>
                     {service.is_active ? "Deactivate" : "Activate"}
+                  </button>
+                  <button type="button" className="button" onClick={() => toggleRequiresAssessment(service)} disabled={busyServiceId === service.id}>
+                    {service.requires_assessment ? "Remove assessment requirement" : "Require assessment"}
                   </button>
                   <button type="button" className="button" onClick={() => deleteService(service.id)} disabled={busyServiceId === service.id}>Delete</button>
                 </div>

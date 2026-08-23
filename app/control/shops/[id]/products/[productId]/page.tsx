@@ -10,10 +10,15 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const { session } = result;
   const headers = authHeaders(session);
 
-  const res = await fetch(`${kisApiBase()}/api/v1/commerce/products/${encodeURIComponent(productId)}/`, { headers, cache: "no-store", signal: AbortSignal.timeout(15_000) });
-  if (!res.ok) notFound();
-  const product = await res.json();
+  const [productRes, categoriesRes] = await Promise.all([
+    fetch(`${kisApiBase()}/api/v1/commerce/products/${encodeURIComponent(productId)}/`, { headers, cache: "no-store", signal: AbortSignal.timeout(15_000) }),
+    fetch(`${kisApiBase()}/api/v1/commerce/product-categories/?category_type=product`, { headers, cache: "no-store", signal: AbortSignal.timeout(15_000) }),
+  ]);
+  if (!productRes.ok) notFound();
+  const product = await productRes.json();
   if (product.shop !== id) notFound();
+  const categoriesData = categoriesRes.ok ? await categoriesRes.json() : {};
+  const categories = Array.isArray(categoriesData?.results) ? categoriesData.results : Array.isArray(categoriesData) ? categoriesData : [];
 
   return (
     <>
@@ -24,6 +29,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       <ProductEditForm
         shopId={id}
         productId={product.id}
+        categories={categories}
         initial={{
           name: product.name || "",
           sku: product.sku || "",
@@ -32,7 +38,15 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           sale_price: product.sale_price != null ? String(product.sale_price) : "",
           stock_qty: product.stock_qty ?? 0,
           is_active: Boolean(product.is_active),
+          is_featured: Boolean(product.is_featured),
           image_url: product.image_url || "",
+          category_ids: Array.isArray(product.catalog_categories) ? product.catalog_categories.map((c: { id: string }) => c.id) : [],
+          brand: product.brand || "",
+          condition: product.condition || "",
+          compare_at_price: product.compare_at_price != null ? String(product.compare_at_price) : "",
+          available_sizes: Array.isArray(product.available_sizes) ? product.available_sizes.join(", ") : "",
+          available_colors: Array.isArray(product.available_colors) ? product.available_colors.join(", ") : "",
+          gallery_images: Array.isArray(product.gallery_images) ? product.gallery_images : [],
         }}
       />
     </>
