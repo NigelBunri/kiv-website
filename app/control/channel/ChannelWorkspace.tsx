@@ -28,10 +28,18 @@ type Content = {
   status: string;
   text_plain_preview?: string;
   description_preview?: string;
+  visibility?: string;
 };
 
 async function postJson(url: string, body?: unknown) {
   const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
+  const data = await res.json();
+  if (!data.success) throw new Error(data.message || "Request failed.");
+  return data.data;
+}
+
+async function patchJson(url: string, body: unknown) {
+  const res = await fetch(url, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   const data = await res.json();
   if (!data.success) throw new Error(data.message || "Request failed.");
   return data.data;
@@ -98,6 +106,33 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
     } finally {
       setCreatingPost(false);
       setPostProgress("");
+    }
+  }
+
+  // ---- Edit ----
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editText, setEditText] = useState("");
+  const [savingEdit, setSavingEdit] = useState(false);
+  function startEdit(content: Content) {
+    setEditingId(content.id);
+    setEditTitle(content.title || "");
+    setEditText(content.text_plain_preview || content.description_preview || "");
+  }
+  function cancelEdit() {
+    setEditingId(null);
+  }
+  async function saveEdit(id: string) {
+    setSavingEdit(true);
+    setMessage(null);
+    try {
+      const data = await patchJson(`/api/control/channel/contents/${id}`, { title: editTitle, text_plain: editText });
+      setContents((prev) => prev.map((c) => (c.id === id ? { ...c, title: data.title ?? editTitle, text_plain_preview: data.text_plain_preview ?? editText } : c)));
+      setEditingId(null);
+    } catch (error: unknown) {
+      setMessage({ kind: "error", text: error instanceof Error ? error.message : "Unable to save changes." });
+    } finally {
+      setSavingEdit(false);
     }
   }
 
@@ -207,20 +242,34 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
         ) : (
           <div className="control-list">
             {contents.map((content) => (
-              <div key={content.id} className="control-list-row">
-                <div>
-                  <div className="control-list-row-title">{content.title}</div>
-                  <div className="control-list-row-meta">{content.text_plain_preview || content.description_preview || content.content_type}</div>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                  <span className={`control-badge control-badge--${content.status === "published" ? "active" : "pending"}`}>{content.status}</span>
-                  {content.status === "published" ? (
-                    <button type="button" className="button" onClick={() => unpublish(content.id)} disabled={busyId === content.id}>Unpublish</button>
-                  ) : (
-                    <button type="button" className="button primary" onClick={() => publish(content.id)} disabled={busyId === content.id}>Publish</button>
-                  )}
-                  <button type="button" className="button" onClick={() => removeContent(content.id)} disabled={busyId === content.id}>Delete</button>
-                </div>
+              <div key={content.id} className="control-list-row" style={{ flexDirection: "column", alignItems: "stretch" }}>
+                {editingId === content.id ? (
+                  <div className="control-form">
+                    <label>Title<input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} /></label>
+                    <label>Text<textarea rows={3} value={editText} onChange={(e) => setEditText(e.target.value)} /></label>
+                    <div className="control-actions">
+                      <button type="button" className="button primary" onClick={() => saveEdit(content.id)} disabled={savingEdit}>{savingEdit ? "Saving…" : "Save"}</button>
+                      <button type="button" className="button" onClick={cancelEdit} disabled={savingEdit}>Cancel</button>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                      <div className="control-list-row-title">{content.title}</div>
+                      <div className="control-list-row-meta">{content.text_plain_preview || content.description_preview || content.content_type}</div>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                      <span className={`control-badge control-badge--${content.status === "published" ? "active" : "pending"}`}>{content.status}</span>
+                      <button type="button" className="button" onClick={() => startEdit(content)} disabled={busyId === content.id}>Edit</button>
+                      {content.status === "published" ? (
+                        <button type="button" className="button" onClick={() => unpublish(content.id)} disabled={busyId === content.id}>Unpublish</button>
+                      ) : (
+                        <button type="button" className="button primary" onClick={() => publish(content.id)} disabled={busyId === content.id}>Publish</button>
+                      )}
+                      <button type="button" className="button" onClick={() => removeContent(content.id)} disabled={busyId === content.id}>Delete</button>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
