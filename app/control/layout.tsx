@@ -5,7 +5,7 @@ import ControlShell from "./ControlShell";
 import { Section } from "@/components/PageBlocks";
 import { SiteShell } from "@/components/SiteShell";
 
-export const metadata = { title: "Control panel — KIS", robots: { index: false, follow: false } };
+export const metadata = { title: "Control panel - KIS", robots: { index: false, follow: false } };
 
 export default async function ControlLayout({ children }: { children: React.ReactNode }) {
   const result = await fetchControlProfile();

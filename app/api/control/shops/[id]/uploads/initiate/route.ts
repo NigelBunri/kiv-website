@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { authHeaders, getValidSession, kisApiBase, setSessionCookie } from "@/lib/session";
 
 // Locks shop_id to the route param and only ever allows product-image
-// purposes — never trust the browser to name its own shop/purpose for an
+// purposes - never trust the browser to name its own shop/purpose for an
 // upload handshake.
 const ALLOWED_PURPOSES = new Set(["product_main_image", "product_gallery_image", "shop_logo"]);
 

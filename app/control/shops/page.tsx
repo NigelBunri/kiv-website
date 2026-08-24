@@ -16,7 +16,7 @@ export default async function ShopsPage() {
   const headers = authHeaders(session);
 
   // ShopViewSet.list() defaults to "active shops OR mine" for a signed-in
-  // non-staff user — ?owner scopes this page to "my shops" specifically,
+  // non-staff user - ?owner scopes this page to "my shops" specifically,
   // matching the Health/Education institution pages' owner-only listing.
   const res = await fetch(`${kisApiBase()}/api/v1/commerce/shops/?owner=${encodeURIComponent(profile.userId)}`, {
     headers,
@@ -44,7 +44,7 @@ export default async function ShopsPage() {
           {shops.map((shop) => (
             <tr key={shop.id}>
               <td><Link href={`/control/shops/${shop.id}`}>{shop.name}</Link></td>
-              <td>{shop.status || "—"}</td>
+              <td>{shop.status || "-"}</td>
             </tr>
           ))}
         </tbody>

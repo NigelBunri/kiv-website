@@ -51,7 +51,7 @@ export default async function PartnerPolicyPage() {
   return (
     <>
       <div className="control-header">
-        <h1>{manageable.name} — Enterprise policy</h1>
+        <h1>{manageable.name} - Enterprise policy</h1>
         <p>Security, compliance, retention, and rate-limit controls.</p>
       </div>
       <div className="control-actions">

@@ -38,7 +38,7 @@ export default async function PartnerVerificationPage() {
   return (
     <>
       <div className="control-header">
-        <h1>{manageable.name} — Verification</h1>
+        <h1>{manageable.name} - Verification</h1>
         <p>Request verified-partner status and track review progress.</p>
       </div>
       <div className="control-actions">

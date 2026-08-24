@@ -1,9 +1,9 @@
 import { authHeaders, getValidSession, kisApiBase, type Session } from "@/lib/session";
 
-// Server-only profile fetch for the /control section — reuses the same
+// Server-only profile fetch for the /control section - reuses the same
 // GET /api/v1/profiles/me/ endpoint the mobile app's "am I GO" check
 // (PartnersScreen.tsx's checkSuperuser/isGoUser) relies on. Deliberately
-// NOT /api/v1/users/me/ — that serializer's Meta.exclude strips
+// NOT /api/v1/users/me/ - that serializer's Meta.exclude strips
 // is_superuser/is_staff entirely (apps/accounts/serializers.py), so it
 // can't answer the GO-gating question at all.
 export type ControlProfile = {
@@ -14,7 +14,7 @@ export type ControlProfile = {
   tierRank: number;
 };
 
-// Business Pro's seeded rank (apps/accounts/tier_presets.py) — the floor
+// Business Pro's seeded rank (apps/accounts/tier_presets.py) - the floor
 // for control-panel eligibility. Partner (4) and Partner Pro (5) clear it
 // automatically since AccountTier.rank is monotonic by design.
 export const CONTROL_PANEL_MIN_TIER_RANK = 3;

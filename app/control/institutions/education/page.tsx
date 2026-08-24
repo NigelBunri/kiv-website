@@ -41,7 +41,7 @@ export default async function EducationInstitutionsPage() {
           {institutions.map((institution) => (
             <tr key={institution.id}>
               <td><Link href={`/control/institutions/education/${institution.id}`}>{institution.name}</Link></td>
-              <td>{institution.institution_type || "—"}</td>
+              <td>{institution.institution_type || "-"}</td>
             </tr>
           ))}
         </tbody>

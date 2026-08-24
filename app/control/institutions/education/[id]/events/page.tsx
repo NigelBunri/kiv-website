@@ -26,7 +26,7 @@ export default async function EventsPage({ params }: { params: Promise<{ id: str
       <BackLink href={`/control/institutions/education/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Events</h1>
-        <p>One-off events for your institution — open days, webinars, graduations.</p>
+        <p>One-off events for your institution - open days, webinars, graduations.</p>
       </div>
 
       <EventCreateForm institutionId={id} />

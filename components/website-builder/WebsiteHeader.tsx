@@ -8,7 +8,7 @@ import { PublicCartIcon } from "./PublicCartIcon";
 import { ScrollableTabNav } from "@/components/ScrollableTabNav";
 import { useNavFlyout, type FlyoutNavEntry } from "@/lib/useNavFlyout";
 
-// Every website-builder site gets this header — previously WebsitePageView
+// Every website-builder site gets this header - previously WebsitePageView
 // only rendered a bare, unstyled page-switcher <nav> and only when a site
 // had more than one page, so a single-page site (the common case) showed
 // no header at all: no site name, no logo, nothing a visitor would
@@ -16,7 +16,7 @@ import { useNavFlyout, type FlyoutNavEntry } from "@/lib/useNavFlyout";
 // page list collapses into a full-screen slide-in panel below the md
 // breakpoint (see .wb-site-nav-toggle / .wb-site-nav--open in
 // globals.css) and only renders at all once there's more than one page.
-// Sign-in and "Get the app" stay visible at every width — a PC visitor
+// Sign-in and "Get the app" stay visible at every width - a PC visitor
 // can sign in and buy directly on-site (see BuyButton.tsx); a phone
 // visitor gets routed to the native app instead (see OpenInApp.tsx on
 // individual content cards).
@@ -39,7 +39,7 @@ export function WebsiteHeader({ site, currentSlug }: { site: WebsiteBuilderSite;
 
   // Long institution names get truncated on narrow screens (see
   // .wb-site-brand-name's max-width in globals.css) so they don't crowd
-  // out the hamburger toggle — tapping the truncated name reveals the
+  // out the hamburger toggle - tapping the truncated name reveals the
   // full name in a small popover instead of just cutting it off with no
   // way to read the rest.
   useEffect(() => {
@@ -62,7 +62,7 @@ export function WebsiteHeader({ site, currentSlug }: { site: WebsiteBuilderSite;
 
   const closeNav = () => setNavOpen(false);
 
-  // Fed to ScrollableTabNav for the desktop row — capped to roughly 5
+  // Fed to ScrollableTabNav for the desktop row - capped to roughly 5
   // visible tabs with drag/arrow scrolling for the rest (see
   // .scroll-tab-track.wb-site-nav--desktop in globals.css). Pages with a
   // description or preview image get the shared hover/focus mega-menu
@@ -83,7 +83,7 @@ export function WebsiteHeader({ site, currentSlug }: { site: WebsiteBuilderSite;
   return (
     <header className={`wb-site-header${scrolled ? " wb-site-header--scrolled" : ""}${navOpen ? " wb-site-header--nav-open" : ""}`}>
       <div className="wb-site-brand" ref={brandRef}>
-        <Link href={homeHref} className="wb-site-brand-link" onClick={closeNav} aria-label={`${site.name} — home`}>
+        <Link href={homeHref} className="wb-site-brand-link" onClick={closeNav} aria-label={`${site.name} - home`}>
           {logoUrl ? (
             <img src={logoUrl} alt="" className="wb-site-brand-mark" />
           ) : (

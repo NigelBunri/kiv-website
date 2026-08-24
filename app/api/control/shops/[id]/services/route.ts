@@ -20,7 +20,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 // shop is injected server-side from the route param, same reasoning as the
-// products proxy — Django re-checks ownership regardless, but the client
+// products proxy - Django re-checks ownership regardless, but the client
 // shouldn't be trusted to assert which shop it's posting to.
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

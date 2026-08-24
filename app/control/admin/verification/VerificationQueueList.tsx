@@ -61,7 +61,7 @@ function CaseRow({ item, onDecided }: { item: StaffCase; onDecided: (caseId: str
         <div>
           <div className="control-list-row-title">{item.subject.display_name || item.subject.subject_id}</div>
           <div className="control-list-row-meta">
-            {item.level} · {item.provider || "manual"} · {item.submitted_at ? new Date(item.submitted_at).toLocaleString() : "—"}
+            {item.level} · {item.provider || "manual"} · {item.submitted_at ? new Date(item.submitted_at).toLocaleString() : "-"}
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>

@@ -1,6 +1,6 @@
 # Forms integration setup: Turnstile CAPTCHA + Google Sheet delivery
 
-Both pieces are opt-in via environment variables — the site works exactly
+Both pieces are opt-in via environment variables - the site works exactly
 as it did before (validated, honeypot-protected, no CAPTCHA, no delivery)
 until you configure them. Neither integration needs credentials to be
 shared with anyone outside your own Cloudflare and Google accounts; you do
@@ -8,22 +8,22 @@ all of the setup below yourself.
 
 ## 1. Cloudflare Turnstile (CAPTCHA)
 
-Turnstile is Cloudflare's CAPTCHA replacement — free and privacy-respecting.
+Turnstile is Cloudflare's CAPTCHA replacement - free and privacy-respecting.
 This site itself deploys as a self-hosted Docker/AWS container (see
-`docs/deployment.md`), not Cloudflare Workers — Turnstile is used purely as
+`docs/deployment.md`), not Cloudflare Workers - Turnstile is used purely as
 a hosted CAPTCHA service here, independent of where the site runs.
 
 1. Go to the [Cloudflare dashboard](https://dash.cloudflare.com/) → **Turnstile**.
 2. **Add a site.** Enter your domain (`kingdomimpactventures.org`), and add
    `localhost` too if you want the widget to render in local dev.
 3. Choose the **Managed** challenge type (invisible-first, falls back to an
-   interactive challenge only if needed — the least friction for real
+   interactive challenge only if needed - the least friction for real
    visitors).
 4. Copy the **Site Key** and **Secret Key** it gives you.
 5. Set:
    - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` = the Site Key (this one is meant to
-     be public — it ships to the browser).
-   - `TURNSTILE_SECRET_KEY` = the Secret Key (server-only — set this as a
+     be public - it ships to the browser).
+   - `TURNSTILE_SECRET_KEY` = the Secret Key (server-only - set this as a
      secret/environment variable on whichever host actually runs the
      container: an AWS Secrets Manager entry injected into the task
      definition, a `.env` file outside version control read by Docker
@@ -36,7 +36,7 @@ Once both are set, every `PublicForm` on the site (`/contact`,
 the API route (`app/api/forms/route.ts`) rejects any submission whose
 token doesn't verify against Cloudflare's `siteverify` endpoint.
 
-## 2. Google Sheet delivery (via Apps Script — no service account needed)
+## 2. Google Sheet delivery (via Apps Script - no service account needed)
 
 This deliberately avoids the Google Sheets API + service-account route,
 which would require generating a credential file and deciding where to
@@ -53,7 +53,7 @@ webhook URL that only your own Google account ever controls.
    ```javascript
    const SHEET_NAME = "Form Submissions";
    // Set this to a long random string YOU choose. It must match
-   // KIV_FORM_WEBHOOK_SECRET exactly — it's how the script tells a real
+   // KIV_FORM_WEBHOOK_SECRET exactly - it's how the script tells a real
    // request from this site apart from anyone else who discovers the URL.
    const EXPECTED_SECRET = "REPLACE_WITH_A_LONG_RANDOM_SECRET";
 
@@ -94,7 +94,7 @@ webhook URL that only your own Google account ever controls.
    ```
 
 4. Replace `REPLACE_WITH_A_LONG_RANDOM_SECRET` with a long random string of
-   your own choosing (a password generator's output is fine — it never
+   your own choosing (a password generator's output is fine - it never
    needs to be memorable, just unguessable).
 5. **Save** the project (give it a name like "KIV form webhook").
 
@@ -103,12 +103,12 @@ webhook URL that only your own Google account ever controls.
 1. **Deploy → New deployment.**
 2. Click the gear icon next to "Select type" → **Web app**.
 3. Set **Execute as**: "Me" (your account).
-4. Set **Who has access**: "Anyone" — this is required for the site's
+4. Set **Who has access**: "Anyone" - this is required for the site's
    server to be able to POST to it without a Google login of its own; the
    shared secret in the script is what actually protects it, not Google's
    access control.
 5. Click **Deploy**. The first time, Google will ask you to authorize the
-   script (it's acting on your own sheet, on your own behalf) — approve it.
+   script (it's acting on your own sheet, on your own behalf) - approve it.
 6. Copy the **Web app URL** it gives you (ends in `/exec`).
 
 ### c. Configure the site
@@ -128,5 +128,5 @@ subject, product, and message.
 
 If you ever change the Apps Script code, you need to **Deploy → Manage
 deployments → edit (pencil icon) → New version → Deploy** for the change
-to take effect — saving the script alone does not update the live Web
+to take effect - saving the script alone does not update the live Web
 app.

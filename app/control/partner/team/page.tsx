@@ -40,7 +40,7 @@ export default async function PartnerTeamPage() {
   return (
     <>
       <div className="control-header">
-        <h1>{manageable.name} — Team</h1>
+        <h1>{manageable.name} - Team</h1>
         <p>Manage roles and moderate members of your partner organization.</p>
       </div>
       <div className="control-actions">

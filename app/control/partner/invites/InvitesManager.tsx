@@ -72,7 +72,7 @@ export default function InvitesManager({ partnerId, initialInvites }: { partnerI
   }
 
   function copyCode(invite: InviteEntry) {
-    // Invites are redeemed in the KIS app (Partners > join with code) — there's
+    // Invites are redeemed in the KIS app (Partners > join with code) - there's
     // no web redemption flow, so share the raw code rather than a link.
     navigator.clipboard?.writeText(invite.code).then(() => {
       setCopiedId(invite.id);
@@ -122,7 +122,7 @@ export default function InvitesManager({ partnerId, initialInvites }: { partnerI
             <tbody>
               {invites.map((invite) => (
                 <tr key={invite.id}>
-                  <td>{invite.label || <span className="control-note">—</span>}</td>
+                  <td>{invite.label || <span className="control-note">-</span>}</td>
                   <td><code>{invite.code}</code></td>
                   <td>{invite.membership_role}</td>
                   <td>{invite.use_count}{invite.max_uses ? ` / ${invite.max_uses}` : ""}</td>

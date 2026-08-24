@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Custom-domain host routing for the Website Builder — application code
+// Custom-domain host routing for the Website Builder - application code
 // for a Cloudflare for SaaS setup (Worker-as-origin) that hasn't been
 // provisioned yet: apps.websites.custom_domains on the backend never
 // marks a domain ACTIVE without that (separate, not-yet-done) zone/
 // Worker-route infrastructure step, so in production today this always
-// bypasses to NextResponse.next() for every real request — it only
+// bypasses to NextResponse.next() for every real request - it only
 // starts rewriting once a real custom hostname exists and is verified.
 //
 // kingdomimpactventures.org itself, its subdomains, localhost, and the

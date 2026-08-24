@@ -30,7 +30,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ id: s
   if (!shopRes.ok) notFound();
   const shop = await shopRes.json();
   if (shop.owner !== profile.userId && !profile.isSuperuser) {
-    // Same read-guard reasoning as the shop detail page — Django's list
+    // Same read-guard reasoning as the shop detail page - Django's list
     // endpoint isn't owner-restricted, only writes are.
     const partnersRes = await fetch(`${kisApiBase()}/api/v1/partners/`, { headers, cache: "no-store", signal: AbortSignal.timeout(15_000) });
     const partnersData = partnersRes.ok ? await partnersRes.json() : {};
@@ -47,7 +47,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ id: s
     <>
       <BackLink href={`/control/shops/${id}`} label="Back to shop" />
       <div className="control-header">
-        <h1>Products — {shop.name}</h1>
+        <h1>Products - {shop.name}</h1>
         <p>Create and manage this shop&rsquo;s marketplace listings.</p>
       </div>
 

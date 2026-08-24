@@ -19,7 +19,7 @@ export type PartnerRoleAssignment = {
 };
 
 // The full set of codenames apps/partners/views.py actually checks via
-// _require_permission — there's no backend registry to read this from, so
+// _require_permission - there's no backend registry to read this from, so
 // this list has to be kept in sync with those call sites by hand.
 const PERMISSION_CODENAMES = [
   "partner.settings.view", "partner.settings.manage",
@@ -125,7 +125,7 @@ export default function RolesManager({
       <section className="control-section">
         <h2>Roles ({roles.length})</h2>
         {roles.length === 0 ? (
-          <div className="control-empty">No named roles created yet — team-level roles (member/manager/admin) still apply.</div>
+          <div className="control-empty">No named roles created yet - team-level roles (member/manager/admin) still apply.</div>
         ) : (
           <table className="control-table">
             <thead><tr><th>Name</th><th>Permissions</th></tr></thead>
@@ -136,7 +136,7 @@ export default function RolesManager({
                     <div style={{ fontWeight: 600 }}>{role.name}</div>
                     {role.description ? <div style={{ fontSize: ".78rem", color: "var(--ink-faint)" }}>{role.description}</div> : null}
                   </td>
-                  <td style={{ fontSize: ".82rem" }}>{role.permissions.length ? role.permissions.join(", ") : "—"}</td>
+                  <td style={{ fontSize: ".82rem" }}>{role.permissions.length ? role.permissions.join(", ") : "-"}</td>
                 </tr>
               ))}
             </tbody>

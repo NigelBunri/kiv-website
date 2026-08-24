@@ -18,13 +18,13 @@ export default function HomePage() {
       <HomeHero />
       <Section title="What Kingdom Impact Ventures is">
         <p>
-          Kingdom Impact Ventures (KIV) is the technology venture arm of KCAN — Kingdom Citizens &amp; Ambassadors Network. KIV designs, builds and operates Kingdom-aligned digital products: practical, accountable technology for real community, education, marketplace, payments and social-impact needs, not abstract mission statements.
+          Kingdom Impact Ventures (KIV) is the technology venture arm of KCAN - Kingdom Citizens &amp; Ambassadors Network. KIV designs, builds and operates Kingdom-aligned digital products: practical, accountable technology for real community, education, marketplace, payments and social-impact needs, not abstract mission statements.
         </p>
         <p>
-          The first product is Kingdom Impact Social (KIS), a Christian digital ecosystem combining community, private communication and discipleship tools. Future ventures extend the same approach into education, marketplace, payments and health — each announced publicly only once it has real launch readiness behind it, never before.
+          The first product is Kingdom Impact Social (KIS), a Christian digital ecosystem combining community, private communication and discipleship tools. Future ventures extend the same approach into education, marketplace, payments and health - each announced publicly only once it has real launch readiness behind it, never before.
         </p>
       </Section>
-      <Section title="The product: Kingdom Impact Social" body="KIS is real today — in advanced launch preparation, not a future concept — and it's the fastest way to see what KIV actually builds.">
+      <Section title="The product: Kingdom Impact Social" body="KIS is real today - in advanced launch preparation, not a future concept - and it's the fastest way to see what KIV actually builds.">
         <ImageStory
           src="/images/kis-ecosystem-visual.jpg"
           alt="KIS shown as a unified app ecosystem combining social feed, private messaging, Bible study, partner spaces and marketplace foundations."

@@ -1,6 +1,6 @@
 // schema.org JSON-LD for Website Builder public pages. Doesn't change
 // whether a page gets indexed (that stays a deliberate, separate
-// noindex-by-default stance — see lib/metadata.ts) but means the markup
+// noindex-by-default stance - see lib/metadata.ts) but means the markup
 // is already correct for the moment indexing is turned on, and some
 // platforms/crawlers read JSON-LD independent of the meta robots tag.
 import type { WebsiteBuilderKisContentItem, WebsiteBuilderSite } from "./website-builder-api";

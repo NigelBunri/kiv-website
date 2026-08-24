@@ -108,7 +108,7 @@ export default function ServiceCreateForm({ shopId, categories }: { shopId: stri
             ))}
           </fieldset>
         ) : (
-          <p className="control-error">No service categories are configured yet — contact an admin.</p>
+          <p className="control-error">No service categories are configured yet - contact an admin.</p>
         )}
         <label>Short summary<input value={shortSummary} onChange={(e) => setShortSummary(e.target.value)} maxLength={320} /></label>
         <label>Description<textarea rows={3} value={description} onChange={(e) => setDescription(e.target.value)} /></label>

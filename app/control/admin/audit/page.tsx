@@ -48,7 +48,7 @@ export default async function AdminAuditPage() {
                 <tr key={entry.id}>
                   <td>{new Date(entry.created_at).toLocaleString()}</td>
                   <td>{entry.action_type}</td>
-                  <td>{entry.target_app ? `${entry.target_app}.${entry.target_model} #${String(entry.target_pk || "").slice(0, 8)}` : "—"}</td>
+                  <td>{entry.target_app ? `${entry.target_app}.${entry.target_model} #${String(entry.target_pk || "").slice(0, 8)}` : "-"}</td>
                   <td><span className={`control-badge control-badge--${entry.severity === "critical" ? "inactive" : entry.severity === "warning" ? "pending" : "active"}`}>{entry.severity}</span></td>
                 </tr>
               ))}

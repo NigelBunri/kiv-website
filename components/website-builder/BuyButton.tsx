@@ -13,11 +13,11 @@ type Status = "idle" | "pending" | "error" | "enrolled";
 
 // The "Buy"/"Book Now"/"Enroll" action on a live KIS-content card.
 // Deliberately branches per target_type rather than being one generic
-// "purchase" call — products/services/courses each hit a different
+// "purchase" call - products/services/courses each hit a different
 // Django endpoint with a different payload shape (see the three
 // app/api/checkout/* routes). Anything not purchasable on-site (health
 // services, channels, posts, events, testimonials) falls back to the
-// existing deep_link into the app — unchanged from Phase 1.
+// existing deep_link into the app - unchanged from Phase 1.
 export function BuyButton({ targetType, item, shopId }: Props) {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
@@ -39,7 +39,7 @@ export function BuyButton({ targetType, item, shopId }: Props) {
         return;
       }
       if (!data.success) {
-        setError(data.message || "That didn't work — please try again.");
+        setError(data.message || "That didn't work - please try again.");
         setStatus("error");
         return;
       }
@@ -54,7 +54,7 @@ export function BuyButton({ targetType, item, shopId }: Props) {
       setError("Checkout couldn't be started for this item.");
       setStatus("error");
     } catch {
-      setError("Something went wrong — please try again.");
+      setError("Something went wrong - please try again.");
       setStatus("error");
     }
   }
@@ -105,7 +105,7 @@ export function BuyButton({ targetType, item, shopId }: Props) {
   if (targetType === "course") {
     const checkoutContentId = (item as { checkout_content_id?: string | null }).checkout_content_id;
     if (status === "enrolled") {
-      return <p className="wb-price">You&apos;re enrolled — check the KIS app to start learning.</p>;
+      return <p className="wb-price">You&apos;re enrolled - check the KIS app to start learning.</p>;
     }
     return (
       <div className="wb-buy">
@@ -123,7 +123,7 @@ export function BuyButton({ targetType, item, shopId }: Props) {
     );
   }
 
-  // health_service, broadcast_channel, post, event, testimonial — no
+  // health_service, broadcast_channel, post, event, testimonial - no
   // on-site checkout surface for these (see the website-builder plan's
   // "Health checkout" scope note); the deep_link already rendered on the
   // card is the only action for these types.

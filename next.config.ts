@@ -4,10 +4,10 @@ import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 // 'unsafe-eval' is added to script-src in dev only: Next's dev-mode runtime
 // (Turbopack/React Refresh) calls eval() to reconstruct cross-environment
 // call stacks and isn't used at all in production ("React will never use
-// eval() in production mode" — from the console error this produces
+// eval() in production mode" - from the console error this produces
 // without it). Excluding it in prod was confirmed safe by monitoring
 // securitypolicyviolation/console across page load, scroll-triggered
-// reveal animations and client-side navigation — nothing there depends on
+// reveal animations and client-side navigation - nothing there depends on
 // eval()/Function() construction.
 const scriptSrc = [
   "'self'",
@@ -16,7 +16,7 @@ const scriptSrc = [
   "https://challenges.cloudflare.com",
   // Cloudflare injects its own Web Analytics beacon into the served HTML
   // at the edge (outside this app's control) whenever it's enabled on the
-  // zone — without this, every single page load logs a blocked-by-CSP
+  // zone - without this, every single page load logs a blocked-by-CSP
   // console error for a script this app never requested.
   "https://static.cloudflareinsights.com",
 ].join(" ");
@@ -31,11 +31,11 @@ const csp = [
   "font-src 'self' data:",
   // 'unsafe-inline' is a hard requirement, not a default left in by habit:
   // Next's App Router streams RSC/hydration data via multiple inline
-  // <script> tags (confirmed empirically — removing this broke all
+  // <script> tags (confirmed empirically - removing this broke all
   // client-side interactivity site-wide, since React never received the
   // payload to hydrate against).
   // challenges.cloudflare.com is required for the Turnstile CAPTCHA widget
-  // (PublicForm.tsx injects its script tag directly) — without this, the
+  // (PublicForm.tsx injects its script tag directly) - without this, the
   // widget script and its challenge iframe would both be silently blocked.
   `script-src ${scriptSrc}`,
   "frame-src https://challenges.cloudflare.com",

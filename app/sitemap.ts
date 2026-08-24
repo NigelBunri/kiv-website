@@ -4,11 +4,11 @@ import { fetchWebsiteSitemapPlan } from "@/lib/website-builder-api";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // A hardcoded single date for every URL made `lastModified` meaningless
-  // as a freshness signal — every entry claimed the same "last changed"
+  // as a freshness signal - every entry claimed the same "last changed"
   // date forever, including on builds where nothing in that route changed.
   // `updates` entries have a real per-item date already; everywhere else
   // that has no genuine per-content timestamp, this uses the actual build
-  // time instead of a stale fixed string — an honest "this reflects what
+  // time instead of a stale fixed string - an honest "this reflects what
   // was live as of this build" signal, not a fabricated edit date.
   const buildDate = new Date();
 
@@ -47,10 +47,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  // Website Builder pages — a genuinely dynamic set (owners publish from
+  // Website Builder pages - a genuinely dynamic set (owners publish from
   // inside the KIS app), fetched live rather than baked in like every
   // other entry above. Kept separate from broadcasts' own sitemap-plan
-  // (kis.app, a different domain/concern) — see the website-builder plan.
+  // (kis.app, a different domain/concern) - see the website-builder plan.
   // Never lets a fetch failure break the whole sitemap.
   let websiteEntries: MetadataRoute.Sitemap = [];
   try {

@@ -57,7 +57,7 @@ export default async function HealthInstitutionDetailPage({ params }: { params: 
       <BackLink href="/control/institutions/health" label="All institutions" />
       <div className="control-header">
         <h1>{institution.name}</h1>
-        <p>Health institution — {institution.institution_type}</p>
+        <p>Health institution - {institution.institution_type}</p>
       </div>
       {institution.can_manage ? (
         <HealthInstitutionWorkspace initialInstitution={institution} initialServices={services} />

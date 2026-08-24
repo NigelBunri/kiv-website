@@ -35,7 +35,7 @@ export default async function OrdersPage({ params }: { params: Promise<{ id: str
     <>
       <BackLink href={`/control/shops/${id}`} label="Back to shop" />
       <div className="control-header">
-        <h1>Orders — {shop.name}</h1>
+        <h1>Orders - {shop.name}</h1>
         <p>Incoming marketplace orders for this shop.</p>
       </div>
       <OrdersList shopId={id} initialOrders={orders} />

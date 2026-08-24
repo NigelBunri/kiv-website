@@ -1,7 +1,7 @@
 // Live server-side fetch layer for the KIS Website Builder's public pages
 // (kingdomimpactventures.org/page/<slug>[/<page-slug>]). Modeled directly
-// on app/api/payment-status/route.ts's proven pattern — same env var,
-// same fallback domain, same no-store/timeout config — but called
+// on app/api/payment-status/route.ts's proven pattern - same env var,
+// same fallback domain, same no-store/timeout config - but called
 // directly from Server Components rather than through an intermediate
 // /api/* proxy route, since these are plain unauthenticated GETs with no
 // CORS concern (server-to-server, not browser-initiated).
@@ -20,7 +20,7 @@ async function fetchJson<T>(url: string): Promise<T | null> {
     const response = await fetch(url, {
       method: "GET",
       headers: { Accept: "application/json" },
-      // Website builder content changes without a rebuild — never serve
+      // Website builder content changes without a rebuild - never serve
       // a stale cached response.
       cache: "no-store",
       signal: AbortSignal.timeout(20_000),
@@ -47,9 +47,9 @@ export type WebsiteBuilderKisContentItem = {
   image_url: string;
   price_display: string;
   deep_link: string;
-  /** product only — which shop to check out against. */
+  /** product only - which shop to check out against. */
   shop_id?: string;
-  /** course only — the underlying EducationInstitutionBroadcast to enroll
+  /** course only - the underlying EducationInstitutionBroadcast to enroll
    * in; null when this course has no purchasable content yet. */
   checkout_content_id?: string | null;
   [key: string]: unknown;
@@ -71,7 +71,7 @@ export type WebsiteBuilderSection = {
   has_more?: boolean;
   resolved_video?: WebsiteBuilderResolvedKisVideo | null;
   responsive?: { hidden_on?: Array<"mobile" | "desktop"> };
-  /** Which of the section type's alternate visual designs to render —
+  /** Which of the section type's alternate visual designs to render -
    * see SECTION_VARIANTS in SectionRenderer.tsx. Absent/unrecognized
    * falls back to "classic" (the original single design each type had
    * before variants existed), so old sections keep rendering unchanged. */
@@ -82,7 +82,7 @@ export type WebsiteBuilderSite = {
   slug: string;
   name: string;
   owner_type: string;
-  /** Only present/needed for owner_type=="shop" sites — scopes cart
+  /** Only present/needed for owner_type=="shop" sites - scopes cart
    * operations (see PublicCartProvider.tsx). */
   owner_id: string;
   branding: Record<string, unknown>;
@@ -122,7 +122,7 @@ export type WebsiteBuilderKisContentDetail = WebsiteBuilderKisContentItem & {
   service_type?: string;
   negotiable?: boolean;
   quote_required?: boolean;
-  /** Product only — display/preview only, see resolve_product_detail's
+  /** Product only - display/preview only, see resolve_product_detail's
    * docstring on the backend for why this doesn't affect checkout yet. */
   variants?: WebsiteBuilderProductVariant[];
 };

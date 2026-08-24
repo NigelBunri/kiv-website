@@ -10,7 +10,7 @@ type NavLink = { href: string; label: string };
 type NavSubGroup = { heading: string; items: NavLink[]; note?: string };
 type NavGroup = { heading: string; items?: NavLink[]; subGroups?: NavSubGroup[] };
 
-// Top-level, ungrouped links — account-wide, not specific to one of the
+// Top-level, ungrouped links - account-wide, not specific to one of the
 // four domain sections below.
 const TOP_NAV_ITEMS: NavLink[] = [
   { href: "/control", label: "Dashboard" },
@@ -26,14 +26,14 @@ const TOP_NAV_ITEMS: NavLink[] = [
 //
 // Broadcast is structured differently on purpose: it mirrors the RN app's
 // own Channel Studio grouping (ChannelStudioScreen.tsx's five
-// StudioTabCategory values — content/live/growth/brand/protect), since
+// StudioTabCategory values - content/live/growth/brand/protect), since
 // that's the mental model the product already trained users on. "Brand"
 // isn't broken out as its own sub-group here because the website's
 // branding form and content composer live on the exact same page
 // (/control/channel) rather than separate routes the way the RN app's
 // tabs are separate. Only 4 of the RN app's 20 studio tabs have a
 // website page today (content list+create, playlists, revenue,
-// moderation) — the rest (live streaming, audience/traffic/impressions
+// moderation) - the rest (live streaming, audience/traffic/impressions
 // analytics, ads, copyright, subtitles/chapters/end-screens/cards,
 // shelves, settings) are real backend capabilities with no website UI
 // yet. Sub-groups with nothing built show a note instead of a dead link,
@@ -64,7 +64,7 @@ const DOMAIN_NAV_GROUPS: NavGroup[] = [
       {
         heading: "Live",
         items: [],
-        note: "Live streaming isn't on the website yet — use the KIS app.",
+        note: "Live streaming isn't on the website yet - use the KIS app.",
       },
       {
         heading: "Growth",

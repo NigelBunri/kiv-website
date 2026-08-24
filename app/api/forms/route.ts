@@ -9,7 +9,7 @@ function clientKey(request: NextRequest) {
 /**
  * Verifies the Cloudflare Turnstile token against Cloudflare's own
  * siteverify endpoint. Returns true (skips verification) when
- * TURNSTILE_SECRET_KEY isn't configured — matches this codebase's existing
+ * TURNSTILE_SECRET_KEY isn't configured - matches this codebase's existing
  * pattern of degrading honestly when a provider isn't set up (see
  * validatePublicForm's KIV_FORM_PROVIDER messaging) rather than either
  * silently accepting unverified submissions in production or breaking the
@@ -37,7 +37,7 @@ async function verifyTurnstile(token: string, remoteIp: string): Promise<boolean
 /**
  * Forwards a validated submission to a Google Sheet via a Google Apps
  * Script Web App (see docs/forms-integration-setup.md for how that's set
- * up) — deliberately not the Google Sheets API directly, since that would
+ * up) - deliberately not the Google Sheets API directly, since that would
  * need a service-account credential managed here; the Apps Script approach
  * keeps all Google-side auth inside the user's own Google account. A
  * failure here is logged, not surfaced to the submitter: the request was

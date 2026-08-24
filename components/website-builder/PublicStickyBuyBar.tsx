@@ -1,10 +1,10 @@
 "use client";
 
 // Slim bar that sticks to the bottom of the viewport once the page's
-// own buy/book action has scrolled out of view — the shopper never has
+// own buy/book action has scrolled out of view - the shopper never has
 // to scroll back up to purchase. Reuses BuyButton as-is (same checkout
 // path, same behavior), just re-rendered in a fixed-position shell.
-// Not a cart — this site's checkout is still single-item "buy now" per
+// Not a cart - this site's checkout is still single-item "buy now" per
 // product/service/course (see BuyButton.tsx); a real multi-item cart
 // drawer would need new Cart/Order backend models and is a separate,
 // larger piece of work.
@@ -33,7 +33,7 @@ export function PublicStickyBuyBar({ targetType, item, shopId, priceDisplay }: P
 
   return (
     <>
-      {/* Placed right after the primary action area in WebsiteItemDetailView — once this scrolls above the viewport, the sticky bar appears. */}
+      {/* Placed right after the primary action area in WebsiteItemDetailView - once this scrolls above the viewport, the sticky bar appears. */}
       <div ref={sentinelRef} aria-hidden="true" style={{ height: 1 }} />
       <div className={`wb-sticky-buy-bar${visible ? " wb-sticky-buy-bar--visible" : ""}`} aria-hidden={!visible}>
         <div className="wb-sticky-buy-bar-inner">

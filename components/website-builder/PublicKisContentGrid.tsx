@@ -13,17 +13,17 @@ type Props = {
   siteSlug: string;
   pageSlug: string;
   sectionId: string;
-  /** From the editor's `presentation` field — grid is the historical
+  /** From the editor's `presentation` field - grid is the historical
    * default (every section created before this option existed behaves
    * as grid). carousel = horizontal scroll-snap row with arrow controls,
    * list = stacked horizontal cards (image beside text, not above it). */
   displayMode?: "grid" | "carousel" | "list";
-  /** Grid mode only — column count on wide screens. */
+  /** Grid mode only - column count on wide screens. */
   columns?: number;
 };
 
 // Only these target types have an on-site detail page (see
-// resolve_kis_content_item_detail's _DETAIL_RESOLVERS on the backend) —
+// resolve_kis_content_item_detail's _DETAIL_RESOLVERS on the backend) -
 // everything else (health_service, broadcast_channel, post, event,
 // testimonial) has no on-site checkout surface and goes straight to the
 // app instead, same as the deep_link already used for their OpenInApp
@@ -61,7 +61,7 @@ export function PublicKisContentGrid({
       setItems((prev) => [...prev, ...(Array.isArray(data.items) ? data.items : [])]);
       setHasMore(Boolean(data.has_more));
     } catch {
-      // Leave items/hasMore as they were — the button stays visible to retry.
+      // Leave items/hasMore as they were - the button stays visible to retry.
     } finally {
       setLoading(false);
     }
@@ -88,7 +88,7 @@ export function PublicKisContentGrid({
     );
   });
 
-  // List mode needs its own DOM shape — everything but the image grouped
+  // List mode needs its own DOM shape - everything but the image grouped
   // into one body column so it can be vertically centered and padded as
   // a unit, rather than laid out as loose flex siblings next to the
   // image (which is what grid/carousel's flat structure above does).

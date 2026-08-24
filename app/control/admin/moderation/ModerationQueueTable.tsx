@@ -60,7 +60,7 @@ export default function ModerationQueueTable({ flags }: { flags: Flag[] }) {
             <tr key={flag.id}>
               <td>{flag.target_type} {flag.target_id ? `#${flag.target_id.slice(0, 8)}` : ""}</td>
               <td><span className="control-badge control-badge--pending">{flag.severity}</span></td>
-              <td>{flag.reason || "—"}</td>
+              <td>{flag.reason || "-"}</td>
               <td>
                 <select
                   defaultValue=""

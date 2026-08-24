@@ -40,7 +40,7 @@ export default async function ShopMembersPage({ params }: { params: Promise<{ id
     <>
       <BackLink href={`/control/shops/${id}`} label="Back to shop" />
       <div className="control-header">
-        <h1>Team — {shop.name}</h1>
+        <h1>Team - {shop.name}</h1>
         <p>Add staff, assign roles, and manage who can help run this shop.</p>
       </div>
       <MembersWorkspace shopId={id} initialMembers={members} />

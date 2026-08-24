@@ -3,7 +3,7 @@ import { authHeaders, getValidSession, kisApiBase, setSessionCookie } from "@/li
 
 // Fetches (or creates) the visitor's active cart for one shop. Same
 // Cart/CartItem models the RN mobile app's own per-shop cart already
-// uses in production (apps.commerce.models.Cart, CartViewSet) — this
+// uses in production (apps.commerce.models.Cart, CartViewSet) - this
 // adds no new backend logic, only a signed-in-visitor entry surface,
 // same pattern as app/api/checkout/product/route.ts.
 export async function GET(request: NextRequest) {
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (current.status === 404) {
-      // No cart exists yet for this shop — create one. Matches
+      // No cart exists yet for this shop - create one. Matches
       // CartViewSet.perform_create: one active cart per (user, shop).
       const created = await fetch(`${kisApiBase()}/api/v1/commerce/carts/`, {
         method: "POST",

@@ -1,7 +1,7 @@
 "use client";
 
 // Fires one page-view beacon per mount via navigator.sendBeacon (falls
-// back to fetch with keepalive when unavailable) — no third-party
+// back to fetch with keepalive when unavailable) - no third-party
 // script, no cookie, nothing persisted client-side. See
 // apps.websites.analytics on the backend for what's actually stored.
 import { useEffect } from "react";

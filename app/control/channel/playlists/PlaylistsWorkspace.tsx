@@ -133,7 +133,7 @@ export default function PlaylistsWorkspace({
             ))}
           </div>
         )}
-        <p className="control-note">Current playlist contents can&rsquo;t be listed yet — add or remove posts by title above; there&rsquo;s no way to see what&rsquo;s already in a playlist from here.</p>
+        <p className="control-note">Current playlist contents can&rsquo;t be listed yet - add or remove posts by title above; there&rsquo;s no way to see what&rsquo;s already in a playlist from here.</p>
       </section>
     </>
   );

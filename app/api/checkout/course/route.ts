@@ -3,7 +3,7 @@ import { authHeaders, getValidSession, kisApiBase, setSessionCookie } from "@/li
 
 // Enroll in (and, if paid, start checkout for) a course from a Website
 // Builder page. Purchasing operates on the course's underlying
-// EducationInstitutionBroadcast, not the course row directly — there is
+// EducationInstitutionBroadcast, not the course row directly - there is
 // no course-level purchase endpoint in this codebase. `checkoutContentId`
 // is resolved server-side by apps.websites.kis_content_resolvers.
 // resolve_courses() (the "primary purchasable broadcast" for that
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
             paymentUrl: booking?.payment_url || null,
             txRef: booking?.payment_reference || null,
             // No payment_url at all means this was free/instant enrollment
-            // (see EducationContentEnrollmentView) — already complete.
+            // (see EducationContentEnrollmentView) - already complete.
             enrolled: !booking?.payment_url,
           }
         : { success: false, message: data?.detail || "Unable to enroll in this course." },

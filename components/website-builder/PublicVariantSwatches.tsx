@@ -1,7 +1,7 @@
 "use client";
 
 // Size/color (or any other option) swatch selector for a product's
-// variants — display/preview only. Selecting a combination shows that
+// variants - display/preview only. Selecting a combination shows that
 // specific variant's own price and stock so a shopper can compare
 // before deciding, but purchasing still always buys the base product:
 // checkout has no variant concept yet (see resolve_product_detail's
@@ -68,7 +68,7 @@ export function PublicVariantSwatches({ variants, basePriceDisplay, baseCompareA
             {showingVariant ? showingVariant.compare_at_price_display : baseCompareAtPriceDisplay}
           </s>
         ) : null}
-        {showingVariant && !showingVariant.in_stock ? <span className="wb-item-detail-stock wb-item-detail-stock--out"> — Out of stock</span> : null}
+        {showingVariant && !showingVariant.in_stock ? <span className="wb-item-detail-stock wb-item-detail-stock--out"> - Out of stock</span> : null}
       </p>
       {!showingVariant && (
         <p className="wb-variant-swatch-hint">Select {optionGroups.map((g) => g.key.toLowerCase()).join(" and ")} to see exact price and availability.</p>

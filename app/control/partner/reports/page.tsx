@@ -50,7 +50,7 @@ export default async function PartnerReportsPage() {
   return (
     <>
       <div className="control-header">
-        <h1>{manageable.name} — Reports</h1>
+        <h1>{manageable.name} - Reports</h1>
         <p>Activity summary for your partner organization.</p>
       </div>
       <div className="control-actions">

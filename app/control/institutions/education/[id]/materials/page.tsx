@@ -31,7 +31,7 @@ export default async function MaterialsPage({ params }: { params: Promise<{ id: 
       <BackLink href={`/control/institutions/education/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Materials</h1>
-        <p>Videos, documents, slides, and links — attach these to course modules from a course&rsquo;s page.</p>
+        <p>Videos, documents, slides, and links - attach these to course modules from a course&rsquo;s page.</p>
       </div>
 
       <MaterialCreateForm institutionId={id} courses={courses} />

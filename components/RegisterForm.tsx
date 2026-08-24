@@ -80,7 +80,7 @@ export function RegisterForm() {
   if (done) {
     return (
       <div className="form-status" role="status" aria-live="polite">
-        <p><strong>Account created.</strong> You&apos;re signed in here — and you can use this same phone number and password to log into the KIS app too.</p>
+        <p><strong>Account created.</strong> You&apos;re signed in here - and you can use this same phone number and password to log into the KIS app too.</p>
       </div>
     );
   }

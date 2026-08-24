@@ -3,7 +3,7 @@ import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { products, site, type Product } from "@/lib/site";
 
 /**
- * Visible breadcrumb trail paired with its BreadcrumbJsonLd — a page's
+ * Visible breadcrumb trail paired with its BreadcrumbJsonLd - a page's
  * markup and its structured data should describe the same thing, and a
  * JSON-LD-only breadcrumb with no matching visible trail is both a weaker
  * trust signal for Google and a missed internal-link/navigation aid for
@@ -12,7 +12,7 @@ import { products, site, type Product } from "@/lib/site";
  */
 export function Breadcrumbs({ items }: { items: Array<{ name: string; href: string }> }) {
   // A single "Home" crumb on the homepage itself isn't a real trail (Google's
-  // own BreadcrumbList examples always show 2+ levels) — it was rendering as
+  // own BreadcrumbList examples always show 2+ levels) - it was rendering as
   // a lone "Home" label between the header and the hero, adding unwanted
   // vertical space for no navigational value. Skip entirely below 2 items.
   if (items.length < 2) return null;
@@ -49,7 +49,7 @@ function stripExt(src: string): string {
  * falling back to the original format at the same widths for browsers
  * without WebP support (vanishingly few today, but this costs nothing to
  * keep). Every hero/story/card image on the site goes through this instead
- * of a single full-resolution <img> — see docs/forms-integration-setup.md's
+ * of a single full-resolution <img> - see docs/forms-integration-setup.md's
  * sibling concern: don't ship one desktop-sized asset to every viewport.
  */
 function ResponsiveImage({
@@ -114,7 +114,7 @@ export function Hero({
   body: string;
   actions?: Array<{ href: string; label: string; variant?: "primary" | "secondary" }>;
   /** When provided (e.g. on a product page), shows that product's own crest
-   *  instead of the generic KCAN/KIV/KIS venture-structure panel — every
+   *  instead of the generic KCAN/KIV/KIS venture-structure panel - every
    *  page repeating the same panel added little once a page has its own
    *  real mark to show. */
   logo?: { src: string; alt: string };
@@ -232,7 +232,7 @@ export function HomeHero() {
           Kingdom technology ventures built with <span>clear purpose and responsible impact.</span>
         </h1>
         <p>
-          Kingdom Impact Ventures (KIV) is the business and technology venture of KCAN. We build and support ventures in education, market, payments and health — for Kingdom impact.
+          Kingdom Impact Ventures (KIV) is the business and technology venture of KCAN. We build and support ventures in education, market, payments and health - for Kingdom impact.
         </p>
         <div className="home-hero-actions">
           <Link className="home-button home-button--dark" href="/products/kis">View KIS <span aria-hidden="true">→</span></Link>
@@ -423,7 +423,7 @@ export function ProductGrid() {
 
 /**
  * Photo-forward cards pairing a real-world challenge with the specific
- * KIS capability that addresses it — used on /who-we-serve. Distinct from
+ * KIS capability that addresses it - used on /who-we-serve. Distinct from
  * CardGrid (small logo + single body paragraph): each card needs two
  * separate statements (the problem, then the KIS-specific answer) plus a
  * larger, photo-sized image rather than an 80px logo mark.

@@ -3,7 +3,7 @@ import { fetchWebsitePage, fetchWebsiteSite } from "@/lib/website-builder-api";
 import { pageMetadata } from "@/lib/metadata";
 import { WebsitePageView } from "@/components/website-builder/WebsitePageView";
 
-// Website Builder public homepage — kingdomimpactventures.org/page/<slug>.
+// Website Builder public homepage - kingdomimpactventures.org/page/<slug>.
 // No generateStaticParams: unlike every other route in this repo, this
 // content changes without a rebuild (an owner publishes/edits inside the
 // KIS app), so this is deliberately dynamic, server-rendered per request.
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }) 
     path: `/page/${siteSlug}`,
     image: seo.share_image_url ? { url: seo.share_image_url, width: 1200, height: 630, alt: site.name } : undefined,
     // Conservative default regardless of the Django flag until indexing
-    // is explicitly approved for production — see lib/metadata.ts.
+    // is explicitly approved for production - see lib/metadata.ts.
     robots: { index: false, follow: false },
   });
 }

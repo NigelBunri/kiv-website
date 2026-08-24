@@ -10,7 +10,7 @@ type Props = {
 
 // Web equivalent of the app's country/dial-code picker
 // (KIS/src/components/common/SafeCountryPicker.tsx, wrapping
-// react-native-country-picker-modal) — a native <select> here instead of a
+// react-native-country-picker-modal) - a native <select> here instead of a
 // modal sheet, same underlying data shape (ISO2 + dial code), fully
 // keyboard/screen-reader accessible with zero extra UI to build.
 export function CountrySelect({ value, onChange, id }: Props) {

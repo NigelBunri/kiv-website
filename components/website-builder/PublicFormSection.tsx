@@ -1,10 +1,10 @@
 "use client";
 
-// The one interactive (client-rendered) section type — every other
+// The one interactive (client-rendered) section type - every other
 // section in SectionRenderer.tsx stays a plain Server Component. Field
 // names (title/submitLabel/fields[].key|label|type|required) match the RN
 // Website Builder editor's own `form` section vocabulary exactly (see
-// KIS/src/components/section-builder/types.ts's FormSectionData) — the RN
+// KIS/src/components/section-builder/types.ts's FormSectionData) - the RN
 // app is the only place a `form` section is ever authored, so this reads
 // its field names directly rather than inventing a second shape.
 import { useRef, useState } from "react";
@@ -82,7 +82,7 @@ export function PublicFormSection({ data, sectionId, siteSlug, pageSlug }: Props
           {status === "submitting" ? "Sending…" : submitLabel}
         </button>
         <p className={`form-status${status === "success" ? " success" : ""}`} role="status">
-          {status === "success" && "Thanks — your message was sent."}
+          {status === "success" && "Thanks - your message was sent."}
           {status === "error" && errorMessage}
         </p>
       </form>

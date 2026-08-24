@@ -36,8 +36,8 @@ export default async function PartnerProfilePage() {
   return (
     <>
       <div className="control-header">
-        <h1>{manageable.name} — Organization profile</h1>
-        <p>Public details about your organization — mission, contact info, and branding.</p>
+        <h1>{manageable.name} - Organization profile</h1>
+        <p>Public details about your organization - mission, contact info, and branding.</p>
       </div>
       <div className="control-actions">
         <a href="/control/partner" className="button">Organization overview</a>

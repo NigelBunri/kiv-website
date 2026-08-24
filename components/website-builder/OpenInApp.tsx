@@ -8,7 +8,7 @@ import { productBySlug } from "@/lib/site";
 // scheme registered natively on both platforms (ios/KIS/Info.plist,
 // android/app/src/main/AndroidManifest.xml). The custom scheme is used
 // for the actual open-attempt rather than the https:// form because
-// kis.app doesn't yet serve apple-app-site-association/assetlinks.json —
+// kis.app doesn't yet serve apple-app-site-association/assetlinks.json -
 // without those, an https:// "universal link" is just a normal page
 // navigation the OS won't hand to the app, whereas an unrecognized custom
 // scheme fails silently, which is what the timeout-fallback below depends on.
@@ -31,7 +31,7 @@ function detectPlatform(): Platform {
   return "desktop";
 }
 
-// Renders nothing on desktop — BuyButton already gives PC visitors a full
+// Renders nothing on desktop - BuyButton already gives PC visitors a full
 // on-site checkout/login flow there (see BuyButton.tsx), so a phone-only
 // app-open button next to it would be redundant clutter. On a phone, this
 // is the primary action: try the native app first, and only fall back to
@@ -59,7 +59,7 @@ export function OpenInApp({ deepLink, label = "Open in the KIS app" }: { deepLin
     window.location.href = scheme;
     setTimeout(() => {
       // The tab going to background means iOS/Android actually switched to
-      // the app — don't fire the fallback navigation on top of that.
+      // the app - don't fire the fallback navigation on top of that.
       if (document.hidden) return;
       if (Date.now() - openedAt < 2500) {
         window.location.href = fallbackUrl;

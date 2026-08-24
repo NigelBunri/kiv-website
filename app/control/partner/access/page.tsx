@@ -40,7 +40,7 @@ export default async function PartnerAccessPage() {
   return (
     <>
       <div className="control-header">
-        <h1>{manageable.name} — Access governance</h1>
+        <h1>{manageable.name} - Access governance</h1>
         <p>Role access requests and periodic access reviews.</p>
       </div>
       <div className="control-actions">

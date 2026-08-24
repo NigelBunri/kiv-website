@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authHeaders, getValidSession, kisApiBase, setSessionCookie } from "@/lib/session";
 
-// Checks out every item currently in the cart as one MarketplaceOrder —
+// Checks out every item currently in the cart as one MarketplaceOrder -
 // same place_marketplace_order() the single-item .../checkout/product
 // route and the RN app's own cart checkout (CartDetailPage.handleCheckout)
 // both call, just with N items instead of 1. The client sends the items
 // it already has from having fetched the cart (same approach the RN app
-// uses — it doesn't ask Django to re-derive items from a cart_id either).
+// uses - it doesn't ask Django to re-derive items from a cart_id either).
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}));
   const shopId = String(body?.shopId || "").trim();

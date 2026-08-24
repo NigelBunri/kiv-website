@@ -42,7 +42,7 @@ export default async function HealthInstitutionsPage() {
           {institutions.map((institution) => (
             <tr key={institution.id}>
               <td><Link href={`/control/institutions/health/${institution.id}`}>{institution.name}</Link></td>
-              <td>{institution.institution_type || "—"}</td>
+              <td>{institution.institution_type || "-"}</td>
             </tr>
           ))}
         </tbody>

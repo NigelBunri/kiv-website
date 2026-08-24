@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 /**
  * A thin gold progress bar pinned to the very top of the viewport, width
  * tied to how far down the page you've scrolled. Purely decorative/UX
- * feedback — reads the scroll position via rAF-throttled listener and
+ * feedback - reads the scroll position via rAF-throttled listener and
  * writes directly to the bar's own inline style (no React state/re-render
  * per scroll tick, which would be wasteful at 60fps).
  */

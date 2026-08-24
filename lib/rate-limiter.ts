@@ -6,7 +6,7 @@ const LIMIT = 5;
 // In-memory fallback. Correct only for a single long-running Node process
 // (e.g. the Docker/AWS path in docs/deployment.md). On Cloudflare Workers,
 // each request can land on a different isolate with its own empty Map, so
-// this fallback stops being an effective limit there — set REDIS_URL in
+// this fallback stops being an effective limit there - set REDIS_URL in
 // that deployment so rateLimitRedis below is used instead.
 const submissions = new Map<string, { count: number; resetAt: number }>();
 
@@ -25,7 +25,7 @@ function rateLimitInMemory(key: string): boolean {
 let redisClient: Redis | null | undefined;
 
 // Dynamically imported so the ioredis module (and its Node net/tls usage)
-// is only ever loaded when REDIS_URL is actually set — it stays out of the
+// is only ever loaded when REDIS_URL is actually set - it stays out of the
 // Worker bundle's hot path entirely on deployments that don't configure it.
 async function getRedisClient(): Promise<Redis | null> {
   if (redisClient !== undefined) return redisClient;
@@ -54,7 +54,7 @@ async function rateLimitRedis(client: Redis, key: string): Promise<boolean> {
  * REDIS_URL is configured (needed once this site runs more than one
  * replica); otherwise falls back to the in-memory counter above, which is
  * already correct for a single-replica deployment. Fails open on Redis
- * errors — an availability safeguard must not become a new outage cause.
+ * errors - an availability safeguard must not become a new outage cause.
  */
 export async function rateLimit(key: string): Promise<boolean> {
   const client = await getRedisClient();

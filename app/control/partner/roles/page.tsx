@@ -42,7 +42,7 @@ export default async function PartnerRolesPage() {
   return (
     <>
       <div className="control-header">
-        <h1>{manageable.name} — Roles &amp; permissions</h1>
+        <h1>{manageable.name} - Roles &amp; permissions</h1>
         <p>Fine-grained named roles, on top of the basic member/manager/admin team roles.</p>
       </div>
       <div className="control-actions">

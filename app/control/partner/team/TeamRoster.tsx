@@ -143,10 +143,10 @@ function MemberRow({
           <span className="control-badge control-badge--active">active</span>
         ) : null}
       </td>
-      <td>{member.joined_at ? new Date(member.joined_at).toLocaleDateString() : "—"}</td>
+      <td>{member.joined_at ? new Date(member.joined_at).toLocaleDateString() : "-"}</td>
       <td>
         {locked || isSelf ? (
-          <span className="control-note">—</span>
+          <span className="control-note">-</span>
         ) : (
           <>
             <button type="button" className="button" onClick={() => setExpanded((v) => !v)}>

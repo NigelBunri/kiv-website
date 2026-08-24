@@ -1,11 +1,11 @@
 import { cookies } from "next/headers";
 import crypto from "node:crypto";
 
-// Server-only web session for the KIS Website Builder — the browser never
+// Server-only web session for the KIS Website Builder - the browser never
 // sees a raw JWT. This module encrypts {access, refresh, deviceId, userId,
 // accessExpiresAt} into one httpOnly cookie; every authenticated Django
 // call happens server-side (a Route Handler or Server Component reads the
-// cookie, attaches Authorization+X-Device-Id, calls Django directly) —
+// cookie, attaches Authorization+X-Device-Id, calls Django directly) -
 // server-to-server, so this never touches CORS, unlike a browser-JS bearer
 // token would. Modeled on the existing app/api/payment-status/route.ts
 // server-side-fetch pattern, extended with a session instead of a one-shot
@@ -29,7 +29,7 @@ function apiBase(): string {
 function encryptionKey(): Buffer {
   const secret = process.env.SESSION_ENCRYPTION_SECRET;
   if (!secret) {
-    throw new Error("SESSION_ENCRYPTION_SECRET is not configured — web login cannot issue sessions without it.");
+    throw new Error("SESSION_ENCRYPTION_SECRET is not configured - web login cannot issue sessions without it.");
   }
   // sha256 gives a stable 32-byte key regardless of the configured secret's
   // own length, which aes-256-gcm requires exactly.
@@ -60,7 +60,7 @@ function decryptSession(value: string): Session | null {
   }
 }
 
-/** Decode a JWT's `exp` claim without verifying the signature — Django is
+/** Decode a JWT's `exp` claim without verifying the signature - Django is
  * the only party that ever verifies these tokens; this is purely so the
  * website knows when to proactively refresh, never used for trust. */
 function readJwtExpiry(accessToken: string): number {
@@ -82,10 +82,10 @@ const COOKIE_OPTIONS = {
   secure: true,
   sameSite: "lax" as const,
   path: "/",
-  maxAge: 60 * 60 * 24 * 90, // matches Django's REFRESH_TOKEN_LIFETIME default (90 days) — the access token itself is refreshed transparently well before it expires
+  maxAge: 60 * 60 * 24 * 90, // matches Django's REFRESH_TOKEN_LIFETIME default (90 days) - the access token itself is refreshed transparently well before it expires
 };
 
-/** Read-only — safe to call from Server Components. Never refreshes; a
+/** Read-only - safe to call from Server Components. Never refreshes; a
  * near-expired access token is fine for "am I signed in" display purposes,
  * and any Route Handler that needs to actually call Django uses
  * getValidAccessToken() below, which does refresh. */
@@ -101,7 +101,7 @@ export function setSessionCookie(response: Response, session: Session) {
   const encoded = encryptSession(session);
   // NextResponse extends Response with a typed .cookies helper, but this
   // module is also used from Server Actions where a plain Response may be
-  // passed — feature-detect rather than importing NextResponse's type here.
+  // passed - feature-detect rather than importing NextResponse's type here.
   (response as unknown as { cookies: { set: (name: string, value: string, opts: typeof COOKIE_OPTIONS) => void } }).cookies.set(
     COOKIE_NAME, encoded, COOKIE_OPTIONS,
   );
@@ -117,7 +117,7 @@ export function clearSessionCookie(response: Response) {
  * expiry, using Django's existing DeviceBoundTokenRefreshView (keyed on
  * the same device_id/token_version every mobile session already uses).
  * Returns both the headers to attach AND the (possibly refreshed) session
- * — the caller must re-set the cookie with the returned session if
+ * - the caller must re-set the cookie with the returned session if
  * `refreshed` is true, since only the caller holds the outgoing Response.
  */
 export async function getValidSession(): Promise<{ session: Session; refreshed: boolean } | null> {
@@ -135,7 +135,7 @@ export async function getValidSession(): Promise<{ session: Session; refreshed: 
       cache: "no-store",
       signal: AbortSignal.timeout(20_000),
     });
-    if (!res.ok) return null; // refresh token itself expired/revoked — caller should treat as signed out
+    if (!res.ok) return null; // refresh token itself expired/revoked - caller should treat as signed out
     const data = (await res.json()) as { access?: string; refresh?: string };
     if (!data.access) return null;
     const refreshedSession = buildSession({

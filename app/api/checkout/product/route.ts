@@ -3,10 +3,10 @@ import { authHeaders, getValidSession, kisApiBase, setSessionCookie } from "@/li
 
 // Buy a product from a Website Builder page. Reuses the exact same
 // service function the mobile app's checkout hits (place_marketplace_order
-// via MarketplaceOrderViewSet.create) — this handler adds no business
+// via MarketplaceOrderViewSet.create) - this handler adds no business
 // logic, only a signed-in-visitor entry surface. Returns a Flutterwave
 // hosted payment_url; the browser redirects there directly (this
-// codebase's only checkout UI pattern — no card collection happens here
+// codebase's only checkout UI pattern - no card collection happens here
 // or on Django).
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}));

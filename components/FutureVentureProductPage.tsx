@@ -9,7 +9,7 @@ const readinessTitles = ["What the site claims today", "What must happen first"]
 type FutureVentureSlug = "kie" | "kim" | "kip" | "kih";
 
 /**
- * Shared body for KIE/KIM/KIP/KIH — the four planned/research-stage
+ * Shared body for KIE/KIM/KIP/KIH - the four planned/research-stage
  * ventures that intentionally share one structure (Hero, story, readiness
  * cards, deep-dive detail, shared launch-discipline timeline,
  * availability). KIS is deliberately NOT built on this: it's a real,

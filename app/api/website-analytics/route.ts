@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Proxies a Website Builder page-view beacon to Django's public
-// (AllowAny, IP-throttled) beacon endpoint — same server-to-server,
+// (AllowAny, IP-throttled) beacon endpoint - same server-to-server,
 // no-CORS-needed pattern as every other Django call from this repo.
 // Fire-and-forget by design: always responds quickly and never surfaces
 // an error to the client, since a tracking beacon has nothing for a

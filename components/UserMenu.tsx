@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-// Self-fetching rather than a prop from SiteShell — SiteShell is a client
+// Self-fetching rather than a prop from SiteShell - SiteShell is a client
 // component rendered on every page, and reading the session cookie
 // requires a server-side call (next/headers). Keeping this decoupled
 // avoids turning every page's SiteShell usage into something that needs
@@ -41,7 +41,7 @@ export function UserMenu() {
 
   return (
     <>
-      {/* Always shown once signed in — /control itself shows an upgrade
+      {/* Always shown once signed in - /control itself shows an upgrade
           message for tiers below Business Pro, so this link doesn't need
           to know the viewer's tier just to decide whether to render. */}
       <a className="header-button header-button--light" href="/control">Control panel</a>

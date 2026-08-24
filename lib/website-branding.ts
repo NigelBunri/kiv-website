@@ -1,9 +1,9 @@
 // Turns a Website's `branding` JSON (validated server-side by
-// apps/websites/branding.py — palette hex colors, a closed typography
+// apps/websites/branding.py - palette hex colors, a closed typography
 // preset, a closed button shape/fill) into the --wb-* CSS custom
 // properties app/globals.css's .wb-* rules read. Typography presets map
 // to fonts already loaded build-time via next/font/google in
-// app/layout.tsx (--font-sans, --font-serif) — never an arbitrary
+// app/layout.tsx (--font-sans, --font-serif) - never an arbitrary
 // font name, since nothing else could resolve one at runtime under this
 // site's CSP.
 import type { CSSProperties } from "react";

@@ -4,7 +4,7 @@
   /* Ink & neutrals */
   --ink: #1c170f;
   --ink-soft: #56493a;
-  /* Darkened from #8d7d68 (3.92:1 on --paper) — failed WCAG AA's 4.5:1
+  /* Darkened from #8d7d68 (3.92:1 on --paper) - failed WCAG AA's 4.5:1
      minimum for normal-size text (this token is used at .76rem, well under
      the "large text" exemption threshold). Now 4.91:1. */
   --ink-faint: #7d6d59;
@@ -12,7 +12,7 @@
   /* Brand gold */
   --gold: #b88a2d;
   /* Darkened from #8a6117 (only 3.4-3.7:1 against the realistic worst-case
-     rendered pixel of the translucent sky background — sampled empirically
+     rendered pixel of the translucent sky background - sampled empirically
      via canvas at the actual viewport-fixed crop, not a theoretical
      whole-image worst case, since background-attachment:fixed means only
      that one crop is ever visible regardless of scroll position). Failed
@@ -34,7 +34,7 @@
   --danger: #9a3324;
   --focus: #1c50a8;
 
-  /* Elevation — layered umbra + soft penumbra, tinted warm rather than
+  /* Elevation - layered umbra + soft penumbra, tinted warm rather than
      neutral grey, so shadows read as part of the palette, not a generic
      default. */
   --shadow-sm: 0 1px 2px rgba(40, 29, 11, .07), 0 3px 8px rgba(40, 29, 11, .05);
@@ -48,7 +48,7 @@
   --radius-lg: 1.4rem;
   --radius-full: 999px;
 
-  /* Motion — one shared easing curve and two durations, used everywhere,
+  /* Motion - one shared easing curve and two durations, used everywhere,
      so every hover/focus interaction feels like the same system. */
   --ease: cubic-bezier(.2, .7, .2, 1);
   --fast: 150ms;
@@ -62,7 +62,7 @@ html {
 }
 body {
   margin: 0;
-  /* Heavenly sky/clouds art, site-wide, meant to actually be seen — kept
+  /* Heavenly sky/clouds art, site-wide, meant to actually be seen - kept
      behind a light cream scrim layered in the same background property
      (not a separate element), which guarantees the photo paints strictly
      behind every real element including text, with no z-index/stacking
@@ -72,7 +72,7 @@ body {
      alternating .section, availability/contact/download panels) has been
      changed to a translucent color instead, so the sky stays visible
      through them too. background-attachment:fixed degrades to
-     scrolling-with-content on browsers that don't honor it — never
+     scrolling-with-content on browsers that don't honor it - never
      breaks, just loses the parallax feel. */
   background:
     linear-gradient(rgba(255, 253, 248, .3), rgba(255, 253, 248, .4)),
@@ -120,7 +120,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 .skip-link:focus { transform: translateY(0); }
 
-/* Scroll-progress bar — fixed above everything, including the sticky
+/* Scroll-progress bar - fixed above everything, including the sticky
    header, so it's always visible while scrolling any page. */
 .scroll-progress {
   position: fixed;
@@ -145,7 +145,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   to { background-position: 200% 0; }
 }
 
-/* Subtle grain — a near-invisible fractal-noise overlay, multiply-blended,
+/* Subtle grain - a near-invisible fractal-noise overlay, multiply-blended,
    so flat gold/cream fields read as a tactile material rather than a solid
    digital fill. No z-index (stays in normal paint order, under sticky/fixed
    UI) and pointer-events:none so it never intercepts input. */
@@ -159,7 +159,7 @@ body::before {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 
-/* Scroll reveal — safe by default. [data-reveal] elements are fully
+/* Scroll reveal - safe by default. [data-reveal] elements are fully
    visible in plain CSS; ONLY components/ScrollReveal.tsx's own JS ever adds
    .reveal-pending (to elements it has already confirmed it will reveal
    again via IntersectionObserver), so a script that never runs at all
@@ -216,7 +216,7 @@ body::before {
 .brand strong { font-weight: 800; letter-spacing: -.005em; }
 .brand small { color: var(--ink-faint); font-size: .9rem; font-weight: 500; }
 
-/* Hamburger toggle — hidden by default, only shown under the small-screen
+/* Hamburger toggle - hidden by default, only shown under the small-screen
    breakpoint below (see @media (max-width: 980px)), where it replaces the
    inline nav with a dropdown. */
 .menu-toggle {
@@ -292,13 +292,13 @@ body::before {
   background: var(--cream-2);
 }
 
-/* Shared scrollable tab strip (ScrollableTabNav.tsx) — used for both the
+/* Shared scrollable tab strip (ScrollableTabNav.tsx) - used for both the
    main site's nav (trackClassName="primary-nav", 7 links) and the
    storefront's page nav (trackClassName="wb-site-nav wb-site-nav--desktop").
    Compound selectors (.scroll-tab-track.primary-nav /
    .scroll-tab-track.wb-site-nav--desktop) so these structural overrides win
    regardless of where each consumer's own link-styling rules sit in the
-   file — specificity decides it, not source order. */
+   file - specificity decides it, not source order. */
 .scroll-tab-nav { position: relative; display: flex; align-items: center; min-width: 0; }
 .scroll-tab-track {
   display: flex;
@@ -395,7 +395,7 @@ body::before {
 .header-actions-menu.is-open { opacity: 1; transform: translateY(0); pointer-events: auto; }
 .header-actions-menu .header-button { width: 100%; }
 
-/* Mobile slide-in nav panel (SiteShell.tsx) — hidden entirely above the
+/* Mobile slide-in nav panel (SiteShell.tsx) - hidden entirely above the
    980px collapse breakpoint; see the @media block below for its actual
    open/closed positioning. Mirrors .wb-site-nav--mobile in the storefront
    header (components/website-builder/WebsiteHeader.tsx). */
@@ -460,7 +460,7 @@ main { overflow: hidden; }
   border-radius: var(--radius-full);
   border: 1px solid rgba(184, 138, 45, .25);
   background: rgba(255, 253, 248, .6);
-  /* Darkened from #8b744f (4.24:1 against the cream hero background) —
+  /* Darkened from #8b744f (4.24:1 against the cream hero background) -
      failed WCAG AA's 4.5:1 for bold 14.4px text (below the "large text"
      3:1 exemption threshold). Now 4.72:1. */
   color: #826d4a;
@@ -677,7 +677,7 @@ main { overflow: hidden; }
   align-items: center;
   gap: clamp(2rem, 5vw, 5rem);
   padding: clamp(4.5rem, 9vw, 8rem) clamp(1.25rem, 5vw, 5rem) clamp(4rem, 7vw, 6.5rem);
-  /* Translucent, not opaque — body's own background (the sky/clouds art)
+  /* Translucent, not opaque - body's own background (the sky/clouds art)
      was getting fully blocked by every section that painted a solid
      color on top of it. This is the biggest section on most pages, so it
      matters most here. */
@@ -707,7 +707,7 @@ main { overflow: hidden; }
   gap: 1.1rem;
   max-width: 52rem;
 }
-/* A thin gold signature rule above the eyebrow — the small heritage-mark
+/* A thin gold signature rule above the eyebrow - the small heritage-mark
    device luxury identities use to signal "considered", not "templated". */
 .hero-copy::before {
   content: "";
@@ -765,7 +765,7 @@ h1, h2, h3 {
 h1 { font-size: clamp(2.1rem, 4vw, 3.3rem); }
 h2 { font-size: clamp(1.7rem, 2.8vw, 2.5rem); }
 h3 { font-size: 1.3rem; }
-/* :not(.eyebrow) — without it, this equal-specificity rule silently wins
+/* :not(.eyebrow) - without it, this equal-specificity rule silently wins
    over ".eyebrow"'s own color (cascade order, not intent) whenever an
    eyebrow <p> sits inside .hero/.section-heading, recoloring it ink-soft
    instead of the brand gold every other eyebrow uses. */
@@ -785,7 +785,7 @@ h3 { font-size: 1.3rem; }
   color: var(--cream);
   border-radius: var(--radius-lg);
   /* A gold hairline ring around the whole card, matching .hero-visual's
-     frame treatment — the two hero right-column variants now read as one
+     frame treatment - the two hero right-column variants now read as one
      consistent "jewel box" design language instead of two unrelated cards. */
   box-shadow: 0 0 0 1px rgba(184, 138, 45, .4), var(--shadow-xl), 0 44px 90px rgba(40, 29, 11, .16);
   overflow: hidden;
@@ -796,7 +796,7 @@ h3 { font-size: 1.3rem; }
   50% { transform: translateY(-16px) rotate(-.6deg); }
 }
 .hero-panel::before {
-  /* A faint oversized monogram watermark — a letterpress/engraving touch
+  /* A faint oversized monogram watermark - a letterpress/engraving touch
      that fills the dark card with quiet texture instead of empty space. */
   content: "KIV";
   position: absolute;
@@ -864,7 +864,7 @@ h3 { font-size: 1.3rem; }
   height: auto;
   display: block;
 }
-/* .hero-visual is now the "mat" — a gallery-frame treatment: a gold-foil
+/* .hero-visual is now the "mat" - a gallery-frame treatment: a gold-foil
    hairline, a paper-toned mat border, and two museum-label corner accents
    around an inner .hero-visual-frame that holds the actual photo and its
    sheen/vignette/Ken-Burns effects. Reads as a curated piece, not a plain
@@ -1265,7 +1265,7 @@ h3 { font-size: 1.3rem; }
 .card, .product-card { transition: transform var(--base) var(--ease), box-shadow var(--base) var(--ease), border-color var(--base) var(--ease); }
 .card p, .product-card p { margin: 0; color: var(--ink-soft); }
 
-/* Segment cards (/who-we-serve) — a photo-forward variant of .card that
+/* Segment cards (/who-we-serve) - a photo-forward variant of .card that
    pairs a real-world challenge with the specific KIS answer, so it needs
    a full-bleed image up top (unlike the small logo mark other cards use)
    and two distinct labelled statements instead of one body paragraph. */
@@ -1598,9 +1598,9 @@ textarea { resize: vertical; }
 @media (max-width: 980px) {
   /* Small-screen header: only the KIV logo mark stays visible (brand name
      + tagline hidden), and the inline nav is replaced by a hamburger button
-     that opens a dropdown panel — see components/SiteShell.tsx for the
+     that opens a dropdown panel - see components/SiteShell.tsx for the
      open/close state and the .is-open class it toggles. */
-  /* Progressive truncation, not an abrupt hide — the tagline goes first
+  /* Progressive truncation, not an abrupt hide - the tagline goes first
      (least essential), then the name itself ellipsizes tighter at each
      smaller breakpoint below, and only disappears completely at the
      380px breakpoint (mirrors .wb-site-brand-name's truncation scale in
@@ -1620,7 +1620,7 @@ textarea { resize: vertical; }
      .scroll-tab-nav wrapper still claims the last flex slot, which pushes
      the hamburger button (the item before it) into the middle of the
      header instead of flush right. :has() (not the generic
-     .scroll-tab-nav class) scopes this to the primary-nav instance only —
+     .scroll-tab-nav class) scopes this to the primary-nav instance only -
      the storefront's own .scroll-tab-nav (WebsiteHeader.tsx) sits inside
      a margin-left:auto container and isn't affected by this at all. */
   .scroll-tab-nav:has(.primary-nav) { display: none; }
@@ -1647,7 +1647,7 @@ textarea { resize: vertical; }
     /* height (not top:0;bottom:0) so the panel reliably spans the full
        screen even where a fixed element's bottom edge can misjudge the
        viewport while mobile browser chrome (the address bar) is
-       animating in/out — 100dvh already accounts for that; 100vh is
+       animating in/out - 100dvh already accounts for that; 100vh is
        just the fallback for browsers without dvh support. */
     height: 100vh;
     height: 100dvh;
@@ -1666,7 +1666,7 @@ textarea { resize: vertical; }
   .primary-nav-mobile--open { transform: translateX(0); }
   /* The panel's own z-index (50) sits above the header (10), so the
      hamburger button that opened it is covered and can't be tapped again
-     to close — this button is the reachable way to close it instead of
+     to close - this button is the reachable way to close it instead of
      only the backdrop tap. */
   .primary-nav-mobile-close {
     position: absolute;
@@ -1775,11 +1775,11 @@ textarea { resize: vertical; }
 /* ---------- Website Builder public pages (kingdomimpactventures.org/page/<slug>) ---------- */
 /* --wb-* custom properties are set inline on .wb-site's root by
    WebsitePageView from the owner's Website.branding (palette/typography/
-   buttons) — see lib/website-branding.ts. Every rule below falls back to
+   buttons) - see lib/website-branding.ts. Every rule below falls back to
    this site's own design tokens when a website has no branding set yet.
    Header/footer chrome deliberately stays on the sitewide ink/cream/gold
    tokens regardless of an owner's custom palette (consistent KIV-hosted
-   framing, like a platform chrome) — only the content area and buttons
+   framing, like a platform chrome) - only the content area and buttons
    pick up --wb-*. */
 /* overflow-x:hidden guards against the full-bleed sections' width:100vw
    (.wb-hero/.wb-slideshow/.wb-hero-bottomcard/.wb-about-banner) causing
@@ -1825,7 +1825,7 @@ textarea { resize: vertical; }
 }
 
 /* min-width: 0 here (both on the flex item and its shrinking child below)
-   is load-bearing, not decorative — without it a flex item's default
+   is load-bearing, not decorative - without it a flex item's default
    min-width:auto refuses to shrink below its content's natural width, so
    a long institution name never actually truncates and instead pushes
    the hamburger toggle off-canvas on narrow screens. */
@@ -1897,7 +1897,7 @@ textarea { resize: vertical; }
   .brand-text { display: none; }
 }
 
-/* Desktop nav — a sliding pill indicator behind the active/hovered link
+/* Desktop nav - a sliding pill indicator behind the active/hovered link
    rather than a flat background swap, and an underline that grows in on
    hover for the rest. */
 .wb-site-nav--desktop { display: flex; align-items: center; gap: .1rem; margin: 0 auto; }
@@ -1931,7 +1931,7 @@ textarea { resize: vertical; }
 .wb-site-nav--desktop a[aria-current="page"] { color: var(--ink, #1c170f); font-weight: 800; }
 .wb-site-nav--desktop a[aria-current="page"]::after { transform: scaleX(1); }
 
-/* Mega-menu flyout — appears under a nav item on hover/focus when that
+/* Mega-menu flyout - appears under a nav item on hover/focus when that
    item has a description or preview image (lib/useNavFlyout.tsx). Shared
    by both the storefront/site-builder page nav (WebsiteHeader.tsx) and
    the main site's own primary nav (SiteShell.tsx). Fixed positioning +
@@ -2000,7 +2000,7 @@ textarea { resize: vertical; }
 }
 .wb-site-header-download:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(40, 29, 11, .22); }
 
-/* Hamburger toggle — hidden on desktop, shown below the collapse
+/* Hamburger toggle - hidden on desktop, shown below the collapse
    breakpoint. Three bars morph into an X while the mobile panel is open. */
 .wb-site-nav-toggle {
   display: none;
@@ -2069,7 +2069,7 @@ textarea { resize: vertical; }
     transition: transform 320ms cubic-bezier(.22, 1, .36, 1);
     /* Without this, links could render past the panel's fixed bottom
        edge with no background behind them instead of scrolling inside
-       it — happens whenever the link list is taller than the
+       it - happens whenever the link list is taller than the
        available height (short viewports, landscape phones, or just
        enough nav pages). */
     overflow-y: auto;
@@ -2079,7 +2079,7 @@ textarea { resize: vertical; }
 
   /* Same reasoning as .primary-nav-mobile-close: the panel's z-index (50)
      covers the .wb-site-nav-toggle button that opened it, so it can't be
-     tapped again to close — this is the reachable close affordance. */
+     tapped again to close - this is the reachable close affordance. */
   .wb-site-nav-mobile-close {
     position: absolute;
     top: 1.25rem;
@@ -2228,7 +2228,7 @@ textarea { resize: vertical; }
 }
 
 /* ---------- Hero ---------- */
-/* True edge-to-edge breakout — width:100vw + self-centering margin/
+/* True edge-to-edge breakout - width:100vw + self-centering margin/
    transform, NOT a negative margin sized off .wb-page's own padding
    (that old approach could only ever cancel .wb-page's padding, never
    its max-width: 72rem cap, so full-bleed sections stayed boxed in on
@@ -2262,7 +2262,7 @@ textarea { resize: vertical; }
 .wb-hero-subheadline { font-size: clamp(1.05rem, 1.6vw, 1.25rem); opacity: .92; margin: .75rem 0 1.75rem; line-height: 1.5; }
 .wb-hero .wb-button { padding: .9rem 2rem; box-shadow: 0 10px 24px rgba(40, 29, 11, .18); }
 
-/* Hero — alternate designs (SECTION_VARIANTS.hero_banner) */
+/* Hero - alternate designs (SECTION_VARIANTS.hero_banner) */
 .wb-hero-split {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -2412,7 +2412,7 @@ textarea { resize: vertical; }
 .wb-faqs details { padding: .75rem 0; border-bottom: 1px solid rgba(0, 0, 0, .08); }
 .wb-social-links { display: flex; flex-wrap: wrap; gap: 1rem; }
 
-/* kis_content — carousel/list display modes (PublicKisContentGrid.tsx);
+/* kis_content - carousel/list display modes (PublicKisContentGrid.tsx);
    grid mode overrides the shared auto-fit rule above with the editor's
    configured column count on wide screens. */
 .wb-kis-content-grid { grid-template-columns: repeat(var(--wb-grid-columns, 3), minmax(0, 1fr)); }
@@ -2485,7 +2485,7 @@ textarea { resize: vertical; }
 .wb-kis-content-card-actions .wb-buy { padding: 0; margin: 0; flex: 0 0 auto; }
 @media (max-width: 560px) {
   /* Stays a compact row (image beside text) rather than stacking to a
-     tall column — stacking turned a short list into a long, heavy
+     tall column - stacking turned a short list into a long, heavy
      scroll on phones, which read worse than the original layout it
      was meant to fix. */
   .wb-kis-content-card-media img { width: 6rem; aspect-ratio: 1 / 1; }
@@ -2496,7 +2496,7 @@ textarea { resize: vertical; }
   .wb-kis-content-card-actions .wb-button { padding: .5rem 1rem; font-size: .85rem; }
 }
 
-/* Product/service/course cards — real card treatment: border, radius,
+/* Product/service/course cards - real card treatment: border, radius,
    shadow, image area, hover lift. Previously these were plain text
    stacked with no visual container at all. */
 .wb-kis-content-card {
@@ -2575,7 +2575,7 @@ textarea { resize: vertical; }
 .wb-about--reverse .wb-about-image { order: 2; }
 .wb-about-image { width: 100%; border-radius: var(--radius-md, .75rem); object-fit: cover; aspect-ratio: 4 / 3; }
 
-/* About — alternate designs (SECTION_VARIANTS.about) */
+/* About - alternate designs (SECTION_VARIANTS.about) */
 .wb-about-stack { text-align: center; max-width: 40rem; margin: 0 auto; }
 .wb-about-stack-image {
   width: 9rem;
@@ -2661,7 +2661,7 @@ textarea { resize: vertical; }
 .wb-kis-video-player { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius-md, .75rem); background: #000; }
 .wb-kis-video-description { margin-top: .75rem; opacity: .85; }
 
-/* ---------- Item detail page (product/course/service — /item/<type>/<id>) ---------- */
+/* ---------- Item detail page (product/course/service - /item/<type>/<id>) ---------- */
 .wb-item-detail { padding-top: 2rem; }
 .wb-item-detail-back {
   display: inline-flex;
@@ -2692,7 +2692,7 @@ textarea { resize: vertical; }
   border-radius: var(--radius-md, 1rem);
   background: var(--cream-2, #f8efdb);
 }
-/* Product gallery — click-to-swap thumbnails + cursor-tracked hover zoom
+/* Product gallery - click-to-swap thumbnails + cursor-tracked hover zoom
    (PublicProductGallery.tsx). */
 .wb-product-gallery-frame {
   position: relative;
@@ -2735,7 +2735,7 @@ textarea { resize: vertical; }
 .wb-item-detail-info h1 { font-family: var(--font-serif), Georgia, serif; font-size: clamp(1.7rem, 3vw, 2.4rem); margin: 0 0 .75rem; text-wrap: balance; }
 .wb-item-detail-price { font-size: 1.4rem; font-weight: 800; color: var(--gold-strong, #704d10); margin: 0 0 .5rem; }
 
-/* Variant swatches (size/color etc.) — display/preview only, see
+/* Variant swatches (size/color etc.) - display/preview only, see
    PublicVariantSwatches.tsx's docstring on why checkout isn't wired. */
 .wb-variant-swatches { margin: 0 0 1rem; display: flex; flex-direction: column; gap: .85rem; }
 .wb-variant-swatch-group { display: flex; flex-direction: column; gap: .4rem; }
@@ -2773,7 +2773,7 @@ textarea { resize: vertical; }
 .wb-item-detail-actions .wb-buy { margin-top: 0; }
 .wb-item-detail-actions .wb-open-in-app { width: auto; margin: 0; padding: .8rem 1.5rem; }
 
-/* Sticky buy bar — appears once the page's own action row scrolls out
+/* Sticky buy bar - appears once the page's own action row scrolls out
    of view (PublicStickyBuyBar.tsx). */
 .wb-sticky-buy-bar {
   position: fixed;
@@ -2821,7 +2821,7 @@ textarea { resize: vertical; }
 @media (max-width: 860px) {
   .control-shell { grid-template-columns: 1fr; }
 }
-/* Mobile-only top bar carrying the hamburger toggle — the static desktop
+/* Mobile-only top bar carrying the hamburger toggle - the static desktop
    sidebar (.control-sidebar--desktop) is hidden below the breakpoint and
    replaced by the slide-in .control-sidebar--drawer instance instead of
    stacking the full sidebar above the page content. */

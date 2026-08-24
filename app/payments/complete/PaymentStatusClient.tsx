@@ -85,7 +85,7 @@ export function PaymentStatusClient() {
     return (
       <div className="card" role="alert">
         <h2>We couldn&apos;t find your payment reference</h2>
-        <p>This page expects a payment reference from KIS checkout. If you completed a payment and landed here without one, please check the KIS app directly — your account may already be updated.</p>
+        <p>This page expects a payment reference from KIS checkout. If you completed a payment and landed here without one, please check the KIS app directly - your account may already be updated.</p>
         <ReturnToAppButton />
       </div>
     );
@@ -98,7 +98,7 @@ export function PaymentStatusClient() {
     return (
       <div className="card" aria-live="polite">
         <h2>Confirming your payment…</h2>
-        <p>Flutterwave told us this checkout was {redirectStatus || "submitted"}. We&apos;re confirming it with KIS now — this usually takes a few seconds.</p>
+        <p>Flutterwave told us this checkout was {redirectStatus || "submitted"}. We&apos;re confirming it with KIS now - this usually takes a few seconds.</p>
         {error ? <p style={{ color: "var(--muted, #6b6355)" }}>{error}</p> : null}
         <div className="spinner" aria-hidden="true" />
       </div>
@@ -129,7 +129,7 @@ export function PaymentStatusClient() {
     );
   }
 
-  // Exhausted MAX_POLLS while still pending/unknown — a real payment can
+  // Exhausted MAX_POLLS while still pending/unknown - a real payment can
   // still complete after this (the webhook may simply be slow), so this is
   // deliberately worded as "still confirming," never "failed."
   return (
@@ -137,7 +137,7 @@ export function PaymentStatusClient() {
       <h2>Still confirming your payment</h2>
       <p>
         This is taking longer than expected to confirm. If Flutterwave charged your card, your account will update
-        automatically — please check the KIS app in a few minutes. If it still hasn&apos;t updated, contact support with
+        automatically - please check the KIS app in a few minutes. If it still hasn&apos;t updated, contact support with
         this reference: <code>{txRef}</code>
       </p>
       <ReturnToAppButton />

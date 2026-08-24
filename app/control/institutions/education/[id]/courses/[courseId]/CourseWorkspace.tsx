@@ -283,7 +283,7 @@ export default function CourseWorkspace({
           <label>Summary<textarea rows={2} value={course.summary || ""} onChange={(e) => setCourse({ ...course, summary: e.target.value })} /></label>
           <label>Description<textarea rows={4} value={course.description || ""} onChange={(e) => setCourse({ ...course, description: e.target.value })} /></label>
           <label>Duration (minutes)<input type="number" min={0} value={course.duration_minutes || 0} onChange={(e) => setCourse({ ...course, duration_minutes: Number(e.target.value) })} /></label>
-          <label>Price (KIS Coin — leave 0 for a free course)<input type="number" min={0} step="0.01" value={course.price_amount || 0} onChange={(e) => setCourse({ ...course, price_amount: e.target.value })} /></label>
+          <label>Price (KIS Coin - leave 0 for a free course)<input type="number" min={0} step="0.01" value={course.price_amount || 0} onChange={(e) => setCourse({ ...course, price_amount: e.target.value })} /></label>
           <label>
             Status
             <select value={course.status} onChange={(e) => setCourse({ ...course, status: e.target.value })}>

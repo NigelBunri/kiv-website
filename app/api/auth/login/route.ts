@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { kisApiBase } from "@/lib/session";
 
 // Step 1 of website login: request an OTP code for an existing KIS
-// account. Server-side proxy to Django's OTP initiate endpoint — same
+// account. Server-side proxy to Django's OTP initiate endpoint - same
 // reasoning as app/api/payment-status/route.ts (avoids any CORS
 // dependency; server-to-server isn't subject to it).
 export async function POST(request: NextRequest) {

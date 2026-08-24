@@ -39,7 +39,7 @@ export default async function AdminPartnersPage() {
           {partners.map((partner) => (
             <tr key={partner.id}>
               <td><Link href={`/control/admin/partners/${partner.id}`}>{partner.name}</Link></td>
-              <td>{partner.owner?.email || partner.owner?.username || "—"}</td>
+              <td>{partner.owner?.email || partner.owner?.username || "-"}</td>
               <td>
                 <span className={`control-badge ${partner.is_active ? "control-badge--active" : "control-badge--inactive"}`}>
                   {partner.is_active ? "Active" : "Deactivated"}

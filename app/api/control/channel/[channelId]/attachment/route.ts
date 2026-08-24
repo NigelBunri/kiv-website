@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { authHeaders, getValidSession, kisApiBase, setSessionCookie } from "@/lib/session";
 
 // Multipart passthrough for uploading a channel-post image/video attachment.
-// controlProxy.ts's proxyToDjango can't be reused here — it always
-// JSON-encodes the body — so this forwards the incoming FormData straight
+// controlProxy.ts's proxyToDjango can't be reused here - it always
+// JSON-encodes the body - so this forwards the incoming FormData straight
 // through to Django's generic authenticated attachment endpoint instead.
 export async function POST(request: NextRequest, { params }: { params: Promise<{ channelId: string }> }) {
-  await params; // channelId isn't part of the upstream path — this endpoint is not channel-scoped server-side.
+  await params; // channelId isn't part of the upstream path - this endpoint is not channel-scoped server-side.
   const auth = await getValidSession();
   if (!auth) return NextResponse.json({ success: false, message: "Not signed in.", requiresLogin: true }, { status: 401 });
   const { session, refreshed } = auth;

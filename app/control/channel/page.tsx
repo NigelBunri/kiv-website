@@ -49,7 +49,7 @@ export default async function ChannelPage({ searchParams }: { searchParams: Prom
     );
   }
 
-  // No status filter — the channel manager (this user) sees both draft and
+  // No status filter - the channel manager (this user) sees both draft and
   // published content by default; Django only restricts to published for
   // non-managers.
   const [contentsRes, detailRes, analyticsRes] = await Promise.all([
@@ -57,7 +57,7 @@ export default async function ChannelPage({ searchParams }: { searchParams: Prom
       headers, cache: "no-store", signal: AbortSignal.timeout(15_000),
     }),
     // The list endpoint above uses the public summary serializer (no
-    // payout fields, even gated) — payout status only exists on the
+    // payout fields, even gated) - payout status only exists on the
     // detail serializer's owner/manager-gated fields.
     fetch(`${kisApiBase()}/api/v1/broadcasts/channels/${encodeURIComponent(channel.id)}/`, {
       headers, cache: "no-store", signal: AbortSignal.timeout(15_000),

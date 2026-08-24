@@ -1,7 +1,7 @@
 "use client";
 
 // Thin rotating announcement strip, typically the very first thing on
-// the page (above WebsiteHeader — see WebsitePageView.tsx). Field names
+// the page (above WebsiteHeader - see WebsitePageView.tsx). Field names
 // (messages[].text|link, intervalSeconds) match the RN Website Builder
 // editor's `promo_bar` section vocabulary exactly (KIS/src/components/
 // section-builder/types.ts's PromoBarSectionData).

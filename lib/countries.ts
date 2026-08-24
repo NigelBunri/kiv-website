@@ -1,17 +1,17 @@
 import { getCountries, getCountryCallingCode, type CountryCode } from "libphonenumber-js";
 
 export type CountryOption = {
-  /** ISO 3166-1 alpha-2, e.g. "CM" — sent to Django as `country`. */
+  /** ISO 3166-1 alpha-2, e.g. "CM" - sent to Django as `country`. */
   iso2: CountryCode;
   /** e.g. "Cameroon" */
   name: string;
-  /** e.g. "+237" — sent to Django as `phone_country_code`. */
+  /** e.g. "+237" - sent to Django as `phone_country_code`. */
   dialCode: string;
 };
 
 // Country list + dial codes come from libphonenumber-js's bundled metadata
 // (the same authoritative dataset most production phone inputs use) rather
-// than a hand-maintained list — no separate country-name package needed
+// than a hand-maintained list - no separate country-name package needed
 // since Intl.DisplayNames (built into Node 18+/all modern browsers) covers
 // that from the ISO2 code alone.
 let cached: CountryOption[] | null = null;

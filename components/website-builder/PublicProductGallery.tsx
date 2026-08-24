@@ -1,9 +1,9 @@
 "use client";
 
-// Product/course/service detail page media — click-to-swap thumbnails
+// Product/course/service detail page media - click-to-swap thumbnails
 // plus cursor-tracked hover zoom on the active image (the classic
 // ecommerce PDP pattern: move the mouse over the image, a magnified
-// crop follows the cursor). Pure CSS/JS, no image-processing library —
+// crop follows the cursor). Pure CSS/JS, no image-processing library -
 // the "zoom" is just the same image rendered larger with its
 // background-position driven by the pointer's percentage across the
 // frame.

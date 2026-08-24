@@ -96,7 +96,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
         {flyout}
 
-        {/* Mobile slide-in panel — .header-actions is display:none below the
+        {/* Mobile slide-in panel - .header-actions is display:none below the
             collapse breakpoint (see globals.css), so "View KIS" / "Check
             availability" / sign-in would otherwise be unreachable on
             mobile; they're merged into this same panel as the page links

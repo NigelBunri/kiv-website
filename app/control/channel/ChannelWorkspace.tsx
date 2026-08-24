@@ -10,7 +10,7 @@ type Channel = {
   description?: string;
   avatar_url?: string;
   banner_url?: string;
-  // Server-computed — see apps/broadcasts/serializers.py's
+  // Server-computed - see apps/broadcasts/serializers.py's
   // _resolve_channel_avatar. The avatar shown anywhere in the app/website
   // always comes from these, never the raw avatar_url above.
   avatar_kind?: "logo" | "photo" | "initials";
@@ -100,7 +100,7 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
       const data = await postJson(`/api/control/channel/${channel.id}/contents`, body);
       setContents((prev) => [data, ...prev]);
       setPostTitle(""); setPostText(""); setPostFile(null);
-      setMessage({ kind: "success", text: "Draft created — publish it below when ready." });
+      setMessage({ kind: "success", text: "Draft created - publish it below when ready." });
     } catch (error: unknown) {
       setMessage({ kind: "error", text: error instanceof Error ? error.message : "Unable to create post." });
     } finally {
@@ -199,7 +199,7 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
               </div>
             )}
             <p className="control-note" style={{ margin: 0 }}>
-              Your channel&rsquo;s avatar is automatic — your own profile photo (or initials if you haven&rsquo;t set
+              Your channel&rsquo;s avatar is automatic - your own profile photo (or initials if you haven&rsquo;t set
               one), an institution&rsquo;s logo for an org-owned channel, or the official KIS mark if this is GO&rsquo;s
               own channel. There&rsquo;s nothing to upload here.
             </p>

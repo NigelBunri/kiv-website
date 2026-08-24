@@ -37,7 +37,7 @@ async function apiCall(url: string, method: string, body?: unknown) {
 }
 
 function memberLabel(members: MemberEntry[], userId: string | null) {
-  if (!userId) return "—";
+  if (!userId) return "-";
   const member = members.find((m) => m.user_id === userId);
   return member?.display_name || member?.username || userId;
 }
@@ -146,7 +146,7 @@ export default function AccessGovernancePanel({
                   <tr key={r.id}>
                     <td>{memberLabel(members, r.target_user)}</td>
                     <td>{role?.name || r.requested_role}</td>
-                    <td style={{ maxWidth: "16rem" }}>{r.justification || "—"}</td>
+                    <td style={{ maxWidth: "16rem" }}>{r.justification || "-"}</td>
                     <td><span className="control-badge control-badge--pending">{r.status}</span></td>
                     <td>
                       {r.status === "pending" ? (

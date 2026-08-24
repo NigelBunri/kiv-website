@@ -4,13 +4,13 @@ import { buildSession, kisApiBase, newDeviceId, setSessionCookie } from "@/lib/s
 const DEVICE_ID_COOKIE = "kis_device_id";
 const DEVICE_ID_MAX_AGE = 60 * 60 * 24 * 365;
 
-// Creates a brand-new KIS account — same Django endpoint and same User
+// Creates a brand-new KIS account - same Django endpoint and same User
 // table the mobile app's RegisterScreen posts to (apps.accounts.views.
 // RegisterView / UserCreateSerializer), so an account created here can log
 // into the app immediately afterward with no backend changes (its first
-// device isn't QR-blocked since none exists yet — see
+// device isn't QR-blocked since none exists yet - see
 // password_login_requires_qr). With phone verification disabled (the
-// current default — settings.KIS_PHONE_VERIFICATION_ENABLED=False),
+// current default - settings.KIS_PHONE_VERIFICATION_ENABLED=False),
 // Django returns access/refresh tokens directly on this one call, no OTP
 // round-trip needed.
 export async function POST(request: NextRequest) {
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!data?.access || !data?.refresh) {
-      // Phone verification is on for this deployment — no tokens yet,
+      // Phone verification is on for this deployment - no tokens yet,
       // the account needs an OTP step before it's usable. Not the
       // current default, but handle it rather than assume it can't happen.
       return NextResponse.json({ success: true, pendingVerification: true, user: data.user });

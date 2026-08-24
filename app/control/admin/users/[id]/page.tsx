@@ -42,10 +42,10 @@ export default async function AdminUserDetailPage({ params }: { params: Promise<
         <div className="control-list">
           <div className="control-list-row"><div className="control-list-row-title">Tier</div><span className="control-badge control-badge--pending">{user.tier}</span></div>
           <div className="control-list-row"><div className="control-list-row-title">Status</div><span className={`control-badge ${user.status === "active" ? "control-badge--active" : "control-badge--inactive"}`}>{user.status}</span></div>
-          <div className="control-list-row"><div className="control-list-row-title">Phone</div><span>{user.phone || "—"}</span></div>
-          <div className="control-list-row"><div className="control-list-row-title">Country</div><span>{user.country || "—"}</span></div>
+          <div className="control-list-row"><div className="control-list-row-title">Phone</div><span>{user.phone || "-"}</span></div>
+          <div className="control-list-row"><div className="control-list-row-title">Country</div><span>{user.country || "-"}</span></div>
           <div className="control-list-row"><div className="control-list-row-title">Trust score</div><span>{user.trust_score}</span></div>
-          <div className="control-list-row"><div className="control-list-row-title">Joined</div><span>{user.date_joined ? new Date(user.date_joined).toLocaleDateString() : "—"}</span></div>
+          <div className="control-list-row"><div className="control-list-row-title">Joined</div><span>{user.date_joined ? new Date(user.date_joined).toLocaleDateString() : "-"}</span></div>
         </div>
       </section>
 

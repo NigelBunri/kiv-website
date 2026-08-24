@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { authHeaders, getValidSession, kisApiBase, setSessionCookie } from "@/lib/session";
 
 // Book a service from a Website Builder page. Reuses
-// ServiceBookingViewSet.create exactly as the mobile app does — same
+// ServiceBookingViewSet.create exactly as the mobile app does - same
 // reasoning as the product checkout route. scheduledAt must be an ISO
 // datetime string chosen by the visitor (the section's UI is responsible
 // for offering a real slot picker; this route trusts nothing about

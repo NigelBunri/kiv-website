@@ -26,7 +26,7 @@ export default async function AssessmentsPage({ params }: { params: Promise<{ id
       <BackLink href={`/control/institutions/education/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Assessments</h1>
-        <p>Exams and quizzes — multiple choice, theory, or mixed.</p>
+        <p>Exams and quizzes - multiple choice, theory, or mixed.</p>
       </div>
 
       <AssessmentCreateForm institutionId={id} />

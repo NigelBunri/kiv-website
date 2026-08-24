@@ -30,11 +30,11 @@ export default async function LessonsPage({ params }: { params: Promise<{ id: st
       <BackLink href={`/control/institutions/education/${id}`} label="Back to institution" />
       <div className="control-header">
         <h1>Lessons</h1>
-        <p>Text-based lesson content — attach these to course modules from a course&rsquo;s page.</p>
+        <p>Text-based lesson content - attach these to course modules from a course&rsquo;s page.</p>
       </div>
 
       {courses.length === 0 ? (
-        <div className="control-empty">Create a course first — lessons belong to a course.</div>
+        <div className="control-empty">Create a course first - lessons belong to a course.</div>
       ) : (
         <LessonCreateForm institutionId={id} courses={courses} />
       )}

@@ -38,7 +38,7 @@ export default async function EducationInstitutionDetailPage({ params }: { param
   // _get_education_institution_or_404 already scopes this to owner-or-
   // member-or-partner-accessible institutions server-side (this session's
   // earlier work), so a non-404 response here already means the caller is
-  // allowed to at least view it — no extra client-side ownership check
+  // allowed to at least view it - no extra client-side ownership check
   // needed, unlike the Shop page.
   if (!institutionRes.ok) notFound();
   const institutionData = await institutionRes.json();
@@ -68,7 +68,7 @@ export default async function EducationInstitutionDetailPage({ params }: { param
           />
           <section className="control-section">
             <h2>Curriculum</h2>
-            <p>Create and manage courses, modules, lessons, and materials — including video uploads.</p>
+            <p>Create and manage courses, modules, lessons, and materials - including video uploads.</p>
             <div className="control-actions">
               <a href={`/control/institutions/education/${institution.id}/courses`} className="button primary">Manage courses</a>
               <a href={`/control/institutions/education/${institution.id}/programs`} className="button">Manage programs</a>

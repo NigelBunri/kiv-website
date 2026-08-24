@@ -72,13 +72,13 @@ export default function BillingWorkspace({ tierName, initialSubscription }: { ti
       {message ? <p className={message.kind === "error" ? "control-error" : "control-success"}>{message.text}</p> : null}
 
       {!subscription ? (
-        <p className="control-note">No active paid subscription on file — you&rsquo;re on the free tier or your plan is managed another way (e.g. an app-store subscription).</p>
+        <p className="control-note">No active paid subscription on file - you&rsquo;re on the free tier or your plan is managed another way (e.g. an app-store subscription).</p>
       ) : (
         <>
           {subscription.ends_at ? (
             <p>
               {isPendingCancel ? "Access ends" : "Renews"} on {new Date(subscription.ends_at).toLocaleDateString()}
-              {isPendingCancel ? " — your subscription is set to cancel." : ""}
+              {isPendingCancel ? " - your subscription is set to cancel." : ""}
             </p>
           ) : null}
           <div className="control-actions">
@@ -100,7 +100,7 @@ export default function BillingWorkspace({ tierName, initialSubscription }: { ti
         </>
       )}
       <p className="control-note">
-        To change to a different tier, use the KIS app for now — plan switching isn&rsquo;t available here yet.
+        To change to a different tier, use the KIS app for now - plan switching isn&rsquo;t available here yet.
       </p>
     </section>
   );

@@ -33,7 +33,7 @@ export function useNavFlyout(entries: FlyoutNavEntry[]) {
   const [openKey, setOpenKey] = useState<string | null>(null);
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
   // Fixed positioning means plain CSS :hover can't carry hover state
-  // across the visual gap between the tab and the card below it — a
+  // across the visual gap between the tab and the card below it - a
   // mouseleave on the tab would close the card before the pointer
   // finishes crossing that gap. A short cancellable delay covers the
   // transition without leaving the card open indefinitely.

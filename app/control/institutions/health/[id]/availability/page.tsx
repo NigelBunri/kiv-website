@@ -21,7 +21,7 @@ export default async function HealthAvailabilityPage({ params }: { params: Promi
 
   // The health-dashboard availability endpoint only recognizes
   // institutions that already have a row in the legacy broadcast-profile
-  // blob (same reconciliation gap as StaffWorkspace.tsx) — and unlike the
+  // blob (same reconciliation gap as StaffWorkspace.tsx) - and unlike the
   // staff page, it has no create-on-write fallback, so this eagerly
   // creates the matching blob entry server-side before the availability
   // call, instead of waiting for the user to visit "Manage staff" first.
@@ -68,7 +68,7 @@ export default async function HealthAvailabilityPage({ params }: { params: Promi
     <>
       <BackLink href={`/control/institutions/health/${id}`} label="Back to institution" />
       <div className="control-header">
-        <h1>Availability — {institution.name}</h1>
+        <h1>Availability - {institution.name}</h1>
         <p>Set day-by-day booking status, time slots, and per-service scheduling.</p>
       </div>
       <AvailabilityWorkspace institutionId={institution.id} services={services} initialAvailability={availability} />

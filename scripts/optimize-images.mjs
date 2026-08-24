@@ -51,7 +51,7 @@ async function main() {
     totalBefore += before;
 
     if (file === "heaven-bg.jpg") {
-      // CSS background-image, not an <img> — not part of this pass.
+      // CSS background-image, not an <img> - not part of this pass.
       continue;
     }
 
@@ -69,7 +69,7 @@ async function main() {
     console.log(`processed ${file} (${(before / 1024).toFixed(0)}KB source)`);
   }
 
-  // Small logo thumbnails (sm/) — already small, add WebP for consistency.
+  // Small logo thumbnails (sm/) - already small, add WebP for consistency.
   const smDir = path.join(imagesDir, "sm");
   const smFiles = readdirSync(smDir).filter((f) => /\.png$/i.test(f));
   for (const file of smFiles) {

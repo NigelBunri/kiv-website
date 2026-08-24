@@ -99,7 +99,7 @@ export function LoginForm() {
 
   return (
     <form className="public-form" onSubmit={requestCode} noValidate>
-      <p className="form-note">Sign in with the KIS account you already use in the app — no new account needed.</p>
+      <p className="form-note">Sign in with the KIS account you already use in the app - no new account needed.</p>
       <label htmlFor="login-country">
         Country
         <CountrySelect id="login-country" value={country} onChange={setCountry} />

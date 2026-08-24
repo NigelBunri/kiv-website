@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     description: site.description,
     url: site.url,
     siteName: site.name,
-    images: [{ url: "/images/og-cover.png", width: 1200, height: 630, alt: `${site.name} — business and technology venture of KCAN` }],
+    images: [{ url: "/images/og-cover.png", width: 1200, height: 630, alt: `${site.name} - business and technology venture of KCAN` }],
     locale: "en_US",
     type: "website",
   },

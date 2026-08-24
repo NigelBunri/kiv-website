@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { proxyToDjango } from "@/lib/controlProxy";
 
-// Proxies PartnerViewSet.organizations (apps/partners/views.py) — the
+// Proxies PartnerViewSet.organizations (apps/partners/views.py) - the
 // personal-ownership directory listing (PartnerOrganizationLink), distinct
 // from the delegated-management institutions surfaced on the dashboard via
 // each entity's own partner_id/partner_name.

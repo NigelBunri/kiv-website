@@ -72,7 +72,7 @@ export default function StaffWorkspace({
         { id: `member-${userId}`, userId: String(userId), name: lookupName || "New staff member", phone: lookupPhone, role: lookupRole },
       ]);
       setLookupPhone(""); setLookupName(""); setLookupRole("staff");
-      setMessage({ kind: "success", text: "Added — remember to save changes below." });
+      setMessage({ kind: "success", text: "Added - remember to save changes below." });
     } catch (error: unknown) {
       setMessage({ kind: "error", text: error instanceof Error ? error.message : "Unable to add member." });
     } finally {
@@ -158,7 +158,7 @@ export default function StaffWorkspace({
           <div className="control-list-row">
             <div>
               <div className="control-list-row-title">{ownerName}</div>
-              <div className="control-list-row-meta">Owner — cannot be changed</div>
+              <div className="control-list-row-meta">Owner - cannot be changed</div>
             </div>
             <span className="control-badge control-badge--active">owner</span>
           </div>

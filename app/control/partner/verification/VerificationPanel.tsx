@@ -87,7 +87,7 @@ export default function VerificationPanel({ partnerId, initialStatus }: { partne
         <div style={{ marginTop: "1.25rem" }}>
           <p>
             A verification request is <strong>{activeCase.status.replace(/_/g, " ")}</strong>
-            {activeCase.submitted_at ? ` — submitted ${new Date(activeCase.submitted_at).toLocaleDateString()}` : ""}.
+            {activeCase.submitted_at ? ` - submitted ${new Date(activeCase.submitted_at).toLocaleDateString()}` : ""}.
           </p>
           {typeof activeCase.public_summary?.message === "string" ? (
             <p className="control-note">{activeCase.public_summary.message as string}</p>
@@ -110,7 +110,7 @@ export default function VerificationPanel({ partnerId, initialStatus }: { partne
               <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} maxLength={2000} />
             </label>
             <p className="control-note">
-              Supporting documents aren&rsquo;t uploadable here yet — reviewers will follow up if evidence is needed.
+              Supporting documents aren&rsquo;t uploadable here yet - reviewers will follow up if evidence is needed.
             </p>
             <div className="control-actions">
               <button type="submit" className="button primary" disabled={busy}>

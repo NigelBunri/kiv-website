@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Proxies a Website Builder `form` section submission to Django's public
-// (AllowAny, IP-throttled) submit endpoint — same server-to-server,
+// (AllowAny, IP-throttled) submit endpoint - same server-to-server,
 // no-CORS-needed pattern as payment-status/route.ts. Unauthenticated by
 // design: any site visitor can submit, same as a real HTML form post.
 const DEFAULT_KIS_API_BASE_URL = "https://api.kingdomimpactventures.org";

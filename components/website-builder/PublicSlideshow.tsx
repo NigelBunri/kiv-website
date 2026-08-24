@@ -1,6 +1,6 @@
 "use client";
 
-// Full-width autoplaying carousel — field names (slides[].imageUrl|
+// Full-width autoplaying carousel - field names (slides[].imageUrl|
 // headline|subheadline|ctaText|ctaLink, autoplay, intervalSeconds) match
 // the RN Website Builder editor's `slideshow` section vocabulary exactly
 // (KIS/src/components/section-builder/types.ts's SlideshowSectionData).

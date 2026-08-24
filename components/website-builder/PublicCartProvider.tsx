@@ -1,6 +1,6 @@
 "use client";
 
-// Shared cart state for one shop's storefront — wraps WebsitePageView and
+// Shared cart state for one shop's storefront - wraps WebsitePageView and
 // WebsiteItemDetailView (the two places a product can be added from) so
 // the header's cart icon and every "Add to Cart" button stay in sync.
 // Talks to the app/api/cart/* proxy routes, which talk to the same

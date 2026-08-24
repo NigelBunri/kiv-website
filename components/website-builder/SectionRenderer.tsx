@@ -6,11 +6,11 @@ import { PublicSlideshow } from "./PublicSlideshow";
 import { PublicPromoBar } from "./PublicPromoBar";
 
 // One renderer per section type, dispatched by `type`. Kept in a single
-// file deliberately — these are small, purely presentational blocks over
+// file deliberately - these are small, purely presentational blocks over
 // data the Django backend has already sanitized (safe_public_media_url/
 // safe_public_description), not a place for additional business logic.
 // `kis_content` is the one section type that renders LIVE KIS data
-// (section.resolved_items, resolved server-side on every request — never
+// (section.resolved_items, resolved server-side on every request - never
 // duplicated into this payload) rather than hand-authored `data`.
 
 type Data = Record<string, unknown>;
@@ -41,9 +41,9 @@ function HeroSection({ data }: { data: Data }) {
 // types.ts, reused from the older per-owner-type legacy landing pages),
 // accepted verbatim by the Django backend (apps.websites.models.
 // SECTION_TYPES) rather than translated into this file's hero/text/
-// gallery/cta/contact_info shapes — so these read the RN field names
+// gallery/cta/contact_info shapes - so these read the RN field names
 // directly.
-// Each section type's alternate visual designs — the RN Website Builder
+// Each section type's alternate visual designs - the RN Website Builder
 // editor's design-picker modal offers exactly these keys (see
 // src/components/section-builder/sectionVariants.ts, which must be kept
 // in lockstep with this map and with apps.websites.models.SECTION_VARIANTS
@@ -397,7 +397,7 @@ function MapSection({ data }: { data: Data }) {
 }
 
 
-// Mirrors apps.websites.embeds._PROVIDER_URL_PATTERNS on the backend —
+// Mirrors apps.websites.embeds._PROVIDER_URL_PATTERNS on the backend -
 // re-validated here too (not just trusted from the API response) since
 // this directly controls an iframe src; a stale/malformed record should
 // never render, not just fail to have been saved in the first place.
@@ -531,7 +531,7 @@ export function SectionRenderer({
   section, siteSlug, pageSlug,
 }: {
   section: WebsiteBuilderSection;
-  /** Only `form` sections need these — used to build the submit proxy
+  /** Only `form` sections need these - used to build the submit proxy
    * URL (/api/website-forms/[siteSlug]/[pageSlug]/[sectionId]). */
   siteSlug?: string;
   pageSlug?: string;

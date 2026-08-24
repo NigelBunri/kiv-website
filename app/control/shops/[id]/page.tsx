@@ -48,7 +48,7 @@ export default async function ShopDetailPage({ params }: { params: Promise<{ id:
   const manageablePartners = allPartners.filter((partner) => partner.can_manage);
 
   // ShopViewSet's detail GET has no owner/staff restriction on the Django
-  // side (only mutating methods do) — this page adds its own read guard so
+  // side (only mutating methods do) - this page adds its own read guard so
   // a signed-in user can't browse arbitrary shop ids through the control
   // panel just by knowing the id. Owning the shop directly, or managing
   // the partner it's delegated to, both qualify.

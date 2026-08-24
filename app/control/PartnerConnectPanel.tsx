@@ -5,7 +5,7 @@ import { useState } from "react";
 type Partner = { id: string; name: string; can_manage: boolean };
 
 // Shared by the Shop, Health institution, and Education institution detail
-// pages — all three now expose the identical POST/DELETE .../partner/
+// pages - all three now expose the identical POST/DELETE .../partner/
 // connect-disconnect endpoint (this session's earlier backend work), so
 // this one component drives all three instead of copy-pasting the same
 // picker/button logic three times.
@@ -70,7 +70,7 @@ export default function PartnerConnectPanel({
     <section className="control-section">
       <h2>Partner organization</h2>
       <p>
-        Attach this to a partner organization you manage — anyone with manager rights on that
+        Attach this to a partner organization you manage - anyone with manager rights on that
         partner gets the same ability to manage it that you have.
       </p>
       <p><strong>{partnerName ? `Managed by: ${partnerName}` : "Not connected to a partner"}</strong></p>

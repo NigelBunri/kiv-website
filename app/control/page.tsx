@@ -22,7 +22,7 @@ async function loadShops(userId: string, headers: HeadersInit): Promise<Shop[]> 
     const data = await res.json();
     const rows: Shop[] = Array.isArray(data?.results) ? data.results : Array.isArray(data) ? data : [];
     // ShopViewSet's list queryset returns every active public shop plus the
-    // caller's own regardless of status — narrow to "mine" the same way the
+    // caller's own regardless of status - narrow to "mine" the same way the
     // RN app's ProfileScreen.loadCommerceShops effectively does.
     return rows.filter((shop) => String(shop.owner) === userId);
   } catch {

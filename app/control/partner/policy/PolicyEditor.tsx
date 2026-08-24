@@ -34,7 +34,7 @@ export default function PolicyEditor({ partnerId, initialSettings }: { partnerId
       const res = await fetch(`/api/control/partners/${partnerId}/policy`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        // The backend's `settings` field is a single JSONField — sending a
+        // The backend's `settings` field is a single JSONField - sending a
         // partial section here would overwrite the whole object, so the
         // complete merged settings must go every time.
         body: JSON.stringify({ settings }),

@@ -42,7 +42,7 @@ export default function OrdersList({ shopId, initialOrders }: { shopId: string; 
             <div key={order.id} className="control-list-row">
               <div>
                 <div className="control-list-row-title">
-                  {order.buyer_info?.display_name || order.buyer_info?.name || "Buyer"} — {order.total_usd_label || ""}
+                  {order.buyer_info?.display_name || order.buyer_info?.name || "Buyer"} - {order.total_usd_label || ""}
                 </div>
                 <div className="control-list-row-meta">
                   {(order.items || []).map((item) => `${item.product_name || "Item"} ×${item.quantity || 1}`).join(", ")}

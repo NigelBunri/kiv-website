@@ -83,7 +83,7 @@ export default function OrganizationLinksPanel({ partnerId, initialOrganizations
       <h2>Linked organizations</h2>
       <p>
         Shops, institutions, and channels you personally own that are linked to this partner
-        profile. This is separate from delegated management — see each shop or institution&rsquo;s
+        profile. This is separate from delegated management - see each shop or institution&rsquo;s
         own page for that.
       </p>
 

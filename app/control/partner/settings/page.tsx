@@ -37,7 +37,7 @@ export default async function PartnerSettingsPage() {
   return (
     <>
       <div className="control-header">
-        <h1>{manageable.name} — Settings</h1>
+        <h1>{manageable.name} - Settings</h1>
         <p>Turn features on or off for your organization.</p>
       </div>
       <div className="control-actions">

@@ -40,7 +40,7 @@ export default function SecurityFlagsList({ initialFlags }: { initialFlags: Flag
     <section className="control-section">
       {message ? <p className="control-error">{message.text}</p> : null}
       {flags.length === 0 ? (
-        <div className="control-empty">No unresolved flags — all clear.</div>
+        <div className="control-empty">No unresolved flags - all clear.</div>
       ) : (
         <div className="control-list">
           {flags.map((flag) => (

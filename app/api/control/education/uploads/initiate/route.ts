@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authHeaders, getValidSession, kisApiBase, setSessionCookie } from "@/lib/session";
 
-// Locks context server-side to "education_material" — never trust the
+// Locks context server-side to "education_material" - never trust the
 // browser to name its own upload context, since that's what determines
 // the allowed file types/size ceiling Django enforces on confirm.
 export async function POST(request: NextRequest) {

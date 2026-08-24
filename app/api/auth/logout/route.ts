@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { authHeaders, clearSessionCookie, getSession, kisApiBase } from "@/lib/session";
 
 // Revokes the current browser's Device row server-side (same mechanism
-// mobile logout uses — LogoutView bumps Device.token_version and sets
+// mobile logout uses - LogoutView bumps Device.token_version and sets
 // revoked_at), then clears the session cookie. Best-effort: the cookie is
 // cleared regardless of whether the upstream revoke call succeeds, so a
 // user is never stuck "logged in" locally just because Django was

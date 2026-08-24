@@ -1,7 +1,7 @@
 import { kisApiBase } from "@/lib/session";
 
 // The website previously always used channels[0] (most-recently-updated)
-// with no way to see or switch to any other channel the user manages —
+// with no way to see or switch to any other channel the user manages -
 // unlike the RN app's ChannelStudioScreen, which lets the user pick among
 // all their channels via a pill switcher (useChannelsData({mine: true})
 // + a horizontal ScrollView of channel pills). A user managing more than

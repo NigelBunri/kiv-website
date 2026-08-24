@@ -43,7 +43,7 @@ const features: Array<{ icon: "chat" | "broadcast" | "group" | "book" | "store" 
   {
     icon: "sliders",
     title: "Configured availability",
-    body: "Launch-list, Android, iOS and web actions only appear once official links are configured — nothing is implied ahead of readiness.",
+    body: "Launch-list, Android, iOS and web actions only appear once official links are configured - nothing is implied ahead of readiness.",
   },
 ];
 
@@ -89,7 +89,7 @@ export default function ProductPage() {
       </Section>
       <Section title="Responsible by design" body={product.details[2]}>
         <p className="section-note">
-          KIS is presented here as a real product in advanced launch preparation — not as a fully public app.
+          KIS is presented here as a real product in advanced launch preparation - not as a fully public app.
           Store and web-app links only appear on this site once KIV configures the official, verified URLs, so
           nothing on this page implies availability that isn&apos;t there yet.
         </p>

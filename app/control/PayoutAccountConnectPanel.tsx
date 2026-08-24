@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 // Shared by Shop, Health institution, Education institution, and Broadcast
-// channel — all four expose the identical POST .../payout-account/connect/
+// channel - all four expose the identical POST .../payout-account/connect/
 // endpoint (account_bank/account_number/business_name/country -> Flutterwave
 // subaccount), so one component drives all four. Stripe Connect exists on
 // the same four backends too, but its hosted-onboarding redirect always
@@ -69,7 +69,7 @@ export default function PayoutAccountConnectPanel({
       <p>Connect a bank account (via Flutterwave) so payments settle directly to you.</p>
       <p>
         <strong>
-          {isActive ? `Connected — ${name || "account"}${bankLast4 ? ` (••••${bankLast4})` : ""}` : "Not connected"}
+          {isActive ? `Connected - ${name || "account"}${bankLast4 ? ` (••••${bankLast4})` : ""}` : "Not connected"}
         </strong>
       </p>
       <form className="control-form" onSubmit={handleConnect}>

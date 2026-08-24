@@ -10,15 +10,15 @@ import { CartProvider } from "./PublicCartProvider";
 import { PublicCartDrawer } from "./PublicCartDrawer";
 
 // Shared render body for both app/page/[siteSlug]/page.tsx (Home) and
-// app/page/[siteSlug]/[pageSlug]/page.tsx (everything else) — same
+// app/page/[siteSlug]/[pageSlug]/page.tsx (everything else) - same
 // backend payload shape, same rendering, only the fetch call differs.
 export function WebsitePageView({ site, page }: { site: WebsiteBuilderSite; page: WebsiteBuilderPage }) {
   const pageUrlSlug = page.is_home ? "home" : page.slug;
 
   // A leading promo_bar renders above the sticky header (the pattern
-  // most ecommerce sites use — the bar scrolls away, the nav stays
+  // most ecommerce sites use - the bar scrolls away, the nav stays
   // pinned) instead of inline with the rest of the sections. Only the
-  // FIRST section qualifies — a promo_bar anywhere else in the list
+  // FIRST section qualifies - a promo_bar anywhere else in the list
   // renders normally, in place, via SectionRenderer's regular dispatch.
   const leadingPromoBar = page.sections[0]?.type === "promo_bar" ? page.sections[0] : null;
   const bodySections = leadingPromoBar ? page.sections.slice(1) : page.sections;

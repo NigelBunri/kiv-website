@@ -20,7 +20,7 @@ const TARGET_TYPE_LABEL: Record<string, string> = {
 };
 
 // The on-site counterpart to the app's own product/course/service detail
-// screen — previously a website visitor clicking a kis-content card only
+// screen - previously a website visitor clicking a kis-content card only
 // ever got the app deep_link (dead end on desktop, no real information),
 // with the card's 260-character blurb and single thumbnail as the only
 // on-site information available. Reuses the same BuyButton/OpenInApp
@@ -64,7 +64,7 @@ export function WebsiteItemDetailView({
             {targetType === "product" && item.in_stock === false && <p className="wb-item-detail-stock wb-item-detail-stock--out">Out of stock</p>}
             {targetType === "course" && item.institution_name && <p className="wb-item-detail-meta">Offered by {item.institution_name}</p>}
             {targetType === "course" && item.duration_minutes ? <p className="wb-item-detail-meta">{item.duration_minutes} minutes</p> : null}
-            {targetType === "shop_service" && item.quote_required && <p className="wb-item-detail-meta">Quote required — contact for pricing.</p>}
+            {targetType === "shop_service" && item.quote_required && <p className="wb-item-detail-meta">Quote required - contact for pricing.</p>}
             {item.description && <p className="wb-item-detail-description">{item.description}</p>}
             {item.categories && item.categories.length > 0 && (
               <div className="wb-item-detail-tags">

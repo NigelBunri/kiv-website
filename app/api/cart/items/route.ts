@@ -3,7 +3,7 @@ import { authHeaders, getValidSession, kisApiBase, setSessionCookie } from "@/li
 
 // Adds a product to an existing cart (see ../route.ts for how the cart
 // itself is fetched/created first). Proxies straight to CartItemViewSet
-// — the same endpoint the RN app's ProductDetailsPage "add to cart"
+// - the same endpoint the RN app's ProductDetailsPage "add to cart"
 // already calls in production.
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}));

@@ -6,7 +6,7 @@ KCAN, Kingdom Citizens & Ambassadors Network, is the parent organisation. KIV is
 
 ## Local setup
 
-Use Node.js 22.13 or newer and pnpm (this project is pnpm-only — do not commit a `package-lock.json` or `yarn.lock`).
+Use Node.js 22.13 or newer and pnpm (this project is pnpm-only - do not commit a `package-lock.json` or `yarn.lock`).
 
 ```bash
 pnpm install
@@ -54,14 +54,14 @@ Public forms post to `/api/forms`. The current implementation validates input, l
 
 ## Deployment options
 
-The site deploys to Cloudflare Workers via the official `@opennextjs/cloudflare` adapter — see `docs/deployment.md` for the full Cloudflare setup, plus the Vercel-compatible and self-hosted/AWS container alternatives (domain, Nginx, Docker, health-check and rollback details).
+The site deploys to Cloudflare Workers via the official `@opennextjs/cloudflare` adapter - see `docs/deployment.md` for the full Cloudflare setup, plus the Vercel-compatible and self-hosted/AWS container alternatives (domain, Nginx, Docker, health-check and rollback details).
 
 ```bash
 pnpm run preview   # build + run once in the local Workers runtime
 pnpm run deploy    # build + deploy to Cloudflare Workers
 ```
 
-`NEXT_PUBLIC_TURNSTILE_SITE_KEY` must be set wherever `pnpm run deploy`/`build` executes (it's inlined into the client bundle at build time). `TURNSTILE_SECRET_KEY` and any other server-only secret must never go in `wrangler.jsonc` or `.env*` files that get committed — set them once with:
+`NEXT_PUBLIC_TURNSTILE_SITE_KEY` must be set wherever `pnpm run deploy`/`build` executes (it's inlined into the client bundle at build time). `TURNSTILE_SECRET_KEY` and any other server-only secret must never go in `wrangler.jsonc` or `.env*` files that get committed - set them once with:
 
 ```bash
 pnpm wrangler secret put TURNSTILE_SECRET_KEY

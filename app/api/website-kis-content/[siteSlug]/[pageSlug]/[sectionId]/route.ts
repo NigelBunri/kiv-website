@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Proxies the "Load more" click on a public kis_content section to
-// Django's public (AllowAny) load-more endpoint — same server-to-server,
+// Django's public (AllowAny) load-more endpoint - same server-to-server,
 // no-CORS-needed pattern as every other Django call from this repo.
 const DEFAULT_KIS_API_BASE_URL = "https://api.kingdomimpactventures.org";
 

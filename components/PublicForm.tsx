@@ -29,7 +29,7 @@ export function PublicForm({ kind, subject = "", product = "" }: PublicFormProps
   const [pending, setPending] = useState(false);
 
   // Loads Cloudflare's Turnstile script once per page, only when a site key
-  // is actually configured — without one, the form renders and works exactly
+  // is actually configured - without one, the form renders and works exactly
   // as before (no CAPTCHA gate), matching this codebase's existing pattern
   // of degrading honestly when a provider isn't set up yet (see
   // validatePublicForm's KIV_FORM_PROVIDER messaging). Turnstile's own script
@@ -58,7 +58,7 @@ export function PublicForm({ kind, subject = "", product = "" }: PublicFormProps
       const data = (await response.json()) as Result;
       setResult(data);
       if (data.ok) form.reset();
-      // Turnstile tokens are single-use — reset the widget after any
+      // Turnstile tokens are single-use - reset the widget after any
       // submission attempt (success or failure) so a resubmission (e.g.
       // after fixing a validation error) gets a fresh token instead of
       // silently failing verification with the already-spent one.
@@ -74,7 +74,7 @@ export function PublicForm({ kind, subject = "", product = "" }: PublicFormProps
 
   return (
     <form className="public-form" onSubmit={onSubmit} noValidate>
-      {/* React 19 hoists <link> rendered anywhere in the tree up to <head> —
+      {/* React 19 hoists <link> rendered anywhere in the tree up to <head> -
           this warms the connection to Turnstile's origin before its script
           tag is even injected, shaving the DNS/TLS handshake off the
           critical path for the widget that appears further down this form. */}

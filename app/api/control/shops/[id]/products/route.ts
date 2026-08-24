@@ -20,7 +20,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 // shop is injected server-side from the route param rather than trusted
-// from the client body — Django's perform_create re-checks ownership
+// from the client body - Django's perform_create re-checks ownership
 // regardless, but there's no reason to let the client assert which shop
 // it's posting to when the URL already says so.
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {

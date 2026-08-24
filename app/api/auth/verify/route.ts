@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { buildSession, kisApiBase, newDeviceId, setSessionCookie } from "@/lib/session";
 
 const DEVICE_ID_COOKIE = "kis_device_id";
-const DEVICE_ID_MAX_AGE = 60 * 60 * 24 * 365; // 1 year — outlives any single session, deliberately
+const DEVICE_ID_MAX_AGE = 60 * 60 * 24 * 365; // 1 year - outlives any single session, deliberately
 
 // Step 2 of website login: verify the OTP code. On success, Django returns
-// access/refresh tokens for the existing account (purpose=web_login — see
+// access/refresh tokens for the existing account (purpose=web_login - see
 // apps/otp/views.py, rejects unknown phones with 404 rather than
 // registering a new account). This handler is the ONLY place a raw JWT
-// ever exists in this process — it's immediately sealed into an httpOnly
+// ever exists in this process - it's immediately sealed into an httpOnly
 // session cookie and never returned to the browser.
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}));
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, message: "Phone number and code are required." }, { status: 400 });
   }
 
-  // device_id must stay stable across this browser's logins — Django's
+  // device_id must stay stable across this browser's logins - Django's
   // Device model (the same one every mobile session already relies on for
   // DeviceBoundJWTAuthentication/refresh/revoke) is keyed on it, so a new
   // id on every login would silently pile up a new "device" row each time
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     if (!upstream.ok || !data?.access || !data?.refresh) {
       return NextResponse.json(
-        { success: false, message: data?.message || "That code didn't work — check it and try again." },
+        { success: false, message: data?.message || "That code didn't work - check it and try again." },
         { status: upstream.status || 400 },
       );
     }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useCart } from "./PublicCartProvider";
 
 // Sits alongside BuyButton's existing "Buy now" (single-item, instant
-// checkout) as a second option for products specifically — the only
+// checkout) as a second option for products specifically - the only
 // content type with a cart at all (see PublicCartProvider.tsx). Adding
 // requires sign-in same as buying; on a 401 this sends the visitor to
 // login exactly like BuyButton's redirectToPayment does.

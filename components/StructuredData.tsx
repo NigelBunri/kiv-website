@@ -21,7 +21,7 @@ export function OrganizationJsonLd() {
         email: site.supportEmail,
         // areaServed/knowsAbout reflect what the homepage and product pages
         // actually say (the "4 Pillars" / "Many Nations" stats and product
-        // summaries) — not an invented keyword list. Don't add sameAs,
+        // summaries) - not an invented keyword list. Don't add sameAs,
         // founder or foundingDate here without a real, live URL/date to
         // back them: unverifiable Organization claims are exactly what
         // Google's structured-data spam guidance flags, and a broken/fake
@@ -60,20 +60,20 @@ export function WebsiteJsonLd() {
         // No SearchAction/sitelinks-searchbox: the site has no working
         // search results route to point it at. Adding one without a real
         // endpoint behind it is the kind of unverifiable markup Google's
-        // structured-data guidelines flag — see the deployment report.
+        // structured-data guidelines flag - see the deployment report.
       }}
     />
   );
 }
 
 /** WebPage-level typing for pages with a recognized schema.org WebPage
- * subtype. Generic pages (most of the site) don't need this — Google
+ * subtype. Generic pages (most of the site) don't need this - Google
  * doesn't require WebPage markup on every page, and adding it everywhere
  * with no distinguishing type is low-value markup bloat. Use this only for
  * pages with a real subtype: "AboutPage", "ContactPage", or plain
  * "WebPage" for the couple of legal pages that don't have a truer
  * schema.org fit ("PrivacyPolicy"/"TermsOfService" are not real schema.org
- * types, despite showing up in some checklists — using them would fail
+ * types, despite showing up in some checklists - using them would fail
  * validation). */
 export function WebPageJsonLd({
   type = "WebPage",

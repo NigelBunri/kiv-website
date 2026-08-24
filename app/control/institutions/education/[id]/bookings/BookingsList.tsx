@@ -58,7 +58,7 @@ export default function BookingsList({ institutionId, initialBookings }: { insti
           {bookings.map((booking) => (
             <div key={booking.id} className="control-list-row">
               <div>
-                <div className="control-list-row-title">{booking.booked_item_title || "Booking"} — {booking.learner_display_name || "Learner"}</div>
+                <div className="control-list-row-title">{booking.booked_item_title || "Booking"} - {booking.learner_display_name || "Learner"}</div>
                 <div className="control-list-row-meta">
                   {booking.status} · {booking.seat_count} seat{booking.seat_count === 1 ? "" : "s"}{booking.amount_usd_label ? ` · ${booking.amount_usd_label}` : ""}
                 </div>

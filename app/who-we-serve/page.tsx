@@ -24,7 +24,7 @@ export default function WhoWeServePage() {
       <Hero
         eyebrow="Markets and mission"
         title="Six kinds of people. One trusted app built to actually serve them."
-        body="Before KIS is a feature list, it's an answer to specific problems specific people already have. This page names the people, the real problems, and exactly how KIS addresses each one — with nothing claimed beyond what's already documented across the site."
+        body="Before KIS is a feature list, it's an answer to specific problems specific people already have. This page names the people, the real problems, and exactly how KIS addresses each one - with nothing claimed beyond what's already documented across the site."
         visual={{ src: "/images/kiv-mission-visual.jpg", alt: "The mission and purpose guiding who KIS is built to serve." }}
       />
       <Section
@@ -35,7 +35,7 @@ export default function WhoWeServePage() {
       </Section>
       <Section
         title="Real-world problems KIS is built to solve"
-        body="Zoomed out from any one audience, these are the underlying problems the product exists to address — each tied to a specific, already-documented KIS capability."
+        body="Zoomed out from any one audience, these are the underlying problems the product exists to address - each tied to a specific, already-documented KIS capability."
       >
         <DetailList items={worldProblemsSolved} />
       </Section>

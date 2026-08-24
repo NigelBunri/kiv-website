@@ -20,7 +20,7 @@ export default function LoginPage() {
           <p className="eyebrow">Account</p>
           <h1>Sign in or create an account</h1>
           <p className="form-note">
-            One KIS account works everywhere — sign in here with the same phone number and password you use in the
+            One KIS account works everywhere - sign in here with the same phone number and password you use in the
             app, or create a new account and use it to log into the app too.
           </p>
           <Suspense fallback={null}>

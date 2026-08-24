@@ -36,7 +36,7 @@ export default async function AdminPartnerDetailPage({ params }: { params: Promi
 
       <section className="control-section">
         <h2>Owner</h2>
-        <p>{partner.owner?.email || partner.owner?.username || "—"} ({partner.owner?.tier || "—"})</p>
+        <p>{partner.owner?.email || partner.owner?.username || "-"} ({partner.owner?.tier || "-"})</p>
       </section>
 
       <PartnerActivationToggle partnerId={partner.id} isActive={partner.is_active} />

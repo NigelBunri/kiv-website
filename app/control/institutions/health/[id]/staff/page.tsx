@@ -46,7 +46,7 @@ export default async function HealthStaffPage({ params }: { params: Promise<{ id
 
   // If this health_ops institution has never been touched through the
   // legacy broadcast-profile blob (e.g. it was created entirely through
-  // this website), there's no matching entry yet — StaffWorkspace starts
+  // this website), there's no matching entry yet - StaffWorkspace starts
   // from a fresh stub using the same id, and the backend creates the
   // matching blob row on first save (its institutions[] merge already
   // supports create-on-write for unrecognized ids).
@@ -64,7 +64,7 @@ export default async function HealthStaffPage({ params }: { params: Promise<{ id
     <>
       <BackLink href={`/control/institutions/health/${id}`} label="Back to institution" />
       <div className="control-header">
-        <h1>Staff — {institution.name}</h1>
+        <h1>Staff - {institution.name}</h1>
         <p>Add, remove, and assign roles for this institution&rsquo;s staff.</p>
       </div>
       <StaffWorkspace

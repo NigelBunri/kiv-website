@@ -4,13 +4,13 @@
 
 Built via the official `@opennextjs/cloudflare` adapter (see `open-next.config.ts` and `wrangler.jsonc`, `name: kiv-website`).
 
-1. `NEXT_PUBLIC_TURNSTILE_SITE_KEY` must be present wherever the build runs — it's inlined into the client bundle at `next build` time, not read at request time.
-2. Set server-only secrets (`TURNSTILE_SECRET_KEY`, form provider/email credentials, `REDIS_URL`, etc.) with `pnpm wrangler secret put <NAME>` — never in `wrangler.jsonc`'s `vars`, never in a committed `.env*` file.
-3. `pnpm run preview` — builds and runs the Worker once locally against the real Workers runtime (via Miniflare), for a final check before deploying.
-4. `pnpm run deploy` — builds and deploys to Cloudflare Workers.
+1. `NEXT_PUBLIC_TURNSTILE_SITE_KEY` must be present wherever the build runs - it's inlined into the client bundle at `next build` time, not read at request time.
+2. Set server-only secrets (`TURNSTILE_SECRET_KEY`, form provider/email credentials, `REDIS_URL`, etc.) with `pnpm wrangler secret put <NAME>` - never in `wrangler.jsonc`'s `vars`, never in a committed `.env*` file.
+3. `pnpm run preview` - builds and runs the Worker once locally against the real Workers runtime (via Miniflare), for a final check before deploying.
+4. `pnpm run deploy` - builds and deploys to Cloudflare Workers.
 5. Roll back with `wrangler rollback` (see `wrangler rollback --help`), or by re-running `pnpm run deploy` against a previous known-good commit.
 
-Rate limiting on `/api/forms` falls back to an in-memory counter when `REDIS_URL` is unset. Because Workers can route a request to any isolate with no shared memory, that fallback is not an effective limit here — set `REDIS_URL` for this deployment target.
+Rate limiting on `/api/forms` falls back to an in-memory counter when `REDIS_URL` is unset. Because Workers can route a request to any isolate with no shared memory, that fallback is not an effective limit here - set `REDIS_URL` for this deployment target.
 
 ## Vercel-compatible path
 

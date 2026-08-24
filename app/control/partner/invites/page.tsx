@@ -36,7 +36,7 @@ export default async function PartnerInvitesPage() {
   return (
     <>
       <div className="control-header">
-        <h1>{manageable.name} — Invites</h1>
+        <h1>{manageable.name} - Invites</h1>
         <p>Create invite codes and share them with people to join your partner organization. Codes are redeemed in the KIS app.</p>
       </div>
       <div className="control-actions">

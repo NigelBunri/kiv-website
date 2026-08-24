@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Server-side proxy to the Django backend's payment-status endpoint —
+// Server-side proxy to the Django backend's payment-status endpoint -
 // called by the payments/complete redirect landing page after a
 // Flutterwave checkout. Proxying here (rather than having the browser
 // call the Django API directly) avoids a CORS-allowlist dependency
@@ -8,11 +8,11 @@ import { NextRequest, NextResponse } from "next/server";
 // works regardless of whether kingdomimpactventures.org has been added to
 // Django's CORS_ALLOWED_ORIGINS.
 //
-// Deliberately forwards only tx_ref/transaction_id — both are opaque,
+// Deliberately forwards only tx_ref/transaction_id - both are opaque,
 // unguessable identifiers (tx_ref is a uuid4 hex string), never anything
 // that could let a caller act on another user's account.
 // The Django backend runs on AWS Lightsail (Docker/GHCR, see the ops
-// runbook), not Render — this must stay in sync with that deployment's
+// runbook), not Render - this must stay in sync with that deployment's
 // public domain, currently api.kingdomimpactventures.org.
 const DEFAULT_KIS_API_BASE_URL = "https://api.kingdomimpactventures.org";
 
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
       method: "GET",
       headers: { Accept: "application/json" },
       // This page exists specifically to catch a payment whose webhook
-      // hasn't landed yet — never serve a cached "still pending" response.
+      // hasn't landed yet - never serve a cached "still pending" response.
       cache: "no-store",
       signal: AbortSignal.timeout(20_000),
     });

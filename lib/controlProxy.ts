@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authHeaders, getValidSession, kisApiBase, setSessionCookie } from "@/lib/session";
 
-// Shared Route Handler body for every app/api/control/** proxy — extracted
+// Shared Route Handler body for every app/api/control/** proxy - extracted
 // because a dozen+ of these would otherwise repeat the exact same
 // auth-check / forward / refresh-cookie shape already established by
 // app/api/cart/items/route.ts. One Django call per invocation; no new
 // backend logic, these are thin pass-throughs to endpoints that already
 // exist (this session's Shop/HealthInstitution/EducationInstitution
 // partner endpoints, apps.partners' PartnerViewSet, admin_control's
-// views) and already enforce their own permissions server-side — this
+// views) and already enforce their own permissions server-side - this
 // proxy adds nothing beyond "attach the signed-in user's auth headers".
 export async function proxyToDjango(
   request: NextRequest,

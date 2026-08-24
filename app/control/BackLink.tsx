@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-// Lightweight up-the-hierarchy nav for institution/shop-scoped pages —
+// Lightweight up-the-hierarchy nav for institution/shop-scoped pages -
 // deliberately not a full breadcrumb trail with fetched entity names,
 // which would mean adding a new institution/shop-name fetch to every
 // nested list/detail page just to render a label. This solves the same

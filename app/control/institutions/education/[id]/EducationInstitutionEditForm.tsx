@@ -15,9 +15,9 @@ const INSTITUTION_TYPE_OPTIONS = [
 ];
 
 const MEMBERSHIP_POLICY_OPTIONS = [
-  { value: "open", label: "Open — anyone can join" },
+  { value: "open", label: "Open - anyone can join" },
   { value: "application", label: "Application required" },
-  { value: "closed", label: "Closed — invite only" },
+  { value: "closed", label: "Closed - invite only" },
 ];
 
 export default function EducationInstitutionEditForm({

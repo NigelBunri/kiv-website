@@ -11,7 +11,7 @@ type MetaInput = {
    * visual of their own (legal pages, utility routes). */
   image?: { url: string; width: number; height: number; alt: string };
   /** Defaults to indexable (existing behavior for every static route).
-   * Website Builder pages pass `{ index: false, follow: false }` here —
+   * Website Builder pages pass `{ index: false, follow: false }` here -
    * conservative by default until KIS_PUBLIC_WEB_INDEXING_ENABLED is
    * explicitly approved for production, mirroring the Django backend's
    * own default-off indexing stance for its public-web system. */
@@ -23,11 +23,11 @@ const defaultImage = (alt: string) => ({ url: "/images/og-cover.png", width: 120
 export function pageMetadata({ title, description, path, type = "website", image, robots }: MetaInput): Metadata {
   // Root layout.tsx already sets title.template = "%s | Kingdom Impact
   // Ventures", which Next applies to whatever plain-string `title` a page
-  // returns here — so this must NOT also append the suffix itself, or
+  // returns here - so this must NOT also append the suffix itself, or
   // every page's browser-tab/SEO title doubles up. openGraph/twitter
   // titles are NOT run through that template (it only merges into the
   // top-level `title` field), so they still need the suffix applied
-  // explicitly — using the full name here too, for the same reason.
+  // explicitly - using the full name here too, for the same reason.
   const fullTitle = title === site.name ? title : `${title} | ${site.name}`;
   const url = absoluteUrl(path);
   const socialImage = image ?? defaultImage(`${site.name} social preview`);

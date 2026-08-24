@@ -18,7 +18,7 @@ type ClassSession = {
   status: string;
 };
 
-// datetime-local inputs need "YYYY-MM-DDTHH:mm" — trims the seconds/ms and
+// datetime-local inputs need "YYYY-MM-DDTHH:mm" - trims the seconds/ms and
 // timezone designator ISO strings from the API carry.
 function toLocalInput(iso?: string): string {
   if (!iso) return "";
