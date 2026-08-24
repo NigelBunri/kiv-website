@@ -127,6 +127,103 @@ export const audienceSegments = [
   },
 ];
 
+// Deeper version of audienceSegments for /who-we-serve: each market pairs
+// the real problem that group faces today with the specific KIS module
+// that answers it (kisModules above), rather than a single summary line.
+export const audienceDeepDives = [
+  {
+    title: "Individuals and families",
+    problem:
+      "Mainstream social apps are built to hold attention, not to build real community — leaving many people feeling more isolated, not less, and with nowhere purpose-built for faith growth alongside everyday connection.",
+    solution:
+      "KIS pairs purpose-led profiles and community discovery with private messaging and Bible/study workflows, so connection and discipleship live in the same trusted space instead of being split across apps that weren't built for either.",
+    image: { src: "/images/kiv-segment-families-visual.jpg", alt: "A family connecting together, representing individuals and families seeking safer digital community." },
+  },
+  {
+    title: "Churches and ministries",
+    problem:
+      "A typical ministry team runs on a patchwork of email, a group chat app, a social media page and printed bulletins — none of it built for the church, all of it one platform-policy change away from disappearing.",
+    solution:
+      "Broadcast publishing, group coordination and dedicated partner spaces give ministry teams one trusted channel for announcements, member communication and events, owned by the church rather than rented from a general-purpose platform.",
+    image: { src: "/images/kiv-segment-churches-visual.jpg", alt: "A church community gathered together, representing churches and ministries coordinating members." },
+  },
+  {
+    title: "Creators and teachers",
+    problem:
+      "Christian educators and creators publishing on generic social platforms compete against an algorithm tuned for outrage and entertainment, with no structure for the teaching relationship itself.",
+    solution:
+      "Channels, structured content and direct audience relationships let creators and teachers build a real following around their teaching, with Bible and study workflows as first-class content rather than a link out to somewhere else.",
+    image: { src: "/images/kiv-segment-creators-visual.jpg", alt: "A teacher leading a study session, representing Christian creators and educators building structured content." },
+  },
+  {
+    title: "Schools and training partners",
+    problem:
+      "Faith-aligned education partners often have no shared digital infrastructure for cohorts, mentoring and programme communication, and end up assembling one from tools built for neither education nor ministry.",
+    solution:
+      "Partner spaces and the planned KIE learning pathways give schools and training partners a foundation for cohort communication and mentoring inside the same trusted ecosystem their learners already use — staged behind formal programme review, not claimed before it's ready.",
+    image: { src: "/images/kiv-segment-education-visual.jpg", alt: "Students in a learning cohort, representing schools and training partners." },
+  },
+  {
+    title: "Marketplace and service partners",
+    problem:
+      "Vendors and local entrepreneurs in faith communities rarely have a trusted, community-aligned place to reach buyers — general marketplaces offer scale but no shared trust, and word-of-mouth alone doesn't scale.",
+    solution:
+      "Marketplace foundations connect vendors, entrepreneurs and local organizations to the same community they already serve, laying groundwork for commerce inside a trusted network rather than a disconnected storefront.",
+    image: { src: "/images/kiv-segment-marketplace-visual.jpg", alt: "A local vendor at a market stall, representing marketplace and service partners." },
+  },
+  {
+    title: "Care and support partners",
+    problem:
+      "Care coordination in under-resourced communities is often held together by phone trees and spreadsheets, with no privacy-aware digital tooling built for the sensitivity of the work.",
+    solution:
+      "Private groups and messaging give care and support partners a coordination space with privacy and safety review built in from the start, with deeper care-specific workflows staged behind the same compliance review as every KIH-aligned capability.",
+    image: { src: "/images/kiv-contact-workflows-visual.jpg", alt: "A coordination and communication workflow, representing care and support partners routing requests to the right place." },
+  },
+];
+
+// World-problem framing for /who-we-serve: broader than any one audience
+// segment, each paired with the concrete KIS module (or safety/trust page)
+// that answers it — so every claim traces back to something already
+// documented elsewhere on the site, not a new promise invented for this
+// page.
+export const worldProblemsSolved = [
+  {
+    title: "Digital isolation dressed up as connection",
+    body:
+      "Most social platforms optimize for time-on-screen, not for real relationship — leaving people more connected to a feed than to a community. KIS builds around purpose-led profiles and community discovery instead of an engagement-maximizing algorithm.",
+  },
+  {
+    title: "Faith formation has no home in mainstream apps",
+    body:
+      "Bible reading, study and discipleship are treated as something you do somewhere else, never as part of the app itself. KIS makes Bible and study workflows a first-class product area alongside social features, not an afterthought.",
+  },
+  {
+    title: "Ministry communication is scattered across rented platforms",
+    body:
+      "Churches depend on email, group chats and social pages they don't own or control, each with its own policies and outages. KIS gives ministry teams broadcast publishing and partner spaces they control, purpose-built for the church rather than borrowed from a general platform.",
+  },
+  {
+    title: "Community spaces aren't built with safety as a first principle",
+    body:
+      "Many online spaces bolt on moderation and child-safety after problems appear. KIS treats privacy, moderation and child safety as launch-critical requirements from the start — see the site's trust, child-safety and community-guidelines commitments.",
+  },
+  {
+    title: "Faith-aligned commerce has no trusted home",
+    body:
+      "Local vendors and entrepreneurs in faith communities either sell through platforms with no shared trust, or rely on word-of-mouth alone. KIS's marketplace foundations connect vendors to the community they already serve, inside the same trusted ecosystem.",
+  },
+  {
+    title: "Care coordination runs on phone trees and spreadsheets",
+    body:
+      "Support and care work in under-resourced communities is often held together by informal, non-private tooling. KIS's group and messaging foundations give care partners a privacy-aware coordination space, with deeper workflows staged behind compliance review.",
+  },
+  {
+    title: "Education and mentoring lack a shared digital home",
+    body:
+      "Faith-aligned schools, mentors and training partners rarely have infrastructure built for both education and ministry at once. KIS partner spaces, and the planned KIE learning pathways, are designed to close that gap once formal programme review is complete.",
+  },
+];
+
 export const launchWorkflow = [
   {
     title: "1. Define the real workflow",
@@ -411,14 +508,68 @@ export const products: Product[] = [
   },
 ];
 
+// description + previewImage feed the hover/focus mega-menu flyout
+// (lib/useNavFlyout.tsx) that SiteShell's primary nav shares with the
+// storefront/site-builder page nav — every tab gets the same hover
+// preview, not just website-builder pages. Products leads (right after
+// Home) rather than sitting mid-list: visitor feedback was that the
+// actual product (KIS) was hard to find among the corporate/mission
+// copy, so the one nav item that leads straight to it gets top billing.
 export const nav = [
-  { href: "/about", label: "About" },
-  { href: "/mission", label: "Mission" },
-  { href: "/products", label: "Products" },
-  { href: "/partners", label: "Partners" },
-  { href: "/investors", label: "Investors" },
-  { href: "/updates", label: "Updates" },
-  { href: "/contact", label: "Contact" },
+  {
+    href: "/",
+    label: "Home",
+    description: "Where KCAN, KIV and the KIS flagship product all come together.",
+    previewImage: "/images/kiv-structure-visual-800.jpg",
+  },
+  {
+    href: "/products",
+    label: "Products",
+    description: "KIS, the flagship app, plus the staged KIE/KIM/KIP/KIH venture portfolio.",
+    previewImage: "/images/kiv-portfolio-roadmap-800.jpg",
+  },
+  {
+    href: "/who-we-serve",
+    label: "Who We Serve",
+    description: "The people KIS is built for, the real problems they face, and how KIS solves them.",
+    previewImage: "/images/kiv-segment-families-visual-800.jpg",
+  },
+  {
+    href: "/about",
+    label: "About",
+    description: "Who KIV is, how it operates, and how it answers to KCAN.",
+    previewImage: "/images/kiv-structure-visual-800.jpg",
+  },
+  {
+    href: "/mission",
+    label: "Mission",
+    description: "The mission and operating principles behind every KIV product decision.",
+    previewImage: "/images/kiv-mission-visual-800.jpg",
+  },
+  {
+    href: "/partners",
+    label: "Partners",
+    description: "How churches, ministries and organisations can partner with KIV and KIS.",
+    previewImage: "/images/kiv-partners-visual-800.jpg",
+  },
+  {
+    href: "/investors",
+    label: "Investors",
+    description: "Investor information for Kingdom Impact Ventures, without unsupported claims.",
+    previewImage: "/images/kiv-investors-visual-800.jpg",
+  },
+  {
+    href: "/updates",
+    label: "Updates",
+    description: "The latest public updates on KIS launch preparation and the wider portfolio.",
+    previewImage: "/images/kiv-portfolio-roadmap-800.jpg",
+  },
+  {
+    href: "/contact",
+    label: "Contact",
+    description: "The right way to reach KIV — support, partners, investors and security.",
+    previewImage: "/images/kiv-contact-workflows-visual-800.jpg",
+  },
 ];
 
 export const utilityRoutes = [

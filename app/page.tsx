@@ -1,5 +1,6 @@
+import Link from "next/link";
 import { SiteShell } from "@/components/SiteShell";
-import { Breadcrumbs, CardGrid, ContactStrip, DetailList, HomeHero, ProductGrid, Section, Timeline } from "@/components/PageBlocks";
+import { Breadcrumbs, CardGrid, ContactStrip, DetailList, FeatureGrid, HomeHero, ImageStory, ProductGrid, Section, Timeline } from "@/components/PageBlocks";
 import { pageMetadata } from "@/lib/metadata";
 import { audienceSegments, launchWorkflow, operatingModel, ventureTimeline } from "@/lib/site";
 
@@ -22,6 +23,32 @@ export default function HomePage() {
         <p>
           The first product is Kingdom Impact Social (KIS), a Christian digital ecosystem combining community, private communication and discipleship tools. Future ventures extend the same approach into education, marketplace, payments and health — each announced publicly only once it has real launch readiness behind it, never before.
         </p>
+      </Section>
+      <Section title="The product: Kingdom Impact Social" body="KIS is real today — in advanced launch preparation, not a future concept — and it's the fastest way to see what KIV actually builds.">
+        <ImageStory
+          src="/images/kis-ecosystem-visual.jpg"
+          alt="KIS shown as a unified app ecosystem combining social feed, private messaging, Bible study, partner spaces and marketplace foundations."
+          eyebrow="KIV's flagship product"
+          title="One trusted app for community, private messaging, Bible study and partner spaces."
+          body="KIS brings social connection, discipleship and partner operations into a single, purpose-built ecosystem rather than a generic social feed."
+          points={[
+            "Purpose-led profiles, groups and conversations built for KCAN communities.",
+            "Bible and study workflows sit alongside social features as a first-class part of the app.",
+            "Dedicated partner spaces for ministry teams, educators and marketplace leaders.",
+          ]}
+        />
+        <FeatureGrid
+          items={[
+            { icon: "chat", title: "Social connection", body: "Purpose-led profiles, groups and conversations built with intention, not just scroll." },
+            { icon: "broadcast", title: "Broadcast publishing", body: "Publish updates, teachings and announcements to exactly the people who need them." },
+            { icon: "group", title: "Partner spaces", body: "Ministry teams, educators and marketplace leaders run their own communities inside KIS." },
+            { icon: "book", title: "Bible & study workflows", body: "Structured study and discipleship tools sit alongside social features from day one." },
+          ]}
+        />
+        <div className="action-row">
+          <Link className="button primary" href="/products/kis">See everything KIS does <span aria-hidden="true">→</span></Link>
+          <Link className="button secondary" href="/download">Check availability</Link>
+        </div>
       </Section>
       <Section title="How the organisation fits together" body="The project is easier to understand when the public structure is kept explicit.">
         <DetailList items={operatingModel} />

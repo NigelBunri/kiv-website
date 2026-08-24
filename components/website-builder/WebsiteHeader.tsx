@@ -5,7 +5,8 @@ import Link from "next/link";
 import type { WebsiteBuilderSite } from "@/lib/website-builder-api";
 import { UserMenu } from "@/components/UserMenu";
 import { PublicCartIcon } from "./PublicCartIcon";
-import { ScrollableTabNav, type TabNavItem } from "@/components/ScrollableTabNav";
+import { ScrollableTabNav } from "@/components/ScrollableTabNav";
+import { useNavFlyout, type FlyoutNavEntry } from "@/lib/useNavFlyout";
 
 // Every website-builder site gets this header — previously WebsitePageView
 // only rendered a bare, unstyled page-switcher <nav> and only when a site
@@ -23,8 +24,6 @@ export function WebsiteHeader({ site, currentSlug }: { site: WebsiteBuilderSite;
   const [navOpen, setNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [nameExpanded, setNameExpanded] = useState(false);
-  const [flyoutSlug, setFlyoutSlug] = useState<string | null>(null);
-  const [flyoutPos, setFlyoutPos] = useState<{ top: number; left: number } | null>(null);
   const brandRef = useRef<HTMLDivElement>(null);
   const logoUrl = typeof site.branding?.logo_url === "string" ? (site.branding.logo_url as string) : "";
   const initial = (site.name || "?").trim().charAt(0).toUpperCase() || "?";
@@ -61,76 +60,25 @@ export function WebsiteHeader({ site, currentSlug }: { site: WebsiteBuilderSite;
     return () => { document.body.style.overflow = previous; };
   }, [navOpen]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => () => cancelScheduledClose(), []);
-
   const closeNav = () => setNavOpen(false);
-
-  // The flyout is a sibling of the nav item (not a DOM descendant, unlike
-  // the old version) so it can escape the scroll track's clipping — see
-  // the .wb-site-nav-flyout--fixed comment in globals.css. That means
-  // plain CSS :hover no longer carries hover state across the visual gap
-  // between the link and the card below it, so a mouseleave on the item
-  // would close it before the pointer finishes crossing that gap. A short
-  // cancellable delay covers that transition without leaving the flyout
-  // open indefinitely.
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  function cancelScheduledClose() {
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-    }
-  }
-  function openFlyout(slug: string, el: HTMLElement) {
-    cancelScheduledClose();
-    const rect = el.getBoundingClientRect();
-    setFlyoutSlug(slug);
-    setFlyoutPos({ top: rect.bottom, left: rect.left + rect.width / 2 });
-  }
-  function scheduleCloseFlyout() {
-    cancelScheduledClose();
-    closeTimer.current = setTimeout(() => setFlyoutSlug(null), 150);
-  }
-  const closeFlyout = () => {
-    cancelScheduledClose();
-    setFlyoutSlug(null);
-  };
-  const flyoutPage = flyoutSlug
-    ? site.pages.find((p) => (p.is_home ? "home" : p.slug) === flyoutSlug)
-    : undefined;
 
   // Fed to ScrollableTabNav for the desktop row — capped to roughly 5
   // visible tabs with drag/arrow scrolling for the rest (see
   // .scroll-tab-track.wb-site-nav--desktop in globals.css). Pages with a
-  // mega-menu flyout use `render` since they need extra markup around the
-  // link, not just the link itself.
-  const desktopNavItems: TabNavItem[] = site.pages.map((p) => {
+  // description or preview image get the shared hover/focus mega-menu
+  // flyout (lib/useNavFlyout.tsx); the rest stay plain links.
+  const navEntries: FlyoutNavEntry[] = site.pages.map((p) => {
     const slug = p.is_home ? "home" : p.slug;
-    const href = p.is_home ? `/page/${site.slug}` : `/page/${site.slug}/${p.slug}`;
-    const isActive = slug === currentSlug;
-    const hasFlyout = Boolean(p.description || p.preview_image_url);
-    if (!hasFlyout) {
-      return { href, label: p.title, active: isActive };
-    }
     return {
-      href,
+      key: slug,
+      href: p.is_home ? `/page/${site.slug}` : `/page/${site.slug}/${p.slug}`,
       label: p.title,
-      active: isActive,
-      render: () => (
-        <div
-          className="wb-site-nav-item"
-          onMouseEnter={(e) => openFlyout(slug, e.currentTarget)}
-          onMouseLeave={scheduleCloseFlyout}
-          onFocus={(e) => openFlyout(slug, e.currentTarget)}
-          onBlur={closeFlyout}
-        >
-          <Link href={href} aria-current={isActive ? "page" : undefined}>
-            {p.title}
-          </Link>
-        </div>
-      ),
+      active: slug === currentSlug,
+      description: p.description,
+      previewImageUrl: p.preview_image_url,
     };
   });
+  const { navItems: desktopNavItems, flyout } = useNavFlyout(navEntries);
 
   return (
     <header className={`wb-site-header${scrolled ? " wb-site-header--scrolled" : ""}${navOpen ? " wb-site-header--nav-open" : ""}`}>
@@ -180,31 +128,7 @@ export function WebsiteHeader({ site, currentSlug }: { site: WebsiteBuilderSite;
         )}
       </div>
 
-      {flyoutPage && flyoutPos && (() => {
-        const href = flyoutPage.is_home ? `/page/${site.slug}` : `/page/${site.slug}/${flyoutPage.slug}`;
-        return (
-          <div
-            className="wb-site-nav-flyout--fixed"
-            role="menu"
-            style={{ top: flyoutPos.top, left: flyoutPos.left }}
-            onMouseEnter={cancelScheduledClose}
-            onMouseLeave={scheduleCloseFlyout}
-          >
-            <Link href={href} className="wb-site-nav-flyout-card" onClick={() => { closeNav(); closeFlyout(); }}>
-              {flyoutPage.preview_image_url ? (
-                <img src={flyoutPage.preview_image_url} alt="" className="wb-site-nav-flyout-image" />
-              ) : (
-                <div className="wb-site-nav-flyout-image wb-site-nav-flyout-image--placeholder" aria-hidden="true" />
-              )}
-              <div className="wb-site-nav-flyout-copy">
-                <span className="wb-site-nav-flyout-title">{flyoutPage.title}</span>
-                {flyoutPage.description ? <span className="wb-site-nav-flyout-description">{flyoutPage.description}</span> : null}
-                <span className="wb-site-nav-flyout-cta">Explore →</span>
-              </div>
-            </Link>
-          </div>
-        );
-      })()}
+      {flyout}
 
       {hasPages && (
         <>

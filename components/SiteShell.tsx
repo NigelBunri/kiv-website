@@ -5,8 +5,9 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { nav, products, site, utilityRoutes } from "@/lib/site";
 import { useDismissableMenu } from "@/lib/useDismissableMenu";
+import { useNavFlyout, type FlyoutNavEntry } from "@/lib/useNavFlyout";
 import { UserMenu } from "./UserMenu";
-import { ScrollableTabNav, type TabNavItem } from "./ScrollableTabNav";
+import { ScrollableTabNav } from "./ScrollableTabNav";
 
 function isActiveNavLink(pathname: string | null, href: string) {
   return pathname === href || pathname?.startsWith(`${href}/`) === true;
@@ -31,11 +32,15 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   const actionsToggleRef = useRef<HTMLButtonElement>(null);
   useDismissableMenu(actionsOpen, () => setActionsOpen(false), actionsRef, actionsToggleRef);
 
-  const navItems: TabNavItem[] = nav.map((item) => ({
+  const navEntries: FlyoutNavEntry[] = nav.map((item) => ({
+    key: item.href,
     href: item.href,
     label: item.label,
     active: isActiveNavLink(pathname, item.href),
+    description: item.description,
+    previewImageUrl: item.previewImage,
   }));
+  const { navItems, flyout } = useNavFlyout(navEntries);
 
   return (
     <>
@@ -88,6 +93,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <UserMenu />
           </div>
         </div>
+
+        {flyout}
 
         {/* Mobile slide-in panel — .header-actions is display:none below the
             collapse breakpoint (see globals.css), so "View KIS" / "Check

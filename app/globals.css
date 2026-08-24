@@ -1264,6 +1264,26 @@ h3 { font-size: 1.3rem; }
 }
 .card, .product-card { transition: transform var(--base) var(--ease), box-shadow var(--base) var(--ease), border-color var(--base) var(--ease); }
 .card p, .product-card p { margin: 0; color: var(--ink-soft); }
+
+/* Segment cards (/who-we-serve) — a photo-forward variant of .card that
+   pairs a real-world challenge with the specific KIS answer, so it needs
+   a full-bleed image up top (unlike the small logo mark other cards use)
+   and two distinct labelled statements instead of one body paragraph. */
+.segment-card { padding: 0; gap: 0; }
+.segment-card-image { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+.segment-card-body { display: grid; gap: .85rem; padding: 1.5rem 1.4rem 1.7rem; }
+.segment-card-body h3 { margin: 0; }
+.segment-card-problem, .segment-card-solution { margin: 0; color: var(--ink-soft); line-height: 1.55; }
+.segment-card-problem span, .segment-card-solution span {
+  display: block;
+  margin-bottom: .2rem;
+  color: var(--gold-strong);
+  font-weight: 800;
+  font-size: .75rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.segment-card-solution { color: var(--ink); }
 .product-card span {
   color: var(--gold-strong);
   font-weight: 800;
@@ -1912,28 +1932,29 @@ textarea { resize: vertical; }
 .wb-site-nav--desktop a[aria-current="page"]::after { transform: scaleX(1); }
 
 /* Mega-menu flyout — appears under a nav item on hover/focus when that
-   page has a description or preview image set (WebsiteHeader.tsx). Fixed
-   positioning + JS-computed coordinates (not a plain absolute child of
-   .wb-site-nav-item) because the desktop nav now lives inside
-   ScrollableTabNav's horizontally-scrolling track: any element with
-   overflow-x:auto forces overflow-y to auto too (per spec, "visible"
-   can't be paired with a scrolling axis on the same box), which would
-   otherwise clip this dropdown before it ever became visible. Fixed
-   position escapes that ancestor's overflow entirely. */
-.wb-site-nav-item { position: relative; }
-.wb-site-nav-flyout--fixed {
+   item has a description or preview image (lib/useNavFlyout.tsx). Shared
+   by both the storefront/site-builder page nav (WebsiteHeader.tsx) and
+   the main site's own primary nav (SiteShell.tsx). Fixed positioning +
+   JS-computed coordinates (not a plain absolute child of .nav-flyout-item)
+   because both navs live inside ScrollableTabNav's horizontally-scrolling
+   track: any element with overflow-x:auto forces overflow-y to auto too
+   (per spec, "visible" can't be paired with a scrolling axis on the same
+   box), which would otherwise clip this dropdown before it ever became
+   visible. Fixed position escapes that ancestor's overflow entirely. */
+.nav-flyout-item { position: relative; }
+.nav-flyout-fixed {
   position: fixed;
   transform: translate(-50%, .5rem);
   z-index: 60;
   width: 20rem;
   padding-top: .75rem;
-  animation: wb-flyout-in 140ms var(--ease, ease);
+  animation: nav-flyout-in 140ms var(--ease, ease);
 }
-@keyframes wb-flyout-in {
+@keyframes nav-flyout-in {
   from { opacity: 0; transform: translate(-50%, 0); }
   to { opacity: 1; transform: translate(-50%, .5rem); }
 }
-.wb-site-nav-flyout-card {
+.nav-flyout-card {
   display: flex;
   flex-direction: column;
   border-radius: var(--radius-md, 1rem);
@@ -1944,12 +1965,12 @@ textarea { resize: vertical; }
   text-decoration: none;
   color: inherit;
 }
-.wb-site-nav-flyout-image { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
-.wb-site-nav-flyout-image--placeholder { background: linear-gradient(135deg, var(--gold-soft, #f2e0b3), var(--cream-2, #f8efdb)); }
-.wb-site-nav-flyout-copy { display: flex; flex-direction: column; gap: .3rem; padding: 1rem 1.1rem 1.1rem; }
-.wb-site-nav-flyout-title { font-family: var(--font-serif), Georgia, serif; font-weight: 700; font-size: 1rem; color: var(--ink, #1c170f); }
-.wb-site-nav-flyout-description { font-size: .85rem; color: var(--ink-soft, #56493a); line-height: 1.5; }
-.wb-site-nav-flyout-cta { font-size: .8rem; font-weight: 700; color: var(--gold-strong, #704d10); margin-top: .25rem; }
+.nav-flyout-image { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.nav-flyout-image--placeholder { background: linear-gradient(135deg, var(--gold-soft, #f2e0b3), var(--cream-2, #f8efdb)); }
+.nav-flyout-copy { display: flex; flex-direction: column; gap: .3rem; padding: 1rem 1.1rem 1.1rem; }
+.nav-flyout-title { font-family: var(--font-serif), Georgia, serif; font-weight: 700; font-size: 1rem; color: var(--ink, #1c170f); }
+.nav-flyout-description { font-size: .85rem; color: var(--ink-soft, #56493a); line-height: 1.5; }
+.nav-flyout-cta { font-size: .8rem; font-weight: 700; color: var(--gold-strong, #704d10); margin-top: .25rem; }
 
 .wb-site-header-tools { display: flex; align-items: center; gap: 1rem; margin-left: auto; flex-shrink: 0; }
 .wb-site-header-tools .header-button {

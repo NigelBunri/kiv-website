@@ -421,6 +421,44 @@ export function ProductGrid() {
   );
 }
 
+/**
+ * Photo-forward cards pairing a real-world challenge with the specific
+ * KIS capability that addresses it — used on /who-we-serve. Distinct from
+ * CardGrid (small logo + single body paragraph): each card needs two
+ * separate statements (the problem, then the KIS-specific answer) plus a
+ * larger, photo-sized image rather than an 80px logo mark.
+ */
+export function SegmentGrid({
+  items,
+}: {
+  items: Array<{ title: string; problem: string; solution: string; image: { src: string; alt: string } }>;
+}) {
+  return (
+    <div className="card-grid segment-grid">
+      {items.map((item, index) => (
+        <article key={item.title} className="card segment-card" data-reveal style={revealDelay(index)}>
+          <ResponsiveImage
+            className="segment-card-image"
+            src={item.image.src}
+            alt={item.image.alt}
+            widths={[480, 800]}
+            fallbackExt="jpg"
+            sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 32vw"
+            width={800}
+            height={520}
+            loading="lazy"
+          />
+          <div className="segment-card-body">
+            <h3>{item.title}</h3>
+            <p className="segment-card-problem"><span>The challenge</span>{item.problem}</p>
+            <p className="segment-card-solution"><span>How KIS helps</span>{item.solution}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 export function DetailList({
   items,
 }: {
