@@ -2977,6 +2977,28 @@ textarea { resize: vertical; }
   padding: 2rem clamp(1.25rem, 4vw, 3rem);
   max-width: 64rem;
 }
+.control-channel-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-bottom: 1rem;
+}
+.control-channel-pill {
+  padding: .4rem .9rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: .85rem;
+}
+.control-channel-pill:hover { border-color: var(--gold); }
+.control-channel-pill--active {
+  background: var(--gold-soft);
+  border-color: var(--gold);
+  color: var(--gold-strong);
+}
 .control-back-link {
   display: inline-flex;
   align-items: center;

@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import ModerationQueue from "./ModerationQueue";
+import { fetchMyChannels, pickChannel } from "../resolveChannel";
+import { ChannelSwitcher } from "../ChannelSwitcher";
 
 type ModerationRecord = {
   id: string;
@@ -15,15 +17,15 @@ type ModerationRecord = {
   created_at: string;
 };
 
-export default async function ChannelModerationPage() {
+export default async function ChannelModerationPage({ searchParams }: { searchParams: Promise<{ channel?: string }> }) {
+  const { channel: requestedChannelId } = await searchParams;
   const result = await fetchControlProfile();
   if (!result) return null;
   const { session } = result;
   const headers = authHeaders(session);
 
-  const listRes = await fetch(`${kisApiBase()}/api/v1/broadcasts/channels/?mine=1`, { headers, cache: "no-store", signal: AbortSignal.timeout(15_000) });
-  const listData = listRes.ok ? await listRes.json() : {};
-  const channel = Array.isArray(listData?.results) ? listData.results[0] : null;
+  const channels = await fetchMyChannels(headers);
+  const channel = pickChannel(channels, requestedChannelId);
   if (!channel) notFound();
 
   const res = await fetch(`${kisApiBase()}/api/v1/broadcasts/channels/${encodeURIComponent(channel.id)}/moderation/`, {
@@ -34,6 +36,7 @@ export default async function ChannelModerationPage() {
 
   return (
     <>
+      <ChannelSwitcher channels={channels} activeId={channel.id} basePath="/control/channel/moderation" />
       <div className="control-header">
         <h1>Moderation</h1>
         <p>Reported content and comments on {channel.display_name}.</p>

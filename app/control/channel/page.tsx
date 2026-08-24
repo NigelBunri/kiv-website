@@ -2,6 +2,8 @@ import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import ChannelCreateForm from "./ChannelCreateForm";
 import ChannelWorkspace from "./ChannelWorkspace";
+import { fetchMyChannels, pickChannel } from "./resolveChannel";
+import { ChannelSwitcher } from "./ChannelSwitcher";
 
 type Channel = {
   id: string;
@@ -25,16 +27,15 @@ function formatWatchTime(seconds: number): string {
   return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
 }
 
-export default async function ChannelPage() {
+export default async function ChannelPage({ searchParams }: { searchParams: Promise<{ channel?: string }> }) {
+  const { channel: requestedChannelId } = await searchParams;
   const result = await fetchControlProfile();
   if (!result) return null;
   const { session } = result;
   const headers = authHeaders(session);
 
-  const listRes = await fetch(`${kisApiBase()}/api/v1/broadcasts/channels/?mine=1`, { headers, cache: "no-store", signal: AbortSignal.timeout(15_000) });
-  const listData = listRes.ok ? await listRes.json() : {};
-  const channels: Channel[] = Array.isArray(listData?.results) ? listData.results : [];
-  const channel = channels[0];
+  const channels = (await fetchMyChannels(headers)) as Channel[];
+  const channel = pickChannel(channels, requestedChannelId) as Channel | null;
 
   if (!channel) {
     return (
@@ -73,6 +74,7 @@ export default async function ChannelPage() {
 
   return (
     <>
+      <ChannelSwitcher channels={channels} activeId={channel.id} basePath="/control/channel" />
       <div className="control-header">
         <h1>{channel.display_name}</h1>
         <p>@{channel.handle} · {channel.subscriber_count || 0} subscribers</p>
@@ -95,9 +97,9 @@ export default async function ChannelPage() {
       <section className="control-section">
         <h2>Manage</h2>
         <div className="control-actions">
-          <a href="/control/channel/revenue" className="button primary">Revenue &amp; payouts</a>
-          <a href="/control/channel/moderation" className="button">Moderation</a>
-          <a href="/control/channel/playlists" className="button">Playlists</a>
+          <a href={`/control/channel/revenue?channel=${encodeURIComponent(channel.id)}`} className="button primary">Revenue &amp; payouts</a>
+          <a href={`/control/channel/moderation?channel=${encodeURIComponent(channel.id)}`} className="button">Moderation</a>
+          <a href={`/control/channel/playlists?channel=${encodeURIComponent(channel.id)}`} className="button">Playlists</a>
         </div>
       </section>
       <ChannelWorkspace channel={{ ...channel, ...detail }} initialContents={contents} />

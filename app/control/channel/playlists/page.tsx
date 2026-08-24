@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
 import PlaylistsWorkspace from "./PlaylistsWorkspace";
+import { fetchMyChannels, pickChannel } from "../resolveChannel";
+import { ChannelSwitcher } from "../ChannelSwitcher";
 
 type Playlist = {
   id: string;
@@ -12,15 +14,15 @@ type Playlist = {
 };
 type Content = { id: string; title: string };
 
-export default async function ChannelPlaylistsPage() {
+export default async function ChannelPlaylistsPage({ searchParams }: { searchParams: Promise<{ channel?: string }> }) {
+  const { channel: requestedChannelId } = await searchParams;
   const result = await fetchControlProfile();
   if (!result) return null;
   const { session } = result;
   const headers = authHeaders(session);
 
-  const listRes = await fetch(`${kisApiBase()}/api/v1/broadcasts/channels/?mine=1`, { headers, cache: "no-store", signal: AbortSignal.timeout(15_000) });
-  const listData = listRes.ok ? await listRes.json() : {};
-  const channel = Array.isArray(listData?.results) ? listData.results[0] : null;
+  const channels = await fetchMyChannels(headers);
+  const channel = pickChannel(channels, requestedChannelId);
   if (!channel) notFound();
 
   const [playlistsRes, contentsRes] = await Promise.all([
@@ -34,6 +36,7 @@ export default async function ChannelPlaylistsPage() {
 
   return (
     <>
+      <ChannelSwitcher channels={channels} activeId={channel.id} basePath="/control/channel/playlists" />
       <div className="control-header">
         <h1>Playlists</h1>
         <p>Group posts from {channel.display_name} into ordered playlists.</p>
