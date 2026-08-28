@@ -312,7 +312,19 @@ body::before {
 .scroll-tab-track::-webkit-scrollbar { display: none; }
 .scroll-tab-track > a,
 .scroll-tab-track > .scroll-tab-item { scroll-snap-align: start; flex-shrink: 0; white-space: nowrap; }
-.scroll-tab-track.primary-nav { flex-wrap: nowrap; max-width: min(44rem, 100%); }
+/* justify-content: flex-end must be overridden back to flex-start here -
+   .primary-nav sets flex-end for its original (non-scrolling) right-aligned
+   layout, but paired with overflow-x:auto that packs tabs against the
+   container's right edge instead, pushing the start-side tabs (Home, etc.)
+   into overflow on the LEFT. A flex container can't be scrolled past
+   scrollLeft:0 to reach start-side overflow, so those tabs became
+   permanently stuck off-screen with no way back - and since scrollLeft
+   never leaves 0, canScrollLeft in ScrollableTabNav never goes true either,
+   so the left arrow that would explain "there's more this way" never
+   appeared. flex-start packs tabs from the left instead, so Home is visible
+   at scrollLeft:0 and any overflow lands on the right, where the existing
+   scroll/arrow/drag support already reaches it. */
+.scroll-tab-track.primary-nav { flex-wrap: nowrap; justify-content: flex-start; max-width: min(44rem, 100%); }
 .scroll-tab-track.wb-site-nav--desktop { max-width: min(38rem, 100%); }
 .scroll-tab-track.has-fade-left { mask-image: linear-gradient(90deg, transparent 0, #000 2.2rem, #000 100%); }
 .scroll-tab-track.has-fade-right { mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 2.2rem), transparent 100%); }
