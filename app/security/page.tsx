@@ -40,6 +40,7 @@ export default function Page() {
           { title: "Rate limiting", body: "Enforced on every public form submission; shared across replicas automatically once REDIS_URL is configured." },
           { title: "Secret handling", body: "Provider secrets stay server-side. Public environment variables are limited to values intended for browsers." },
           { title: "Incident routing", body: "Security reports use a dedicated form and security contact address instead of the general contact workflow." },
+          { title: "Internal access control", body: "Administrative actions on KIS backend systems are gated by role-based permissions, not a shared login, and every administrative action is written to an audit trail tied to the acting admin." },
         ]} />
       </Section>
       <Section title="Submit a request" body="Use this form only for the stated purpose and never include passwords or private credentials.">

@@ -43,11 +43,11 @@ export default function Page() {
       <Section title="Our commitments" body="Drafted terms, pending legal review.">
         <DetailList
           items={[
-            { title: "Minimum age", body: "KIS is intended for users aged 13 and older, or the minimum digital-consent age in your country if higher. We do not knowingly permit registration by anyone younger." },
+            { title: "Minimum age", body: "KIS is intended for users aged 13 and older, or the minimum digital-consent age in your country if higher. Age checks are enforced wherever a date of birth is collected at signup; mandatory age verification for every new account is being rolled out and is not yet complete, so this is a stated policy backed by partial technical enforcement today, not a guarantee that every underage registration is caught." },
             { title: "Zero tolerance", body: "Child sexual abuse material or grooming behaviour of any kind is prohibited absolutely. Suspected material is reported to the National Center for Missing & Exploited Children (NCMEC) or the applicable local authority, and to law enforcement." },
             { title: "Reporting", body: `Anyone can report a child-safety concern via /contact or ${site.securityEmail}. Reports involving child safety are treated as urgent.` },
-            { title: "Product safeguards", body: "Messaging, groups, and partner or education spaces involving minors require age-appropriate design, reporting tools, and moderation review before general availability." },
-            { title: "Parental involvement", body: "Where required by law, we will implement parental consent or notice mechanisms for younger users." },
+            { title: "Product safeguards", body: "Messaging, groups, and partner or education spaces involving minors require age-appropriate design, reporting tools, and moderation review before general availability. A server-enforced daily time limit on browsing feeds is already built to reduce open-ended, addictive scrolling for all users, including minors." },
+            { title: "Parental involvement", body: "Where required by law, we will implement parental consent or notice mechanisms for younger users. Guardian-managed family accounts, where only a designated guardian can change a minor's parental-control settings, already exist as a product capability ahead of wider rollout." },
             { title: "Law enforcement cooperation", body: "We cooperate with law enforcement investigations into child exploitation to the extent required and permitted by law." },
           ]}
         />

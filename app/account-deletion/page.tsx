@@ -47,8 +47,9 @@ export default function Page() {
             { title: "Verification first", body: "We confirm you own the account before making changes, without ever asking for your password through the deletion form." },
             { title: "What's removed", body: "Profile information, messages and content tied to your account are deleted or anonymised within a reasonable period after verification." },
             { title: "What may be retained", body: "Records required for legal, security, fraud-prevention or dispute purposes may be retained for a limited period, as described in our Privacy Policy." },
-            { title: "Timeline", body: "We aim to complete verified deletion requests within 30 days and will confirm once complete." },
-            { title: "Irreversibility", body: "Once processed, account deletion cannot be undone. Export anything you want to keep first, once export tools are available." },
+            { title: "Timeline", body: "Once verified, a deletion request starts a grace period of up to 30 days before permanent removal, rather than an instant, irreversible action. This window exists so a request made in error, or under duress, can still be reversed." },
+            { title: "Reactivation window", body: "If you change your mind during the grace period, you can reactivate the account and cancel the deletion instead of losing everything immediately." },
+            { title: "Irreversibility", body: "Once the grace period elapses and deletion is processed, it cannot be undone, and associated chat messages are purged as part of the same process. Export anything you want to keep first, once export tools are available." },
           ]}
         />
       </Section>

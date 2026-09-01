@@ -48,7 +48,7 @@ export default function Page() {
             { title: "Right to access", body: "You can ask what personal data we hold connected to your email address or a specific request." },
             { title: "Right to correction", body: "You can ask us to correct inaccurate personal data." },
             { title: "Verification", body: "We may ask for information to confirm you are the person the data belongs to, but never for passwords or account credentials." },
-            { title: "Response time", body: "We aim to acknowledge requests within a reasonable period and complete verified requests within 30 days." },
+            { title: "Response time", body: "We aim to acknowledge requests within a reasonable period. For account deletion specifically, a verified request starts a grace period of up to 30 days, which exists as a reversible undo window rather than a processing delay, before the deletion is carried out." },
             { title: "Exceptions", body: "Some data may be retained where law requires it, such as security-incident records, fraud-prevention records, or financial and audit records where applicable." },
           ]}
         />
