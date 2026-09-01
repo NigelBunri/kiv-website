@@ -163,6 +163,11 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
               {products.map((product) => (
                 <Link key={product.slug} href={`/products/${product.slug}`}>{product.name}</Link>
               ))}
+              {/* Not added to the `products` array above - KISTube is a
+                  section inside the KIS app, not a separate KIV venture,
+                  so it doesn't carry a stage/summary/availability entry
+                  the way KIS/KIE/KIM/KIP/KIH do. */}
+              <Link href="/kistube">KISTube</Link>
             </nav>
           </div>
           <div className="footer-nav-group">

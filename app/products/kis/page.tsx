@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteShell } from "@/components/SiteShell";
 import { AvailabilityPanel, Breadcrumbs, DetailList, FeatureGrid, Hero, ImageStory, Section, Timeline } from "@/components/PageBlocks";
@@ -80,6 +81,16 @@ export default function ProductPage() {
       </Section>
       <Section title="KIS module detail" body="KIS is designed as an ecosystem, so the public page now explains the major product areas instead of relying only on short cards.">
         <DetailList items={kisModules} />
+      </Section>
+      <Section
+        title="KISTube: watch the channels, broadcast and testimony module live"
+        body="Unlike the rest of KIS, which stays deliberately careful about implying a broad public launch, KISTube is a real, public part of the product you can use today."
+      >
+        <p className="section-note">
+          KISTube is the web home for KIS&apos;s Education, Health, Market, Jobs, Feeds, Testimonies and Channels
+          content — browse channels, watch what partners and creators have published, and follow along, right
+          from a browser. <Link href="/kistube">Open KISTube →</Link>
+        </p>
       </Section>
       <Section title="Product depth" body="This section explains what KIS is intended to become and where the public boundary remains today.">
         <DetailList items={productDeepDives.kis} />
