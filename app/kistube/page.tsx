@@ -1,12 +1,37 @@
 import Link from "next/link";
-import { fetchChannelList, fetchMarketDiscovery, fetchTestimonies, searchBroadcastContent } from "@/lib/kistube-api";
+import { fetchChannelList, fetchMarketDiscovery, fetchTestimonies, searchBroadcastContent, type ContentCard as ContentCardType } from "@/lib/kistube-api";
 import { ContentCard } from "@/components/kistube/ContentCard";
 import { ChannelCard } from "@/components/kistube/ChannelCard";
 import { KISTubeEmptyState } from "@/components/kistube/KISTubeStates";
 import { getKisTubeSidebarData } from "@/lib/kistube-viewer";
+import { authHeaders, getValidSession, kisApiBase } from "@/lib/session";
 import {
   ChannelsIcon, EducationIcon, FeedsIcon, HealthIcon, JobsIcon, MarketIcon, TestimoniesIcon,
 } from "@/components/kistube/icons";
+
+type RecommendedItem = ContentCardType & { recommendation_reason?: string };
+
+// Real weighted-hybrid recommendations (subscription bonus + watch-time +
+// engagement + recency) for signed-in users - direct Django fetch from
+// this Server Component, not the /api/kistube/recommendations route
+// (that route exists for potential client-side use elsewhere).
+async function fetchHomeRecommendations(): Promise<RecommendedItem[]> {
+  const auth = await getValidSession();
+  if (!auth) return [];
+  try {
+    const res = await fetch(`${kisApiBase()}/api/v1/broadcasts/recommendations/`, {
+      headers: authHeaders(auth.session),
+      cache: "no-store",
+      signal: AbortSignal.timeout(15_000),
+    });
+    if (!res.ok) return [];
+    const data = await res.json().catch(() => ({}));
+    return Array.isArray(data?.results) ? data.results : [];
+  } catch (error) {
+    console.error("kistube home: recommendations fetch failed", error);
+    return [];
+  }
+}
 
 const SECTIONS = [
   { href: "/kistube/education", label: "Education", Icon: EducationIcon, blurb: "Courses, lessons and events from KIS education institutions." },
@@ -22,11 +47,12 @@ export const revalidate = 0;
 
 export default async function KISTubeHomePage() {
   const { viewer } = await getKisTubeSidebarData();
-  const [latest, channels, market, testimonies] = await Promise.all([
+  const [latest, channels, market, testimonies, recommended] = await Promise.all([
     searchBroadcastContent({ q: "" }),
     fetchChannelList({ limit: 8 }),
     fetchMarketDiscovery(),
     fetchTestimonies({ limit: 6 }),
+    viewer.signedIn ? fetchHomeRecommendations() : Promise.resolve([]),
   ]);
 
   const latestContent = latest?.results ?? [];
@@ -44,6 +70,15 @@ export default async function KISTubeHomePage() {
           </Link>
         ))}
       </div>
+
+      {viewer.signedIn && recommended.length > 0 && (
+        <section style={{ marginBottom: "2.5rem" }}>
+          <h2 className="kt-related-heading">Recommended for you</h2>
+          <div className="kt-grid">
+            {recommended.slice(0, 12).map((content) => <ContentCard key={content.id} content={content} />)}
+          </div>
+        </section>
+      )}
 
       <section style={{ marginBottom: "2.5rem" }}>
         <h2 className="kt-related-heading">Latest on KISTube</h2>

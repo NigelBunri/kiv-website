@@ -21,10 +21,17 @@ const TYPE_FILTERS = [
   { value: "image", label: "Images" },
 ] as const;
 
-function pageHref(q: string, type: string | undefined, page: number) {
+const SORT_OPTIONS = [
+  { value: "relevance", label: "Relevance" },
+  { value: "views", label: "Most viewed" },
+  { value: "oldest", label: "Oldest" },
+] as const;
+
+function pageHref(q: string, type: string | undefined, sort: string | undefined, page: number) {
   const params = new URLSearchParams();
   params.set("q", q);
   if (type) params.set("type", type);
+  if (sort && sort !== "relevance") params.set("sort", sort);
   if (page > 1) params.set("page", String(page));
   return `/kistube/search?${params.toString()}`;
 }
@@ -32,11 +39,12 @@ function pageHref(q: string, type: string | undefined, page: number) {
 export default async function KISTubeSearchPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; type?: string; page?: string }>;
+  searchParams: Promise<{ q?: string; type?: string; sort?: string; page?: string }>;
 }) {
-  const { q, type, page: pageParam } = await searchParams;
+  const { q, type, sort, page: pageParam } = await searchParams;
   const query = (q || "").trim();
   const page = Math.max(1, Number(pageParam) || 1);
+  const activeSort = (sort === "views" || sort === "oldest") ? sort : "relevance";
 
   return (
     <div>
@@ -46,6 +54,7 @@ export default async function KISTubeSearchPage({
       <form className="kt-search-form" style={{ maxWidth: 420, marginBottom: "1.25rem" }} role="search">
         <input type="search" name="q" defaultValue={q} placeholder="Search KISTube" aria-label="Search KISTube" />
         {type && <input type="hidden" name="type" value={type} />}
+        {sort && <input type="hidden" name="sort" value={sort} />}
         <button type="submit">Search</button>
       </form>
 
@@ -55,14 +64,14 @@ export default async function KISTubeSearchPage({
           body="Enter a search term above to find videos, live streams and more from across the KIS community."
         />
       ) : (
-        <SearchResults q={query} type={type} page={page} />
+        <SearchResults q={query} type={type} sort={activeSort} page={page} />
       )}
     </div>
   );
 }
 
-async function SearchResults({ q, type, page }: { q: string; type?: string; page: number }) {
-  const results = await searchBroadcastContent({ q, type, page });
+async function SearchResults({ q, type, sort, page }: { q: string; type?: string; sort: "relevance" | "views" | "oldest"; page: number }) {
+  const results = await searchBroadcastContent({ q, type, sort, page });
 
   return (
     <>
@@ -70,10 +79,20 @@ async function SearchResults({ q, type, page }: { q: string; type?: string; page
         {TYPE_FILTERS.map((filter) => (
           <Link
             key={filter.value || "all"}
-            href={pageHref(q, filter.value || undefined, 1)}
+            href={pageHref(q, filter.value || undefined, sort, 1)}
             className={`kt-filter-chip${(type || "") === filter.value ? " is-active" : ""}`}
           >
             {filter.label}
+          </Link>
+        ))}
+        <span style={{ width: 1, background: "var(--line)", margin: "0 .25rem" }} />
+        {SORT_OPTIONS.map((option) => (
+          <Link
+            key={option.value}
+            href={pageHref(q, type, option.value, 1)}
+            className={`kt-filter-chip${sort === option.value ? " is-active" : ""}`}
+          >
+            {option.label}
           </Link>
         ))}
       </div>
@@ -87,7 +106,7 @@ async function SearchResults({ q, type, page }: { q: string; type?: string; page
               <ContentCard key={content.id} content={content} />
             ))}
           </div>
-          <Pager q={q} type={type} page={results.page} pageSize={results.page_size} count={results.count} />
+          <Pager q={q} type={type} sort={sort} page={results.page} pageSize={results.page_size} count={results.count} />
         </>
       )}
     </>
@@ -95,17 +114,17 @@ async function SearchResults({ q, type, page }: { q: string; type?: string; page
 }
 
 function Pager({
-  q, type, page, pageSize, count,
+  q, type, sort, page, pageSize, count,
 }: {
-  q: string; type?: string; page: number; pageSize: number; count: number;
+  q: string; type?: string; sort: string; page: number; pageSize: number; count: number;
 }) {
   const totalPages = Math.max(1, Math.ceil(count / pageSize));
   if (totalPages <= 1) return null;
   return (
     <div className="kt-filter-row" style={{ marginTop: "1.5rem" }}>
-      {page > 1 && <Link href={pageHref(q, type, page - 1)} className="kt-filter-chip">← Previous</Link>}
+      {page > 1 && <Link href={pageHref(q, type, sort, page - 1)} className="kt-filter-chip">← Previous</Link>}
       <span className="kt-card-meta" style={{ alignSelf: "center" }}>Page {page} of {totalPages}</span>
-      {page < totalPages && <Link href={pageHref(q, type, page + 1)} className="kt-filter-chip">Next →</Link>}
+      {page < totalPages && <Link href={pageHref(q, type, sort, page + 1)} className="kt-filter-chip">Next →</Link>}
     </div>
   );
 }

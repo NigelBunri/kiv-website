@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { KisTubeFeedStatus, KisTubeSubscription, KisTubeViewer } from "@/lib/kistube-viewer";
+import { NotificationBell } from "@/components/kistube/NotificationBell";
+import { SearchAutocomplete } from "@/components/kistube/SearchAutocomplete";
 import {
   ChannelsIcon,
   EducationIcon,
@@ -17,7 +19,6 @@ import {
   MarketIcon,
   MenuIcon,
   SavedIcon,
-  SearchIcon,
   SettingsIcon,
   TestimoniesIcon,
   UserIcon,
@@ -33,10 +34,18 @@ const SECTION_LINKS = [
   { href: "/kistube/channels", label: "Channels", Icon: ChannelsIcon },
 ] as const;
 
+const DISCOVER_LINKS = [
+  { href: "/kistube/trending", label: "Trending", Icon: FeedsIcon },
+  { href: "/kistube/categories", label: "Categories", Icon: MarketIcon },
+] as const;
+
 const LIBRARY_LINKS = [
   { href: "/kistube/subscriptions", label: "Subscriptions", Icon: ChannelsIcon },
   { href: "/kistube/you", label: "You", Icon: UserIcon },
   { href: "/kistube/saved", label: "Saved", Icon: SavedIcon },
+  { href: "/kistube/playlists", label: "Playlists", Icon: SavedIcon },
+  { href: "/kistube/liked", label: "Liked videos", Icon: SavedIcon },
+  { href: "/kistube/queue", label: "Watch Queue", Icon: SavedIcon },
   { href: "/kistube/history", label: "History", Icon: HistoryIcon },
 ] as const;
 
@@ -72,6 +81,13 @@ function SidebarContents({ pathname, subscriptions, feedStatus, viewer }: {
       <div className="kt-nav-group">
         <div className="kt-nav-heading">Explore</div>
         {SECTION_LINKS.map((link) => (
+          <NavLink key={link.href} {...link} active={pathname.startsWith(link.href)} />
+        ))}
+      </div>
+
+      <div className="kt-nav-group">
+        <div className="kt-nav-heading">Discover</div>
+        {DISCOVER_LINKS.map((link) => (
           <NavLink key={link.href} {...link} active={pathname.startsWith(link.href)} />
         ))}
       </div>
@@ -144,10 +160,8 @@ export function KISTubeShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname() || "/kistube";
-  const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [query, setQuery] = useState("");
   const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -162,13 +176,6 @@ export function KISTubeShell({
     setDrawerOpen(false);
     setProfileOpen(false);
   }, [pathname]);
-
-  function submitSearch(event: React.FormEvent) {
-    event.preventDefault();
-    const trimmed = query.trim();
-    if (!trimmed) return;
-    router.push(`/kistube/search?q=${encodeURIComponent(trimmed)}`);
-  }
 
   const initial = viewer.signedIn ? (viewer.displayName || "?").trim().charAt(0).toUpperCase() : "";
 
@@ -189,19 +196,10 @@ export function KISTubeShell({
           <span className="kt-brand-word">KIS<span className="kt-word-purple">Tube</span></span>
         </Link>
         <div className="kt-topbar-search">
-          <form className="kt-search-form" onSubmit={submitSearch} role="search">
-            <input
-              type="search"
-              name="q"
-              placeholder="Search KISTube"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              aria-label="Search KISTube"
-            />
-            <button type="submit" aria-label="Search"><SearchIcon /></button>
-          </form>
+          <SearchAutocomplete />
         </div>
         <div className="kt-topbar-actions">
+          <NotificationBell signedIn={viewer.signedIn} />
           {viewer.signedIn ? (
             <div className="kt-profile-menu-wrap" ref={profileRef}>
               <button type="button" className="kt-avatar-button" aria-label="Account menu" onClick={() => setProfileOpen((open) => !open)}>
@@ -218,6 +216,7 @@ export function KISTubeShell({
                   <span>{viewer.tierName} plan</span>
                 </div>
                 <Link href="/kistube/you" role="menuitem"><UserIcon className="kt-nav-icon" /> Your channel</Link>
+                <Link href="/kistube/notifications" role="menuitem"><HistoryIcon className="kt-nav-icon" /> Notifications</Link>
                 <Link href="/kistube/history" role="menuitem"><HistoryIcon className="kt-nav-icon" /> Watch history</Link>
                 <Link href="/kistube/saved" role="menuitem"><SavedIcon className="kt-nav-icon" /> Saved</Link>
                 <Link href="/control" role="menuitem"><SettingsIcon className="kt-nav-icon" /> Settings</Link>
@@ -232,16 +231,7 @@ export function KISTubeShell({
       </header>
 
       <div className="kt-mobile-search">
-        <form className="kt-search-form" onSubmit={submitSearch} role="search">
-          <input
-            type="search"
-            placeholder="Search KISTube"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            aria-label="Search KISTube"
-          />
-          <button type="submit" aria-label="Search"><SearchIcon /></button>
-        </form>
+        <SearchAutocomplete />
       </div>
 
       <nav className="kt-mobile-section-tabs" aria-label="Sections">

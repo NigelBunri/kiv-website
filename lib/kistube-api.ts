@@ -204,14 +204,94 @@ export async function recordContentView(contentId: string): Promise<void> {
 export type BroadcastSearchResponse = { count: number; page: number; page_size: number; results: ContentCard[] };
 
 export async function searchBroadcastContent(params: {
-  q: string; type?: string; channelId?: string; page?: number;
+  q: string; type?: string; channelId?: string; page?: number; sort?: "relevance" | "views" | "oldest";
 }): Promise<BroadcastSearchResponse | null> {
   const url = new URL(`${apiBase()}/api/v1/broadcasts/search/`);
   url.searchParams.set("q", params.q);
   if (params.type) url.searchParams.set("type", params.type);
   if (params.channelId) url.searchParams.set("channel_id", params.channelId);
   if (params.page) url.searchParams.set("page", String(params.page));
+  if (params.sort) url.searchParams.set("sort", params.sort);
   return fetchJson<BroadcastSearchResponse>(url.toString());
+}
+
+export type SearchSuggestResponse = {
+  channels: { id: string; handle: string; display_name: string }[];
+  contents: { id: string; title: string }[];
+};
+
+// Debounced client-side calls hit this through app/api/kistube/search-suggest
+// (a thin proxy, since this fires from a Client Component) - exported here
+// too for potential server-side use.
+export async function fetchSearchSuggestions(q: string): Promise<SearchSuggestResponse | null> {
+  const url = new URL(`${apiBase()}/api/v1/broadcasts/search/suggest/`);
+  url.searchParams.set("q", q);
+  return fetchJson<SearchSuggestResponse>(url.toString());
+}
+
+// ── Trending (apps.broadcasts, public, AllowAny) ────────────────────────
+// A genuinely distinct engagement+time-decay ranked list, not just a sort
+// order on the search endpoint - the backend scores
+// (views + reactions*3 + comments*5 + shares*4) / (age_hours+2)^1.5. Its
+// own hand-built item shape is NOT the same as ChannelContentListSerializer
+// (flat view_count/reaction_count/comment_count, channel.name instead of
+// display_name, no engagement_counts/is_verified) - toContentCard() below
+// adapts it to the shared ContentCard type so <ContentCard> still works.
+
+export type TrendingItem = {
+  id: string;
+  title: string;
+  description?: string;
+  content_type: ContentType;
+  thumbnail_url?: string;
+  duration_seconds: number | null;
+  view_count: number;
+  reaction_count: number;
+  comment_count: number;
+  published_at: string | null;
+  channel: { id: string; name: string; handle: string; avatar_url?: string };
+};
+
+export type TrendingResponse = { count: number; results: TrendingItem[] };
+
+export async function fetchTrending(params: { days?: number; limit?: number; offset?: number; contentType?: string } = {}): Promise<TrendingResponse | null> {
+  const url = new URL(`${apiBase()}/api/v1/broadcasts/trending/`);
+  if (params.days) url.searchParams.set("days", String(params.days));
+  url.searchParams.set("limit", String(params.limit ?? 30));
+  if (params.offset) url.searchParams.set("offset", String(params.offset));
+  if (params.contentType) url.searchParams.set("content_type", params.contentType);
+  return fetchJson<TrendingResponse>(url.toString());
+}
+
+export function trendingItemToContentCard(item: TrendingItem): ContentCard {
+  return {
+    id: item.id,
+    title: item.title,
+    description: item.description,
+    content_type: item.content_type,
+    thumbnail_url: item.thumbnail_url,
+    duration_seconds: item.duration_seconds,
+    published_at: item.published_at,
+    channel: { id: item.channel.id, handle: item.channel.handle, display_name: item.channel.name, avatar_url: item.channel.avatar_url },
+    engagement_counts: { views: item.view_count, shares: 0, comments: item.comment_count, reactions: item.reaction_count },
+  };
+}
+
+// ── Categories (apps.broadcasts, public, AllowAny) ──────────────────────
+
+export type ChannelCategoryEntry = { id: string; name: string; slug: string; icon_name?: string; description?: string; subcategories?: ChannelCategoryEntry[] };
+
+export async function fetchChannelCategories(): Promise<ChannelCategoryEntry[]> {
+  const data = await fetchJson<ChannelCategoryEntry[]>(`${apiBase()}/api/v1/broadcasts/categories/`);
+  return data ?? [];
+}
+
+export type CategoryBrowseResponse = { count: number; page: number; page_size: number; results: ContentCard[] };
+
+export async function fetchCategoryBrowse(slug: string, params: { page?: number } = {}): Promise<CategoryBrowseResponse | null> {
+  const url = new URL(`${apiBase()}/api/v1/broadcasts/categories/${encodeURIComponent(slug)}/browse/`);
+  if (params.page) url.searchParams.set("page", String(params.page));
+  return fetchJson<CategoryBrowseResponse>(url.toString());
 }
 
 // ── Market (apps.commerce, public read via IsAuthenticatedOrReadOnly) ──
@@ -268,6 +348,114 @@ export async function fetchMarketDiscovery(q?: string): Promise<CommerceDiscover
   const url = new URL(`${apiBase()}/api/v1/commerce/discovery/`);
   if (q) url.searchParams.set("q", q);
   return fetchJson<CommerceDiscoveryResponse>(url.toString());
+}
+
+// ── Watch-page player features (apps.broadcasts, public GET) ────────────
+// All six of these were IsAuthenticated-only until today - flipped to
+// AllowAny for GET so anonymous viewers get the same player features as
+// signed-in ones (every write path on these views has its own manual
+// role/ownership check, unaffected by this).
+
+export type VideoChapter = { id: string; title: string; start_seconds: number; sort_order: number };
+export async function fetchChapters(contentId: string): Promise<VideoChapter[]> {
+  const data = await fetchJson<{ results: VideoChapter[] }>(`${apiBase()}/api/v1/broadcasts/channel-contents/${encodeURIComponent(contentId)}/chapters/`);
+  return data?.results ?? [];
+}
+
+export type VideoSubtitle = { id: string; language: string; label: string; vtt_url: string; is_auto_generated?: boolean };
+export async function fetchSubtitles(contentId: string): Promise<VideoSubtitle[]> {
+  const data = await fetchJson<{ results: VideoSubtitle[] }>(`${apiBase()}/api/v1/broadcasts/channel-contents/${encodeURIComponent(contentId)}/subtitles/`);
+  return data?.results ?? [];
+}
+
+export type EndScreenConfig = { id: string; config: Array<Record<string, unknown>>; is_enabled: boolean };
+export async function fetchEndScreen(contentId: string): Promise<EndScreenConfig | null> {
+  return fetchJson<EndScreenConfig>(`${apiBase()}/api/v1/broadcasts/channel-contents/${encodeURIComponent(contentId)}/end-screen/`);
+}
+
+export type VideoCard = { id: string; card_type: "video" | "poll" | "link" | "playlist" | "channel"; title: string; start_seconds: number; end_seconds: number | null; target_id: string; url: string };
+export async function fetchCards(contentId: string): Promise<VideoCard[]> {
+  const data = await fetchJson<{ results: VideoCard[] } | VideoCard[]>(`${apiBase()}/api/v1/broadcasts/channel-contents/${encodeURIComponent(contentId)}/cards/`);
+  if (!data) return [];
+  return Array.isArray(data) ? data : data.results ?? [];
+}
+
+export type VideoTranscript = { id: string; language_code: string; source: string; status: string; text_plain: string; vtt_url: string };
+export async function fetchTranscript(contentId: string, lang = "en"): Promise<VideoTranscript | null> {
+  return fetchJson<VideoTranscript>(`${apiBase()}/api/v1/broadcasts/channel-contents/${encodeURIComponent(contentId)}/transcript/?lang=${encodeURIComponent(lang)}`);
+}
+
+export type AudioTrack = { id: string; language_code: string; label: string; url: string; is_default: boolean };
+export async function fetchAudioTracks(contentId: string): Promise<AudioTrack[]> {
+  const data = await fetchJson<AudioTrack[]>(`${apiBase()}/api/v1/broadcasts/channel-contents/${encodeURIComponent(contentId)}/audio-tracks/`);
+  return data ?? [];
+}
+
+export type GeoRestriction = { restriction_type: "block" | "allow"; countries: string[] };
+export async function fetchGeoRestriction(contentId: string): Promise<GeoRestriction | null> {
+  return fetchJson<GeoRestriction>(`${apiBase()}/api/v1/broadcasts/channel-contents/${encodeURIComponent(contentId)}/geo-restriction/`);
+}
+
+export type PremiereInfo = { trailer_url?: string; pre_chat_opens_at?: string; seconds_until_premiere: number; is_live_now: boolean; viewer_count: number };
+export async function fetchPremiere(contentId: string): Promise<PremiereInfo | null> {
+  return fetchJson<PremiereInfo>(`${apiBase()}/api/v1/broadcasts/channel-contents/${encodeURIComponent(contentId)}/premiere/`);
+}
+
+export type ProductTag = { id: string; product_id: string; product_url: string; product_title: string; thumbnail_url?: string; price_display?: string; timestamp_seconds: number };
+export async function fetchProductTags(contentId: string): Promise<ProductTag[]> {
+  const data = await fetchJson<ProductTag[]>(`${apiBase()}/api/v1/broadcasts/channel-contents/${encodeURIComponent(contentId)}/products/`);
+  return data ?? [];
+}
+
+// ── Channel homepage extras (apps.broadcasts, public GET) ───────────────
+
+export type MembershipTier = { id: string; title: string; description: string; price_cents: number; currency: string; perks: string[]; is_joined: boolean };
+export async function fetchMembershipTiers(channelId: string): Promise<MembershipTier[]> {
+  const data = await fetchJson<MembershipTier[]>(`${apiBase()}/api/v1/broadcasts/channels/${encodeURIComponent(channelId)}/membership-tiers/`);
+  return data ?? [];
+}
+
+export type ChannelShelf = { id: string; title: string; shelf_type: string; sort_order: number };
+export async function fetchChannelShelves(channelId: string): Promise<ChannelShelf[]> {
+  const data = await fetchJson<ChannelShelf[]>(`${apiBase()}/api/v1/broadcasts/channels/${encodeURIComponent(channelId)}/shelves/`);
+  return data ?? [];
+}
+
+export type ShelfItem = { id: string; content: string | null; playlist: string | null; sort_order: number };
+export async function fetchShelfItems(shelfId: string): Promise<ShelfItem[]> {
+  const data = await fetchJson<ShelfItem[]>(`${apiBase()}/api/v1/broadcasts/shelves/${encodeURIComponent(shelfId)}/items/`);
+  return data ?? [];
+}
+
+// ── Playlists (apps.broadcasts, public read paths) ──────────────────────
+
+export type PlaylistDetail = {
+  id: string;
+  title: string;
+  description?: string;
+  visibility: string;
+  item_count: number;
+  results: ContentCard[];
+  created_at: string;
+  updated_at: string;
+};
+
+// UserContentPlaylist's visibility field existed but was never read for
+// access control until this endpoint was added - only works for
+// public/unlisted playlists (private 404s, including to non-owners).
+export async function fetchPublicUserPlaylist(playlistId: string): Promise<PlaylistDetail | null> {
+  return fetchJson<PlaylistDetail>(`${apiBase()}/api/v1/broadcasts/user-playlists/${encodeURIComponent(playlistId)}/public/`);
+}
+
+export type ChannelPlaylistDetail = {
+  playlist: { id: string; channel: ChannelSummary; title: string; description?: string; visibility: string; shuffle_enabled: boolean };
+  results: ContentCard[];
+};
+
+// GET on this endpoint didn't exist at all before - only the playlist
+// *list* was public; there was no way to see what was inside one.
+export async function fetchChannelPlaylistItems(playlistId: string): Promise<ChannelPlaylistDetail | null> {
+  return fetchJson<ChannelPlaylistDetail>(`${apiBase()}/api/v1/broadcasts/playlists/${encodeURIComponent(playlistId)}/items/`);
 }
 
 // ── Health (apps.health_ops, public, AllowAny) ──────────────────────────

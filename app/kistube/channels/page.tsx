@@ -5,6 +5,7 @@ import { KISTubeEmptyState } from "@/components/kistube/KISTubeStates";
 import { getKisTubeSidebarData } from "@/lib/kistube-viewer";
 import { kistubeMetadata, kistubeRobots } from "@/lib/kistube-metadata";
 import Link from "next/link";
+import { SearchIcon } from "@/components/kistube/icons";
 
 export const metadata: Metadata = kistubeMetadata({
   title: "Channels",
@@ -40,7 +41,7 @@ export default async function KISTubeChannelsPage({
       <form className="kt-search-form" style={{ maxWidth: 420, marginBottom: "1.25rem" }} role="search">
         <input type="search" name="q" defaultValue={q} placeholder="Search channels" aria-label="Search channels" />
         {type && <input type="hidden" name="type" value={type} />}
-        <button type="submit">Search</button>
+        <button type="submit"><SearchIcon /></button>
       </form>
 
       <div className="kt-filter-row">

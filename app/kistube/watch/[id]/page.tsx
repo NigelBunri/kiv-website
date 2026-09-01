@@ -1,9 +1,24 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { fetchContentComments, fetchPublicContent, fetchRelatedContent } from "@/lib/kistube-api";
+import { fetchContentComments, fetchPublicContent, fetchRelatedContent, fetchSubtitles } from "@/lib/kistube-api";
 import { SubscribeButton } from "@/components/kistube/SubscribeButton";
-import { CommentsSection, ReactionButton, SaveButton, ShareButton, ViewRecorder } from "@/components/kistube/WatchInteractions";
+import { CommentsSection, ReactionButton, ShareButton, ViewRecorder } from "@/components/kistube/WatchInteractions";
+import { SaveToPlaylistMenu } from "@/components/kistube/SaveToPlaylistMenu";
+import { AddToQueueButton } from "@/components/kistube/AddToQueueButton";
+import { DownloadButton } from "@/components/kistube/DownloadButton";
+import { TipButton } from "@/components/kistube/TipButton";
+import { CreateClipButton } from "@/components/kistube/CreateClipButton";
+import { LiveWatchPanel } from "@/components/kistube/LiveWatchPanel";
+import { PremiereCountdown } from "@/components/kistube/PremiereCountdown";
+import { GeoRestrictionNotice } from "@/components/kistube/GeoRestrictionNotice";
+import { VideoChapters } from "@/components/kistube/VideoChapters";
+import { VideoCards } from "@/components/kistube/VideoCards";
+import { TranscriptPanel } from "@/components/kistube/TranscriptPanel";
+import { AudioTrackList } from "@/components/kistube/AudioTrackList";
+import { ProductTags } from "@/components/kistube/ProductTags";
+import { PublicClipsRow } from "@/components/kistube/PublicClipsRow";
+import { PollVoteWidget } from "@/components/kistube/PollVoteWidget";
 import { getKisTubeSidebarData } from "@/lib/kistube-viewer";
 import { kistubeMetadata, kistubeRobots } from "@/lib/kistube-metadata";
 import { kistubeContentDeepLink } from "@/lib/kistube-deeplink";
@@ -32,15 +47,22 @@ export default async function KISTubeWatchPage({ params }: { params: Promise<{ i
   const [content, { viewer }] = await Promise.all([fetchPublicContent(id), getKisTubeSidebarData()]);
   if (!content) notFound();
 
-  const [related, comments] = await Promise.all([fetchRelatedContent(content.id), fetchContentComments(content.id)]);
+  const isLiveStream = content.content_type === "live_stream";
+  const isPoll = content.content_type === "poll";
+
+  const [related, comments, subtitles] = await Promise.all([
+    fetchRelatedContent(content.id),
+    fetchContentComments(content.id),
+    isLiveStream || isPoll ? Promise.resolve([]) : fetchSubtitles(content.id),
+  ]);
   const asset = content.asset;
-  const isVideo = (asset.mime_type || "").startsWith("video") || content.content_type === "video" || content.content_type === "short_video" || content.content_type === "live_stream";
+  const isVideo = (asset.mime_type || "").startsWith("video") || content.content_type === "video" || content.content_type === "short_video";
   const isAudio = (asset.mime_type || "").startsWith("audio") || content.content_type === "audio";
 
   return (
     <div className="kt-watch-layout">
       <div>
-        <ViewRecorder contentId={content.id} />
+        {!isLiveStream && <ViewRecorder contentId={content.id} />}
         <JsonLd
           data={{
             "@context": "https://schema.org",
@@ -53,21 +75,34 @@ export default async function KISTubeWatchPage({ params }: { params: Promise<{ i
             embedUrl: content.embed?.oembed_url,
           }}
         />
-        <div className="kt-player-wrap">
-          {isVideo && asset.url ? (
-            // eslint-disable-next-line jsx-a11y/media-has-caption
-            <video src={asset.url} poster={content.thumbnail_url} controls playsInline />
-          ) : isAudio && asset.url ? (
-            <div style={{ display: "grid", placeItems: "center", height: "100%", background: "var(--cream-2)" }}>
-              <audio src={asset.url} controls style={{ width: "90%" }} />
+
+        {isLiveStream ? (
+          <LiveWatchPanel contentId={content.id} channelId={content.channel.id} signedIn={viewer.signedIn} />
+        ) : (
+          <>
+            <PremiereCountdown contentId={content.id} />
+            <GeoRestrictionNotice contentId={content.id} />
+            <div className="kt-player-wrap">
+              {isVideo && asset.url ? (
+                // eslint-disable-next-line jsx-a11y/media-has-caption
+                <video src={asset.url} poster={content.thumbnail_url} controls playsInline>
+                  {subtitles.map((track) => (
+                    <track key={track.id} kind="subtitles" src={track.vtt_url} srcLang={track.language} label={track.label || track.language} />
+                  ))}
+                </video>
+              ) : isAudio && asset.url ? (
+                <div style={{ display: "grid", placeItems: "center", height: "100%", background: "var(--cream-2)" }}>
+                  <audio src={asset.url} controls style={{ width: "90%" }} />
+                </div>
+              ) : content.thumbnail_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={content.thumbnail_url} alt={content.title} />
+              ) : (
+                <div style={{ display: "grid", placeItems: "center", height: "100%", color: "#fff" }}>No preview available</div>
+              )}
             </div>
-          ) : content.thumbnail_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={content.thumbnail_url} alt={content.title} />
-          ) : (
-            <div style={{ display: "grid", placeItems: "center", height: "100%", color: "#fff" }}>No preview available</div>
-          )}
-        </div>
+          </>
+        )}
 
         <h1 className="kt-watch-title">{content.title}</h1>
 
@@ -87,14 +122,31 @@ export default async function KISTubeWatchPage({ params }: { params: Promise<{ i
           <div className="kt-watch-actions">
             <SubscribeButton channelId={content.channel.id} initialSubscribed={false} signedIn={viewer.signedIn} />
             <ReactionButton contentId={content.id} signedIn={viewer.signedIn} />
-            <SaveButton contentId={content.id} signedIn={viewer.signedIn} />
+            <SaveToPlaylistMenu contentId={content.id} signedIn={viewer.signedIn} />
+            {!isLiveStream && <AddToQueueButton contentId={content.id} signedIn={viewer.signedIn} />}
             <ShareButton url={content.url} />
+            {!isLiveStream && <TipButton contentId={content.id} signedIn={viewer.signedIn} />}
+            {isVideo && !isLiveStream && <CreateClipButton contentId={content.id} signedIn={viewer.signedIn} />}
+            {!isLiveStream && <DownloadButton contentId={content.id} signedIn={viewer.signedIn} />}
             <OpenInApp deepLink={kistubeContentDeepLink(content.id)} />
             <Link href={content.report.url} className="kt-button kt-button--outline">Report</Link>
           </div>
         </div>
 
         {content.description && <p className="kt-watch-description">{content.description}</p>}
+
+        {isPoll && <PollVoteWidget contentId={content.id} signedIn={viewer.signedIn} />}
+
+        {!isLiveStream && !isPoll && (
+          <>
+            <VideoChapters contentId={content.id} />
+            <VideoCards contentId={content.id} />
+            <ProductTags contentId={content.id} />
+            <AudioTrackList contentId={content.id} />
+            <TranscriptPanel contentId={content.id} />
+            <PublicClipsRow contentId={content.id} />
+          </>
+        )}
 
         <CommentsSection contentId={content.id} initialComments={comments} signedIn={viewer.signedIn} />
       </div>

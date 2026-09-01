@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { fetchChannelContents, fetchPublicChannel } from "@/lib/kistube-api";
+import { fetchChannelContents, fetchMembershipTiers, fetchPublicChannel } from "@/lib/kistube-api";
 import { ContentCard } from "@/components/kistube/ContentCard";
 import { SubscribeButton } from "@/components/kistube/SubscribeButton";
 import { KISTubeEmptyState } from "@/components/kistube/KISTubeStates";
+import { ChannelTabs } from "@/components/kistube/ChannelTabs";
+import { ChannelLiveNowBanner } from "@/components/kistube/ChannelLiveNowBanner";
+import { ChannelShelves } from "@/components/kistube/ChannelShelves";
+import { ChannelMembershipTiers } from "@/components/kistube/ChannelMembershipTiers";
+import { ChannelPlaylistsTab } from "@/components/kistube/ChannelPlaylistsTab";
+import { ChannelCommunityFeed } from "@/components/kistube/ChannelCommunityFeed";
 import { getKisTubeSidebarData } from "@/lib/kistube-viewer";
 import { kistubeMetadata, kistubeRobots } from "@/lib/kistube-metadata";
 import { kistubeChannelDeepLink } from "@/lib/kistube-deeplink";
@@ -27,13 +33,19 @@ export async function generateMetadata({ params }: { params: Promise<{ handle: s
   });
 }
 
-export default async function KISTubeChannelPage({ params }: { params: Promise<{ handle: string }> }) {
+export default async function KISTubeChannelPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ handle: string }>;
+  searchParams: Promise<{ tab?: string }>;
+}) {
   const { handle } = await params;
+  const { tab: tabParam } = await searchParams;
+  const tab = (["videos", "playlists", "community", "about"].includes(tabParam || "") ? tabParam : "videos") as "videos" | "playlists" | "community" | "about";
+
   const [channel, { viewer }] = await Promise.all([fetchPublicChannel(handle), getKisTubeSidebarData()]);
   if (!channel) notFound();
-
-  const contents = await fetchChannelContents(channel.id, { limit: 24 });
-  const videos = contents?.results ?? channel.latest_contents ?? [];
 
   return (
     <div>
@@ -78,7 +90,41 @@ export default async function KISTubeChannelPage({ params }: { params: Promise<{
 
       {channel.description && <p className="kt-watch-description" style={{ marginTop: "1rem" }}>{channel.description}</p>}
 
-      <h2 className="kt-related-heading" style={{ marginTop: "1.5rem" }}>Videos</h2>
+      <ChannelLiveNowBanner channelId={channel.id} />
+
+      <ChannelTabs handle={channel.handle} active={tab} />
+
+      {tab === "videos" && (
+        <>
+          <ChannelShelves channelId={channel.id} />
+          <ChannelMembershipTiersSection channelId={channel.id} signedIn={viewer.signedIn} />
+          <VideosTab channelId={channel.id} fallback={channel.latest_contents ?? []} />
+        </>
+      )}
+      {tab === "playlists" && <ChannelPlaylistsTab channelId={channel.id} />}
+      {tab === "community" && <ChannelCommunityFeed channelId={channel.id} signedIn={viewer.signedIn} />}
+      {tab === "about" && (
+        <div style={{ maxWidth: 640 }}>
+          <h2 className="kt-related-heading">About</h2>
+          <p className="kt-watch-description">{channel.description || "This channel hasn't added a description yet."}</p>
+          <div className="kt-card-meta">
+            {formatCount(channel.subscriber_count)} subscribers · {formatCount(channel.content_count)} videos
+            {channel.category ? ` · ${channel.category}` : ""}
+            {channel.country ? ` · ${channel.country}` : ""}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+async function VideosTab({ channelId, fallback }: { channelId: string; fallback: import("@/lib/kistube-api").ContentCard[] }) {
+  const contents = await fetchChannelContents(channelId, { limit: 24 });
+  const videos = contents?.results ?? fallback;
+
+  return (
+    <>
+      <h2 className="kt-related-heading">Videos</h2>
       {videos.length === 0 ? (
         <KISTubeEmptyState title="No content yet" body="This channel hasn't published anything yet — check back soon." />
       ) : (
@@ -86,6 +132,11 @@ export default async function KISTubeChannelPage({ params }: { params: Promise<{
           {videos.map((content) => <ContentCard key={content.id} content={content} />)}
         </div>
       )}
-    </div>
+    </>
   );
+}
+
+async function ChannelMembershipTiersSection({ channelId, signedIn }: { channelId: string; signedIn: boolean }) {
+  const tiers = await fetchMembershipTiers(channelId);
+  return <ChannelMembershipTiers channelId={channelId} tiers={tiers} signedIn={signedIn} />;
 }
