@@ -308,7 +308,12 @@ export type MarketProduct = {
   sale_price?: string | null;
   currency: string;
   image_url?: string;
-  shop: { id: string; name: string };
+  // Bare shop FK id, not a nested object - ProductSerializer/
+  // ShopServiceSerializer both use `fields = '__all__'` with no override,
+  // so DRF's default ModelSerializer behavior for a FK is just the id.
+  // `product.shop.name` (and service.shop.name) rendered blank everywhere
+  // before this was corrected.
+  shop: string;
   is_featured?: boolean;
   [key: string]: unknown;
 };
@@ -329,7 +334,7 @@ export type MarketService = {
   name: string;
   description?: string;
   base_cost_micro?: number;
-  shop: { id: string; name: string };
+  shop: string;
   [key: string]: unknown;
 };
 
@@ -348,6 +353,36 @@ export async function fetchMarketDiscovery(q?: string): Promise<CommerceDiscover
   const url = new URL(`${apiBase()}/api/v1/commerce/discovery/`);
   if (q) url.searchParams.set("q", q);
   return fetchJson<CommerceDiscoveryResponse>(url.toString());
+}
+
+// ── Market detail pages (apps.commerce, public GET) ─────────────────────
+// ProductViewSet.retrieve and PublicShopDetailView were both IsAuthenticated
+// (or nonexistent) until this pass - flipped/added the same way as the six
+// broadcasts player-feature endpoints, verified against real payout-field
+// exposure risk first (see PublicShopSerializer's docstring on the backend).
+
+export type MarketProductDetail = MarketProduct & {
+  description?: string;
+  stock_qty?: number;
+  gallery_images?: { id?: string; image_url?: string }[];
+  main_image?: string;
+  variants?: { id: string; sku?: string; label?: string; price?: string; stock_qty?: number }[];
+  requires_shipping?: boolean;
+  fulfillment_summary?: { requires_shipping?: boolean; pickup_available?: boolean; delivery_estimate?: string; stock_status?: string };
+};
+
+export async function fetchProductDetail(id: string): Promise<MarketProductDetail | null> {
+  return fetchJson<MarketProductDetail>(`${apiBase()}/api/v1/commerce/products/${encodeURIComponent(id)}/`);
+}
+
+export type PublicShopProfile = {
+  shop: MarketShop;
+  products: MarketProductDetail[];
+  services: MarketService[];
+};
+
+export async function fetchShopProfile(id: string): Promise<PublicShopProfile | null> {
+  return fetchJson<PublicShopProfile>(`${apiBase()}/api/v1/commerce/public/shops/${encodeURIComponent(id)}/`);
 }
 
 // ── Watch-page player features (apps.broadcasts, public GET) ────────────

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { fetchMarketDiscovery } from "@/lib/kistube-api";
 import { KISTubeEmptyState } from "@/components/kistube/KISTubeStates";
 import { formatCount } from "@/lib/kistube-format";
@@ -65,26 +66,27 @@ export default async function KISTubeMarketPage({
                 {products.map((product) => {
                   const hasSale = product.sale_price && product.sale_price !== product.price;
                   return (
-                    <div key={product.id} style={tileStyle}>
-                      <div className="kt-card-thumb-wrap">
-                        {product.image_url ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={product.image_url} alt="" loading="lazy" />
-                        ) : (
-                          <div className="kt-card-thumb-placeholder">{product.name}</div>
-                        )}
+                    <Link key={product.id} href={`/kistube/market/product/${product.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                      <div style={tileStyle}>
+                        <div className="kt-card-thumb-wrap">
+                          {product.image_url ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={product.image_url} alt="" loading="lazy" />
+                          ) : (
+                            <div className="kt-card-thumb-placeholder">{product.name}</div>
+                          )}
+                        </div>
+                        <h3 className="kt-card-title">{product.name}</h3>
+                        <div className="kt-card-meta">
+                          {hasSale ? product.sale_price : product.price} {product.currency}
+                          {hasSale && (
+                            <span style={{ textDecoration: "line-through", marginLeft: ".4rem", opacity: 0.6 }}>
+                              {product.price} {product.currency}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <h3 className="kt-card-title">{product.name}</h3>
-                      <div className="kt-card-meta">
-                        {hasSale ? product.sale_price : product.price} {product.currency}
-                        {hasSale && (
-                          <span style={{ textDecoration: "line-through", marginLeft: ".4rem", opacity: 0.6 }}>
-                            {product.price} {product.currency}
-                          </span>
-                        )}
-                      </div>
-                      <div className="kt-card-meta">{product.shop.name}</div>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>
@@ -96,7 +98,7 @@ export default async function KISTubeMarketPage({
               <h2 className="kt-related-heading">Trusted shops</h2>
               <div className="kt-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))" }}>
                 {shops.map((shop) => (
-                  <div key={shop.id} className="kt-channel-card">
+                  <Link key={shop.id} href={`/kistube/market/shop/${shop.id}`} className="kt-channel-card" style={{ textDecoration: "none", color: "inherit" }}>
                     {shop.image_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={shop.image_url} alt="" className="kt-channel-card-avatar" />
@@ -111,7 +113,7 @@ export default async function KISTubeMarketPage({
                       {shop.rating_avg ? `${shop.rating_avg.toFixed(1)}★ · ` : ""}
                       {formatCount(shop.followers_count)} followers
                     </span>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </section>
@@ -122,15 +124,19 @@ export default async function KISTubeMarketPage({
               <h2 className="kt-related-heading">Services</h2>
               <div className="kt-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))" }}>
                 {services.map((service) => (
-                  <div key={service.id} style={tileStyle}>
-                    <h3 className="kt-card-title">{service.name}</h3>
-                    <div className="kt-card-meta">{service.shop.name}</div>
-                    {typeof service.base_cost_micro === "number" && (
-                      <div className="kt-card-meta">
-                        {(service.base_cost_micro / 1_000_000).toFixed(2)} {discovery?.currency}
-                      </div>
-                    )}
-                  </div>
+                  // No dedicated service detail page yet (see docs/kistube.md's
+                  // "intentionally out of scope") - links to the provider's
+                  // shop page instead of a broken/missing destination.
+                  <Link key={service.id} href={`/kistube/market/shop/${service.shop}`} style={{ textDecoration: "none", color: "inherit" }}>
+                    <div style={tileStyle}>
+                      <h3 className="kt-card-title">{service.name}</h3>
+                      {typeof service.base_cost_micro === "number" && (
+                        <div className="kt-card-meta">
+                          {(service.base_cost_micro / 1_000_000).toFixed(2)} {discovery?.currency}
+                        </div>
+                      )}
+                    </div>
+                  </Link>
                 ))}
               </div>
             </section>

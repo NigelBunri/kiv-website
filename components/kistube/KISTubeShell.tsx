@@ -42,6 +42,7 @@ const DISCOVER_LINKS = [
 const LIBRARY_LINKS = [
   { href: "/kistube/subscriptions", label: "Subscriptions", Icon: ChannelsIcon },
   { href: "/kistube/you", label: "You", Icon: UserIcon },
+  { href: "/kistube/cart", label: "Cart", Icon: SavedIcon },
   { href: "/kistube/saved", label: "Saved", Icon: SavedIcon },
   { href: "/kistube/playlists", label: "Playlists", Icon: SavedIcon },
   { href: "/kistube/liked", label: "Liked videos", Icon: SavedIcon },
