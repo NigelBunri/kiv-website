@@ -551,6 +551,149 @@ export function FeatureGrid({
   );
 }
 
+/**
+ * "Seven Mountains" style pillar grid - a themed variant of the site's
+ * .card-grid (same responsive breakpoints, no new CSS grid logic) for
+ * sections that need a titled group of bullet features per card rather
+ * than CardGrid's single paragraph. Each card's head uses the same dark
+ * ink + gold-ring treatment as .hero-panel/.stat-strip, so the "jewel
+ * box" motif reads as one consistent device across the page rather than
+ * three unrelated dark surfaces.
+ */
+export function PillarGrid({
+  items,
+}: {
+  items: Array<{ icon: string; title: string; tagline: string; features: string[] }>;
+}) {
+  return (
+    <div className="card-grid pillar-grid">
+      {items.map((item, index) => (
+        <article key={item.title} className="card pillar-card" data-reveal style={revealDelay(index, 90, 480)}>
+          <div className="pillar-card-head">
+            <span className="pillar-card-icon" aria-hidden="true">{item.icon}</span>
+            <div>
+              <h3>{item.title}</h3>
+              <p>{item.tagline}</p>
+            </div>
+          </div>
+          <div className="pillar-card-body">
+            <ul>
+              {item.features.map((feature) => (
+                <li key={feature}>{feature}</li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+/** A dark, gold-ring stat band - the same jewel-box surface .hero-panel
+ *  introduced, reused here as a full-width strip. Every value here should
+ *  be a real, defensible number about the product's own design (not a
+ *  market-size projection) - this site's convention is never to state as
+ *  fact anything broader than what's actually built. */
+export function StatStrip({
+  items,
+}: {
+  items: Array<{ value: string; label: string }>;
+}) {
+  return (
+    <div className="stat-strip" data-reveal>
+      {items.map((item) => (
+        <div key={item.label} className="stat-strip-item">
+          <span className="stat-strip-value">{item.value}</span>
+          <span className="stat-strip-label">{item.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Large centered editorial quote - for a named, attributed statement
+ *  (founder vision, leadership quote), not anonymous marketing copy.
+ *  `emphasis` wraps the given substring in the gold accent color if
+ *  present in `quote`, otherwise the quote renders plain. */
+export function PullQuote({
+  quote,
+  emphasis,
+  attribution,
+}: {
+  quote: string;
+  emphasis?: string;
+  attribution: string;
+}) {
+  const parts = emphasis && quote.includes(emphasis) ? quote.split(emphasis) : null;
+  return (
+    <div className="pull-quote" data-reveal>
+      <blockquote>
+        {parts ? (
+          <>
+            {parts[0]}
+            <span>{emphasis}</span>
+            {parts[1]}
+          </>
+        ) : (
+          quote
+        )}
+      </blockquote>
+      <cite>{attribution}</cite>
+    </div>
+  );
+}
+
+/**
+ * Capability-breadth comparison table. `cells` values: "yes" | "no" |
+ * string (rendered as a short partial-support label, e.g. "Basic").
+ * Framed throughout the KIS page as designed product scope, not a
+ * live-availability claim - AvailabilityPanel further down the page is
+ * still the only place that speaks to what's actually released.
+ */
+export function ComparisonTable({
+  caption,
+  columns,
+  rows,
+}: {
+  caption?: string;
+  columns: string[];
+  rows: Array<{ label: string; cells: Array<"yes" | "no" | string> }>;
+}) {
+  return (
+    <div className="comparison-wrap" data-reveal>
+      <table className="comparison-table">
+        <thead>
+          <tr>
+            <th scope="col">Capability</th>
+            {columns.map((column, index) => (
+              <th scope="col" key={column} className={index === 0 ? "comparison-kis" : undefined}>{column}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.label}>
+              <th scope="row">{row.label}</th>
+              {row.cells.map((cell, index) => (
+                <td key={`${row.label}-${index}`} className={index === 0 ? "comparison-kis" : undefined}>
+                  {cell === "yes" ? (
+                    <span className="comparison-yes" aria-label="Yes">✓</span>
+                  ) : cell === "no" ? (
+                    <span className="comparison-no" aria-label="No">—</span>
+                  ) : (
+                    <span className="comparison-partial">{cell}</span>
+                  )}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+        {caption ? <caption>{caption}</caption> : null}
+      </table>
+    </div>
+  );
+}
+
 export function AvailabilityPanel({ product }: { product: Product }) {
   const comingSoon = !product.availability.android && !product.availability.ios && !product.availability.web;
   return (

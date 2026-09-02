@@ -94,6 +94,179 @@ export const kisModules = [
   },
 ];
 
+// The "Seven Mountains of influence" framing - one pillar per area of
+// everyday life the product architecture is designed to cover, unified
+// under a single account rather than shipped as seven separate apps.
+// Every bullet describes design scope (what KIS is built to bring
+// together), not a live-availability claim - AvailabilityPanel is still
+// the only place on this page that speaks to what's actually released.
+export const kisPillars = [
+  {
+    icon: "✝",
+    title: "Church & Faith",
+    tagline: "Discipleship and worship as a first-class part of the product",
+    features: [
+      "Online giving, tithes and offerings",
+      "Church membership directories and rosters",
+      "Global prayer wall and prayer chains",
+      "Bible reading, devotionals and study tools",
+      "Live sermon and worship broadcasting",
+      "Small-group and discipleship tracking",
+    ],
+  },
+  {
+    icon: "⌂",
+    title: "Family",
+    tagline: "Built for households, not just individual accounts",
+    features: [
+      "Family accounts and household profiles",
+      "Parental controls and screen-time management",
+      "Shared family devotionals and prayer",
+      "Secure family video calls and chat",
+      "Age-inclusive design from children to elders",
+      "Family event calendars and milestones",
+    ],
+  },
+  {
+    icon: "🎓",
+    title: "Education",
+    tagline: "A learning marketplace, not just a course library",
+    features: [
+      "Courses, lessons and live virtual classrooms",
+      "Institution management for schools and academies",
+      "Enrolment, progress tracking and completion",
+      "Reviews, questions and student-teacher channels",
+      "Free and paid content in the same catalogue",
+      "Scholarship and access-request workflows",
+    ],
+  },
+  {
+    icon: "⚖",
+    title: "Governance & Community",
+    tagline: "Structure for how partner communities are run",
+    features: [
+      "Role-based access control for every partner space",
+      "Partner and organisation governance tools",
+      "Moderation and content-safety workflows",
+      "Audit trails for administrative actions",
+      "Community and cell-group management",
+    ],
+  },
+  {
+    icon: "▶",
+    title: "Media & Broadcasting",
+    tagline: "A full creator and channel studio, built in",
+    features: [
+      "Channels for organisations, ministries and creators",
+      "Live streaming, short-form video and replays",
+      "Comments, reactions, clips and playlists",
+      "Search, trending, categories and recommendations",
+      "Notifications for new uploads and activity",
+      "Watch history, queue and subscriptions",
+    ],
+  },
+  {
+    icon: "◧",
+    title: "Business & Marketplace",
+    tagline: "Commerce with a cart, checkout and real payment rails",
+    features: [
+      "Shop and product catalogues with galleries",
+      "Cart, checkout and order management",
+      "Stripe and Flutterwave payment processing",
+      "Service bookings and provider scheduling",
+      "Jobs board with in-app applications",
+      "Shop team roles and payout accounts",
+    ],
+  },
+  {
+    icon: "✚",
+    title: "Health",
+    tagline: "A directory built for institutions that opt in",
+    features: [
+      "Health institution profiles and service listings",
+      "Clinics, hospitals, labs, pharmacies and wellness centres",
+      "Opt-in public visibility, not an open directory by default",
+      "Service pricing and assessment requirements",
+      "Institution membership and staff roles",
+    ],
+  },
+];
+
+// Framed as the global context KIS was designed to respond to - real,
+// citable trends about the world, not claims about KIS's own current
+// usage or reach. Deliberately does not repeat the audience/market-size
+// projections from internal investor materials as bare stats on the
+// public site; the trends themselves are the honest, defensible part.
+export const kisWhyBuilt = [
+  {
+    title: "One login instead of seven subscriptions",
+    body:
+      "A single church or ministry today typically stitches together a messaging app, a video tool, a streaming service, a store, a course platform, a member directory and a giving app. KIS is architected so one account can replace that whole stack.",
+  },
+  {
+    title: "Faith content treated as a first-class citizen",
+    body:
+      "General-purpose platforms treat faith and ministry content as one category among many, with moderation and monetisation rules built for a different kind of content entirely. KIS is designed around it from the ground up.",
+  },
+  {
+    title: "Digital-first community is now permanent",
+    body:
+      "Hybrid gathering, remote study and online giving are no longer temporary workarounds - they are how communities now expect to operate day to day, alongside in-person life, not instead of it.",
+  },
+  {
+    title: "Built for low-bandwidth and every age",
+    body:
+      "Offline-tolerant design, careful data usage and interfaces that work for a first-time smartphone user as well as a power user are treated as first principles in the product's architecture, not later accommodations.",
+  },
+  {
+    title: "One account, seven areas of life",
+    body:
+      "Faith, family, learning, community governance, media, commerce and health are usually seven separate accounts, seven separate trust decisions, seven separate places to manage. KIS is built to make that one decision, once.",
+  },
+];
+
+// Framed as designed product scope (what the architecture is built to
+// include), matched against categories of general-purpose apps most
+// people already use daily - not a claim that every cell is live in
+// production today. AvailabilityPanel is the actual source of truth for
+// release status.
+export const kisComparisonColumns = ["KIS", "WhatsApp", "YouTube", "Facebook", "A typical church app"];
+
+export const kisComparisonRows: Array<{ label: string; cells: Array<"yes" | "no" | string> }> = [
+  {
+    label: "Secure messaging & video calls",
+    cells: ["yes", "yes", "no", "yes", "Partial"],
+  },
+  {
+    label: "Live broadcasting & creator studio",
+    cells: ["yes", "no", "yes", "Basic", "no"],
+  },
+  {
+    label: "Full commerce: cart, checkout, payments",
+    cells: ["yes", "no", "Merch only", "Basic", "no"],
+  },
+  {
+    label: "Health institution directory",
+    cells: ["yes", "no", "no", "no", "no"],
+  },
+  {
+    label: "Education marketplace with enrolment",
+    cells: ["yes", "no", "Basic courses", "no", "no"],
+  },
+  {
+    label: "Bible & faith-first integration",
+    cells: ["yes", "no", "no", "no", "Partial"],
+  },
+  {
+    label: "Church & organisation management",
+    cells: ["yes", "no", "no", "no", "Partial"],
+  },
+  {
+    label: "White-label app builder for partners",
+    cells: ["yes", "no", "no", "no", "no"],
+  },
+];
+
 export const audienceSegments = [
   {
     title: "Individuals and families",

@@ -1399,6 +1399,152 @@ h3 { font-size: 1.3rem; }
 .timeline-item:nth-child(2n) > span { animation-delay: -1.4s; }
 .timeline-item:nth-child(3n) > span { animation-delay: -2.8s; }
 
+/* ---------- Pillar grid (Seven Mountains) ---------- */
+/* Reuses .card-grid's responsive auto-fit, so it drops to the same
+   1/2/3-column breakpoints every other card grid on the site already
+   uses - no new media queries needed. */
+.pillar-grid { margin-top: 1rem; }
+.pillar-card {
+  display: grid;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.pillar-card-head {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: 1.25rem 1.4rem;
+  background: linear-gradient(160deg, #241d12 0%, var(--ink) 65%);
+  color: var(--cream);
+}
+.pillar-card-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: rgba(184, 138, 45, .18);
+  border: 1px solid rgba(243, 204, 126, .35);
+  font-size: 1.2rem;
+}
+.pillar-card-head h3 { color: var(--cream); margin-bottom: .15rem; font-size: 1.1rem; }
+.pillar-card-head p { margin: 0; color: var(--gold-soft); font-size: .78rem; letter-spacing: .03em; }
+.pillar-card-body { padding: 1.1rem 1.4rem 1.4rem; }
+.pillar-card-body ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: .55rem;
+}
+.pillar-card-body li {
+  display: flex;
+  align-items: flex-start;
+  gap: .5rem;
+  font-size: .87rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.pillar-card-body li::before {
+  content: "";
+  width: .35rem;
+  height: .35rem;
+  margin-top: .5rem;
+  border-radius: var(--radius-full);
+  background: var(--gold);
+  flex-shrink: 0;
+}
+
+/* ---------- Stat strip ---------- */
+.stat-strip {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 1.75rem 1.25rem;
+  margin: clamp(2.5rem, 6vw, 4rem) auto 0;
+  padding: clamp(2.25rem, 5vw, 3rem) clamp(1.5rem, 5vw, 3rem);
+  max-width: 68rem;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, #241d12 0%, var(--ink) 65%);
+  box-shadow: 0 0 0 1px rgba(184, 138, 45, .4), var(--shadow-xl);
+  text-align: center;
+}
+.stat-strip-item { display: grid; gap: .4rem; justify-items: center; }
+.stat-strip-value {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  font-weight: 700;
+  color: var(--gold-soft);
+  line-height: 1;
+}
+.stat-strip-label {
+  max-width: 12rem;
+  color: rgba(255, 253, 248, .72);
+  font-size: .78rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+/* ---------- Pull quote ---------- */
+.pull-quote {
+  max-width: 52rem;
+  margin: 0 auto;
+  text-align: center;
+}
+.pull-quote blockquote {
+  margin: 0 0 1.25rem;
+  font-family: var(--font-serif), Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.4rem, 2.6vw, 1.85rem);
+  line-height: 1.5;
+  color: var(--ink);
+}
+.pull-quote blockquote span { color: var(--gold-strong); font-style: normal; }
+.pull-quote cite {
+  display: block;
+  font-style: normal;
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--gold-strong);
+}
+
+/* ---------- Comparison table ---------- */
+.comparison-wrap {
+  max-width: 62rem;
+  margin: 0 auto;
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-md);
+  background: var(--surface);
+}
+.comparison-table { width: 100%; border-collapse: collapse; min-width: 42rem; }
+.comparison-table caption { caption-side: bottom; padding: .9rem 1.25rem; font-size: .78rem; color: var(--ink-faint); text-align: left; }
+.comparison-table th, .comparison-table td {
+  padding: .85rem 1.1rem;
+  font-size: .87rem;
+  text-align: center;
+  border-bottom: 1px solid var(--line-soft);
+}
+.comparison-table thead th {
+  font-family: var(--font-serif), Georgia, serif;
+  font-weight: 700;
+  font-size: .82rem;
+  color: var(--ink-soft);
+  background: var(--cream-2);
+}
+.comparison-table th:first-child, .comparison-table td:first-child { text-align: left; }
+.comparison-table td:first-child { color: var(--ink); font-weight: 600; }
+.comparison-table .comparison-kis { background: var(--gold-soft); color: var(--gold-strong); font-weight: 700; }
+.comparison-table thead th.comparison-kis { color: var(--gold-strong); }
+.comparison-yes { color: var(--success); font-weight: 800; }
+.comparison-no { color: var(--ink-faint); }
+.comparison-partial { color: var(--gold-strong); font-size: .82rem; }
+
 /* ---------- Availability + contact ---------- */
 .availability-panel, .contact-strip {
   position: relative;
