@@ -516,6 +516,28 @@ export async function fetchHealthDiscovery(params: { q?: string; type?: string; 
   return fetchJson<HealthDiscoveryResponse>(url.toString());
 }
 
+// PublicHealthInstitutionDetailView - institution profile page for the
+// Health section, same is_public/is_active opt-in gate as discovery above.
+export type HealthServiceSummary = {
+  id: string;
+  institution: string;
+  name: string;
+  description?: string;
+  base_cost_micro: number;
+  base_cost_usd_label?: string;
+  requires_assessment: boolean;
+  [key: string]: unknown;
+};
+
+export type HealthInstitutionDetail = {
+  institution: HealthInstitutionSummary;
+  services: HealthServiceSummary[];
+};
+
+export async function fetchHealthInstitutionDetail(id: string): Promise<HealthInstitutionDetail | null> {
+  return fetchJson<HealthInstitutionDetail>(`${apiBase()}/api/v1/health-ops/public/institutions/${encodeURIComponent(id)}/`);
+}
+
 // ── Testimonies (apps.testimony, public GET) ────────────────────────────
 
 export type TestimonyEntry = {
@@ -558,4 +580,37 @@ export type BroadcastSitemapPlan = {
 
 export async function fetchBroadcastSitemapPlan(): Promise<BroadcastSitemapPlan | null> {
   return fetchJson<BroadcastSitemapPlan>(`${apiBase()}/api/v1/broadcasts/public/sitemap-plan/`);
+}
+
+// ── Education content detail (apps.broadcasts, now public GET) ──────────
+// EducationDiscoveryView/EducationContentDetailView were IsAuthenticated -
+// flipped to AllowAny (see that repo's matching commit) so KISTube's
+// Education section can browse/read without signing in first, same as
+// Market/Health. Response shape is large and polymorphic (program/course/
+// lesson/workshop all share one payload) - only the fields this page
+// actually renders are modeled, same defensive-typing approach as
+// education/page.tsx's own EducationItem type.
+export type EducationContentDetail = {
+  id: string;
+  type: string;
+  title: string;
+  summary?: string;
+  description?: string;
+  coverUrl?: string;
+  partnerId: string;
+  partnerName: string;
+  language?: string;
+  level?: string;
+  durationMinutes?: number;
+  price?: { isFree: boolean; amountCents: number; currency: string };
+  viewerState: { has_learning_access: boolean; can_enroll: boolean; payment_required: boolean };
+  reviewSummary?: { rating: number; reviewCount: number; label: string };
+  instructors?: { id: string; name: string; role: string }[];
+  syllabus?: unknown[];
+  outcomes?: { id: string; label: string }[];
+  [key: string]: unknown;
+};
+
+export async function fetchEducationContentDetail(id: string): Promise<EducationContentDetail | null> {
+  return fetchJson<EducationContentDetail>(`${apiBase()}/api/v1/education/contents/${encodeURIComponent(id)}/`);
 }

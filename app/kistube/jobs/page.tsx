@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { authHeaders, getValidSession, kisApiBase } from "@/lib/session";
 import { getKisTubeViewer } from "@/lib/kistube-viewer";
 import { KISTubeAuthGate, KISTubeEmptyState, KISTubeErrorState } from "@/components/kistube/KISTubeStates";
@@ -113,7 +114,9 @@ export default async function KISTubeJobsPage() {
               >
                 <div style={{ flex: 1, minWidth: 220 }}>
                   <h3 style={{ margin: "0 0 .3rem", fontSize: "1.05rem", fontWeight: 700 }}>
-                    {job.title}
+                    <Link href={`/kistube/jobs/${job.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                      {job.title}
+                    </Link>
                     {job.is_kingdom_certified && <span className="kt-verified-badge" style={{ marginLeft: ".35rem" }}>✓</span>}
                   </h3>
                   <div className="kt-card-meta" style={{ marginBottom: ".4rem" }}>

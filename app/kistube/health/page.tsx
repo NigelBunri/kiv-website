@@ -67,11 +67,11 @@ export default async function KISTubeHealthPage({
       ) : (
         <div className="kt-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))" }}>
           {discovery.results.map((institution) => (
-            <div key={institution.id} className="kt-channel-card">
+            <Link key={institution.id} href={`/kistube/health/${institution.id}`} className="kt-channel-card" style={{ textDecoration: "none", color: "inherit" }}>
               <span className="kt-channel-card-avatar" />
               <span className="kt-channel-card-name">{institution.name}</span>
               <span className="kt-channel-card-meta">{TYPE_LABEL[institution.institution_type] || institution.institution_type}</span>
-            </div>
+            </Link>
           ))}
         </div>
       )}

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { authHeaders, getValidSession, kisApiBase } from "@/lib/session";
 import { getKisTubeViewer } from "@/lib/kistube-viewer";
-import { KISTubeAuthGate, KISTubeEmptyState, KISTubeErrorState } from "@/components/kistube/KISTubeStates";
+import { KISTubeEmptyState, KISTubeErrorState } from "@/components/kistube/KISTubeStates";
 import { kistubeMetadata, kistubeRobots } from "@/lib/kistube-metadata";
 
 export const revalidate = 0;
@@ -45,12 +46,15 @@ type EducationDiscoveryResponse = {
   filters: { languages: string[]; levels: string[] };
 };
 
+// EducationDiscoveryView is now AllowAny (was IsAuthenticated) - attach
+// auth headers only when a session exists, same as e.g. the comments GET
+// route, so viewerState/enrollment fields still resolve correctly for a
+// signed-in visitor while anonymous browsing keeps working.
 async function fetchEducationDiscovery(): Promise<EducationDiscoveryResponse | null | "error"> {
   const auth = await getValidSession();
-  if (!auth) return null;
   try {
     const res = await fetch(`${kisApiBase()}/api/v1/education/discovery/`, {
-      headers: authHeaders(auth.session),
+      headers: auth ? authHeaders(auth.session) : {},
       cache: "no-store",
       signal: AbortSignal.timeout(15_000),
     });
@@ -71,7 +75,7 @@ function priceBadge(price?: EducationPrice): string {
 
 function EducationTile({ item }: { item: EducationItem }) {
   return (
-    <div className="kt-card" style={{ cursor: "default" }}>
+    <Link href={`/kistube/education/${item.id}`} className="kt-card" style={{ textDecoration: "none", color: "inherit" }}>
       <div className="kt-card-thumb-wrap">
         {item.coverUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -91,22 +95,15 @@ function EducationTile({ item }: { item: EducationItem }) {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
 export default async function KISTubeEducationPage() {
+  // Browsing no longer requires sign-in (EducationDiscoveryView is AllowAny
+  // now) - viewer is still fetched since section tiles/enroll buttons want
+  // to know signedIn state, same as Market/Health.
   const { viewer } = await getKisTubeViewer();
-  if (!viewer.signedIn) {
-    return (
-      <div>
-        <h1 className="kt-page-heading">Education</h1>
-        <p className="kt-page-subheading">Courses, lessons, programs and workshops from KIS education institutions.</p>
-        <KISTubeAuthGate next="/kistube/education" body="Sign in to browse KIS education courses, lessons and workshops." />
-      </div>
-    );
-  }
-
   const discovery = await fetchEducationDiscovery();
 
   return (
