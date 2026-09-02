@@ -28,6 +28,15 @@ const csp = [
   "frame-ancestors 'none'",
   "object-src 'none'",
   "img-src 'self' data: https:",
+  // No media-src previously meant <video>/<audio> elements fell back to
+  // default-src 'self' - silently blocking every KISTube video/audio
+  // whose src points off-domain (S3/Django media, e.g.
+  // https://s3.eu-west-2.amazonaws.com/kis-production-media-.../*.mp4).
+  // Images used plain <img src> tags, which img-src's https: already
+  // covered, so only playback broke - matching "images and videos work
+  // in the app but videos don't play on KISTube" exactly. blob: is for
+  // any future MediaSource/HLS.js-based player.
+  "media-src 'self' https: blob:",
   "font-src 'self' data:",
   // 'unsafe-inline' is a hard requirement, not a default left in by habit:
   // Next's App Router streams RSC/hydration data via multiple inline

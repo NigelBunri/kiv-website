@@ -39,7 +39,13 @@ export function LiveWatchPanel({ contentId, channelId, signedIn }: { contentId: 
     async function resolve() {
       try {
         const res = await fetch(`/api/kistube/channels/${channelId}/live-streams`);
-        const data = await res.json().catch(() => ({}));
+        const payload = await res.json().catch(() => ({}));
+        // This route proxies through proxyToDjango, which wraps Django's
+        // { results: [...] } as { success, data: { results } } - reading
+        // `.results` off the top level always came back empty, so the
+        // live panel could never resolve a stream and just rendered
+        // nothing for every live video watched through KISTube.
+        const data = payload?.data ?? payload;
         const rows: LiveStreamRow[] = Array.isArray(data?.results) ? data.results : [];
         const match = rows.find((row) => row.content_id === contentId) || null;
         if (!cancelled) {

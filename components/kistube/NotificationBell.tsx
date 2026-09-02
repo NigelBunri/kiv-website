@@ -25,7 +25,14 @@ function deepLinkFor(row: NotificationRow): string | null {
   return null;
 }
 
-function extractRows(data: unknown): NotificationRow[] {
+function extractRows(payload: unknown): NotificationRow[] {
+  // /api/kistube/notifications proxies through proxyToDjango, which wraps
+  // Django's { results: [...] } response as { success, data: { results } }.
+  // Unwrap that envelope first - without it this always fell through to
+  // [], showing "No notifications yet" no matter how many there were.
+  const data = payload && typeof payload === "object" && "data" in (payload as Record<string, unknown>)
+    ? (payload as { data?: unknown }).data
+    : payload;
   if (Array.isArray(data)) return data as NotificationRow[];
   if (data && typeof data === "object" && Array.isArray((data as { results?: unknown }).results)) {
     return (data as { results: NotificationRow[] }).results;
@@ -50,7 +57,11 @@ export function NotificationBell({ signedIn }: { signedIn: boolean }) {
       try {
         const res = await fetch("/api/kistube/notifications/unread-count");
         if (!res.ok || cancelled) return;
-        const data = await res.json().catch(() => ({}));
+        const payload = await res.json().catch(() => ({}));
+        // Same proxyToDjango { success, data } envelope as extractRows()
+        // above - reading unread_count off the top level always read
+        // undefined, so the badge count was permanently stuck at 0.
+        const data = payload?.data ?? payload;
         if (!cancelled) setUnreadCount(Number(data?.unread_count ?? 0));
       } catch {
         // network hiccup - next poll tick will retry

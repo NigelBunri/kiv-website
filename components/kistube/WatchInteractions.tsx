@@ -143,8 +143,17 @@ export function CommentsSection({
         body: JSON.stringify({ body }),
       });
       if (res.ok) {
-        const data = await res.json();
-        setComments((prev) => [data, ...prev]);
+        // This route goes through proxyToDjango, which wraps the upstream
+        // Django response as { success, data } - the raw comment object
+        // (what Django's ChannelContentCommentsView.post actually returns)
+        // lives under `.data`, not at the top level. Reading `data` itself
+        // as the comment silently posted a { user_display: undefined,
+        // body: undefined, ... } row into the list: the comment WAS
+        // created server-side, but rendered as a blank line, which reads
+        // as "nothing happened" when you send one.
+        const payload = await res.json();
+        const comment = payload?.data ?? payload;
+        setComments((prev) => [comment, ...prev]);
         setDraft("");
       }
     } finally {

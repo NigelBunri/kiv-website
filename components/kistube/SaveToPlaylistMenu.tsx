@@ -32,7 +32,13 @@ export function SaveToPlaylistMenu({ contentId, signedIn }: { contentId: string;
     setOpen(next);
     if (next && playlists === null) {
       const res = await fetch("/api/kistube/user-playlists");
-      const data = await res.json().catch(() => ({}));
+      const payload = await res.json().catch(() => ({}));
+      // Route proxies through proxyToDjango, which wraps Django's paginated
+      // response as { success, data: { results, count, ... } } - reading
+      // `.results` off the top level (payload) instead of payload.data
+      // always came back empty, so this menu showed "No playlists yet"
+      // even for a user with playlists.
+      const data = payload?.data ?? payload;
       const rows = Array.isArray(data?.results) ? data.results : Array.isArray(data) ? data : [];
       setPlaylists(rows);
     }
@@ -73,7 +79,13 @@ export function SaveToPlaylistMenu({ contentId, signedIn }: { contentId: string;
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, visibility: "private" }),
       });
-      const data = await res.json().catch(() => ({}));
+      const payload = await res.json().catch(() => ({}));
+      // Same proxyToDjango { success, data } wrapping as the GET above -
+      // the created playlist row lives under payload.data. Reading
+      // payload.id directly meant this always fell through: the playlist
+      // WAS created server-side, but never appeared in the list and the
+      // current video was never actually added to it.
+      const data = payload?.data ?? payload;
       if (res.ok && data?.id) {
         setPlaylists((prev) => [{ id: data.id, title: data.title ?? title, is_system: false }, ...(prev ?? [])]);
         await addTo(data.id);
