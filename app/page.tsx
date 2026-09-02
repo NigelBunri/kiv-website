@@ -47,6 +47,7 @@ export default function HomePage() {
         />
         <div className="action-row">
           <Link className="button primary" href="/products/kis">See everything KIS does <span aria-hidden="true">→</span></Link>
+          <Link className="button secondary" href="/kistube">Watch on KISTube <span aria-hidden="true">→</span></Link>
           <Link className="button secondary" href="/download">Check availability</Link>
         </div>
       </Section>

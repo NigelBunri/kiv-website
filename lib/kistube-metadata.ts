@@ -15,6 +15,7 @@ export function kistubeMetadata(input: {
   type?: "website" | "article";
   image?: { url: string; width: number; height: number; alt: string };
   robots?: { index: boolean; follow: boolean };
+  titleOverride?: string;
 }): Metadata {
   return pageMetadata({ ...input, image: input.image ?? KISTUBE_OG_IMAGE });
 }

@@ -12,5 +12,14 @@
   // Real secret values must never be written here (this file is committed
   // to source control). Set TURNSTILE_SECRET_KEY and other server-only
   // secrets with `wrangler secret put <NAME>` instead - see README.md.
-  "vars": {}
+  //
+  // NEXT_PUBLIC_KISTUBE_INDEXING_ENABLED is NOT actually read from here at
+  // runtime - Next inlines NEXT_PUBLIC_ vars statically at `next build`
+  // time (see .env/.env.example, which is what the build step actually
+  // reads). Present here too only as committed, discoverable
+  // documentation of the real production value, since this file (unlike
+  // .env) is checked into source control.
+  "vars": {
+    "NEXT_PUBLIC_KISTUBE_INDEXING_ENABLED": "true"
+  }
 }

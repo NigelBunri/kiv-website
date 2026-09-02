@@ -5,6 +5,7 @@ import { ChannelCard } from "@/components/kistube/ChannelCard";
 import { KISTubeEmptyState } from "@/components/kistube/KISTubeStates";
 import { getKisTubeSidebarData } from "@/lib/kistube-viewer";
 import { authHeaders, getValidSession, kisApiBase } from "@/lib/session";
+import { BreadcrumbJsonLd, KisTubeJsonLd } from "@/components/StructuredData";
 import {
   ChannelsIcon, EducationIcon, FeedsIcon, HealthIcon, JobsIcon, MarketIcon, TestimoniesIcon,
 } from "@/components/kistube/icons";
@@ -60,8 +61,27 @@ export default async function KISTubeHomePage() {
 
   return (
     <div>
-      <h1 className="kt-page-heading">Welcome to KISTube</h1>
-      <p className="kt-page-subheading">Watch with purpose — education, health, market, jobs, feeds and testimonies from the KIS community, all in one place.</p>
+      <KisTubeJsonLd />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Kingdom Impact Ventures", href: "/" },
+          { name: "Kingdom Impact Social", href: "/products/kis" },
+          { name: "KISTube", href: "/kistube" },
+        ]}
+      />
+      <nav className="kt-breadcrumb" aria-label="Breadcrumb">
+        <Link href="/">Kingdom Impact Ventures</Link>
+        <span aria-hidden="true">/</span>
+        <Link href="/products/kis">Kingdom Impact Social</Link>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">KISTube</span>
+      </nav>
+
+      <h1 className="kt-page-heading">KISTube</h1>
+      <p className="kt-page-subheading">
+        KISTube is the official video platform of Kingdom Impact Social (KIS), part of Kingdom Impact Ventures.
+        Watch channels and discover education, health, market, jobs, feeds and testimonies from the KIS community — all in one place.
+      </p>
 
       <div className="kt-filter-row" aria-label="Sections">
         {SECTIONS.map(({ href, label, Icon }) => (

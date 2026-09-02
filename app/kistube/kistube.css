@@ -274,6 +274,25 @@
 .kt-page-heading { font-family: var(--font-serif), serif; font-size: 1.6rem; margin: 0 0 .25rem; }
 .kt-page-subheading { color: var(--ink-soft); font-size: .95rem; margin: 0 0 1.5rem; }
 
+/* Small, unobtrusive trail - only used on the /kistube hub page, above
+   its h1, so the KIV -> KIS -> KISTube hierarchy is stated once, visibly,
+   matching what BreadcrumbJsonLd already says on that same page. Kept
+   deliberately quiet (kt-card-meta-weight text, no chrome) rather than
+   the main site's boxed .breadcrumb-trail, since KISTube's shell is its
+   own self-contained app UI, not a page inside the main site chrome. */
+.kt-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  flex-wrap: wrap;
+  font-size: .78rem;
+  color: var(--ink-faint);
+  margin-bottom: .9rem;
+}
+.kt-breadcrumb a { color: var(--ink-faint); text-decoration: none; }
+.kt-breadcrumb a:hover { color: var(--gold-strong); text-decoration: underline; }
+.kt-breadcrumb span[aria-current="page"] { color: var(--ink-soft); font-weight: 600; }
+
 .kt-filter-row { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
 .kt-filter-chip {
   border: 1.5px solid var(--line);
