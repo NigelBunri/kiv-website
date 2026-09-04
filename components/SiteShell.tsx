@@ -167,7 +167,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                   section inside the KIS app, not a separate KIV venture,
                   so it doesn't carry a stage/summary/availability entry
                   the way KIS/KIE/KIM/KIP/KIH do. */}
-              <Link href="/kistube">KISTube</Link>
+              <Link href="https://kistube.kingdomimpactventures.org">KISTube</Link>
             </nav>
           </div>
           <div className="footer-nav-group">

@@ -178,40 +178,9 @@ export function ProductJsonLd({ product }: { product: Product }) {
   );
 }
 
-/**
- * KISTube's own entity markup - built to answer exactly one question for
- * Google: what/whose is "KISTube"? WebApplication is the schema.org type
- * that actually matches what KISTube is (a browser-based app with real
- * interactive features - watch, browse, comment, save - not a static
- * informational page, and not a downloadable native app in its own
- * right, which is what SoftwareApplication above more properly
- * describes for KIS itself). Deliberately does not mention or reference
- * any unrelated same/similar-named product - the fix for an entity
- * collision is stronger first-party evidence about what THIS entity is,
- * never a comparison to what it isn't.
- *
- * brand -> the KIS SoftwareApplication's own @id (ProductJsonLd above),
- * so the graph reads KISTube --brand--> KIS --publisher--> Kingdom
- * Impact Ventures, matching the real relationship exactly.
- */
-export function KisTubeJsonLd() {
-  return (
-    <JsonLd
-      data={{
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "@id": `${site.url}/kistube#webapplication`,
-        name: "KISTube",
-        url: `${site.url}/kistube`,
-        description:
-          "KISTube is the official video platform of Kingdom Impact Social (KIS), part of Kingdom Impact Ventures. Watch channels and discover education, health, market, jobs, feeds and testimonies from the KIS community.",
-        applicationCategory: "MultimediaApplication",
-        operatingSystem: "Web",
-        image: absoluteUrl("/kistube/og-cover.png"),
-        brand: { "@id": `${site.url}/products/kis#software` },
-        publisher: { "@id": `${site.url}/#organization` },
-        isPartOf: { "@id": `${site.url}/#website` },
-      }}
-    />
-  );
-}
+// KisTubeJsonLd used to live here, describing KISTube as a WebApplication
+// entity at ${site.url}/kistube. KISTube is now a standalone deployment
+// (kistube.kingdomimpactventures.org, github.com/NigelBunri/kistube-website)
+// and owns its own, correctly domain-scoped copy of this component -
+// this site no longer renders any KISTube page, so this entity markup
+// moved there with it rather than staying here unused.

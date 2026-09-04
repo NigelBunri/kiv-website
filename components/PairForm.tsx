@@ -32,8 +32,16 @@ export function PairForm() {
         setError(data.message || "That code didn't work.");
         return;
       }
-      router.push(next);
-      router.refresh();
+      // See LoginForm.tsx's identical fix: `next` can now be a
+      // fully-qualified cross-origin URL back to kistube.
+      // kingdomimpactventures.org, which router.push() can't navigate to.
+      const isCrossOrigin = /^https?:\/\//i.test(next) && !next.startsWith(window.location.origin);
+      if (isCrossOrigin) {
+        window.location.href = next;
+      } else {
+        router.push(next);
+        router.refresh();
+      }
     } catch {
       setError("Something went wrong signing you in. Please try again.");
     } finally {

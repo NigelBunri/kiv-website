@@ -56,8 +56,20 @@ export function LoginForm() {
         setError(data.message || "That code didn't work.");
         return;
       }
-      router.push(next);
-      router.refresh();
+      // `next` can now be a fully-qualified cross-origin URL (e.g.
+      // https://kistube.kingdomimpactventures.org/watch/123) since
+      // KISTube split into its own subdomain and has no /login page of
+      // its own - it sends users here with `next` pointing back at
+      // itself. router.push() is for same-origin client-side navigation
+      // only; an absolute URL to a different origin needs a real
+      // navigation instead, or it silently does nothing useful.
+      const isCrossOrigin = /^https?:\/\//i.test(next) && !next.startsWith(window.location.origin);
+      if (isCrossOrigin) {
+        window.location.href = next;
+      } else {
+        router.push(next);
+        router.refresh();
+      }
     } catch {
       setError("Something went wrong verifying that code. Please try again.");
     } finally {

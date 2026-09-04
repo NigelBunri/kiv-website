@@ -59,6 +59,24 @@ const nextConfig: NextConfig = {
   // one, and the two are not interchangeable (see docs/deployment.md for
   // what this means for the Docker path).
   poweredByHeader: false,
+  async redirects() {
+    return [
+      // KISTube moved to its own standalone deployment
+      // (kistube.kingdomimpactventures.org, github.com/NigelBunri/kistube-website).
+      // Preserves bookmarks/shared links/existing SEO for the old
+      // kingdomimpactventures.org/kistube/... URLs rather than 404ing them.
+      {
+        source: "/kistube",
+        destination: "https://kistube.kingdomimpactventures.org",
+        permanent: true,
+      },
+      {
+        source: "/kistube/:path*",
+        destination: "https://kistube.kingdomimpactventures.org/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

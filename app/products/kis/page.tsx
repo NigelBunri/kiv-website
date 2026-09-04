@@ -76,7 +76,7 @@ export default function ProductPage() {
         <p className="section-note">
           KISTube is the web home for KIS&apos;s Education, Health, Market, Jobs, Feeds, Testimonies and Channels
           content — browse channels, watch what partners and creators have published, and follow along, right
-          from a browser. <Link href="/kistube">Open KISTube →</Link>
+          from a browser. <Link href="https://kistube.kingdomimpactventures.org">Open KISTube →</Link>
         </p>
       </Section>
       <Section title="Product depth" body="This section explains what KIS is intended to become and where the public boundary remains today.">

@@ -83,6 +83,14 @@ const COOKIE_OPTIONS = {
   sameSite: "lax" as const,
   path: "/",
   maxAge: 60 * 60 * 24 * 90, // matches Django's REFRESH_TOKEN_LIFETIME default (90 days) - the access token itself is refreshed transparently well before it expires
+  // Unset (host-only) by default so local dev on localhost still works.
+  // Production sets SESSION_COOKIE_DOMAIN=.kingdomimpactventures.org on
+  // both this site and the standalone KISTube deployment (kistube-website
+  // repo), so a session started here is recognized there too - required
+  // since KISTube moved to its own subdomain/origin and carries no
+  // /login page of its own. Must stay identical on both deployments or a
+  // cookie set by one won't be readable by the other.
+  domain: process.env.SESSION_COOKIE_DOMAIN || undefined,
 };
 
 /** Read-only - safe to call from Server Components. Never refreshes; a
