@@ -108,9 +108,18 @@
 html {
   scroll-behavior: smooth;
   scrollbar-gutter: stable;
+  /* Safety net against page-level horizontal scroll on mobile - the
+     exact same technique already used for .wb-site further down this
+     file (search "full-bleed sections' width:100vw" for that comment),
+     just never applied site-wide until now. Scoped to the x-axis only
+     so it doesn't interfere with anything using position: sticky
+     (which only cares about its ancestors' vertical overflow). */
+  overflow-x: hidden;
 }
 body {
   margin: 0;
+  max-width: 100%;
+  overflow-x: hidden;
   /* Heavenly sky/clouds art, site-wide, meant to actually be seen - kept
      behind a light cream scrim layered in the same background property
      (not a separate element), which guarantees the photo paints strictly
