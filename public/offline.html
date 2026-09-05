@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>You're offline | Kingdom Impact Ventures</title>
+<!-- Fully self-contained, no external CSS/JS - sw.js serves this file
+     itself from the precache, so it can't also depend on Next's
+     content-hashed CSS bundle (unknown/unstable filename ahead of a
+     build, and not precached here on purpose). Colors match this site's
+     own dark theme (app/globals.css's :root[data-theme="dark"] tokens),
+     since dark is this site's default too. -->
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: #120d08;
+    color: #f3ead4;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  body {
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    text-align: center;
+  }
+  .card { max-width: 26rem; }
+  img { width: 4rem; height: 4rem; margin-bottom: 1.5rem; }
+  h1 { font-size: 1.4rem; margin: 0 0 .75rem; font-family: Georgia, serif; }
+  p { margin: 0 0 1.5rem; color: #cdb999; line-height: 1.6; }
+  button {
+    border: 1px solid #dcae4c;
+    background: transparent;
+    color: #dcae4c;
+    padding: .75rem 1.5rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: .95rem;
+    cursor: pointer;
+  }
+  button:hover { background: #dcae4c; color: #120d08; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <img src="/images/kiv-logo-512.png" alt="" />
+    <h1>You're offline</h1>
+    <p>This page hasn't been saved for offline viewing yet. Reconnect to keep browsing - pages you've already visited will keep working without a connection.</p>
+    <button onclick="location.reload()">Try again</button>
+  </div>
+</body>
+</html>

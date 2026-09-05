@@ -4,6 +4,7 @@ import "./globals.css";
 import { OrganizationJsonLd, WebsiteJsonLd } from "@/components/StructuredData";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { site } from "@/lib/site";
 
 const inter = Inter({ variable: "--font-sans", subsets: ["latin"] });
@@ -97,6 +98,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body className={`${inter.variable} ${serif.variable}`}>
+        <ServiceWorkerRegister />
         <OrganizationJsonLd />
         <WebsiteJsonLd />
         <ScrollProgress />
