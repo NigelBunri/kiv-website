@@ -156,13 +156,16 @@ const nextConfig: NextConfig = {
           // browsing context group can't break a popup-based OAuth dance
           // that doesn't exist here.
           { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
-          // Not Cross-Origin-Embedder-Policy: that would require every
-          // cross-origin subresource (Turnstile's challenge iframe/script,
-          // Cloudflare's injected analytics beacon) to send matching CORP/
-          // CORS headers of their own, which this app doesn't control and
-          // can't guarantee - enabling it risks silently breaking the
-          // CAPTCHA widget.
           { key: "Cross-Origin-Resource-Policy", value: "same-site" },
+          // "credentialless", not "require-corp": require-corp would need
+          // every cross-origin subresource (Turnstile's challenge iframe/
+          // script, Cloudflare's injected analytics beacon, S3/Django media)
+          // to send a matching CORP header, which this app doesn't control.
+          // credentialless instead just strips credentials from those
+          // requests - safe here because nothing in this codebase makes a
+          // credentialed (cookie-bearing) cross-origin fetch (grepped for
+          // `credentials:` - none), so there's nothing to break.
+          { key: "Cross-Origin-Embedder-Policy", value: "credentialless" },
         ],
       },
     ];

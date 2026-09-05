@@ -694,6 +694,17 @@ main { overflow: hidden; }
   will-change: transform, opacity;
 }
 .product-carousel-card.is-active { border-color: rgba(184, 138, 45, .4); }
+/* Replaces ProductCarousel.tsx's old per-card inline transform/opacity/
+   z-index/pointer-events style="" - data-offset only ever takes one of
+   these 5 values (see ringOffset()'s magnitude-based collapse: anything
+   |offset| >= 2 is already fully invisible/non-interactive, so the exact
+   off-screen distance past +-1 doesn't matter and needs no per-count
+   CSS - this table stays correct even if the product list grows). */
+.product-carousel-card[data-offset="0"] { transform: translateX(0%) scale(1); opacity: 1; z-index: 10; pointer-events: auto; }
+.product-carousel-card[data-offset="1"] { transform: translateX(64%) scale(.78); opacity: .55; z-index: 9; pointer-events: auto; }
+.product-carousel-card[data-offset="-1"] { transform: translateX(-64%) scale(.78); opacity: .55; z-index: 9; pointer-events: auto; }
+.product-carousel-card[data-offset="far-right"] { transform: translateX(150%) scale(.6); opacity: 0; z-index: 8; pointer-events: none; }
+.product-carousel-card[data-offset="far-left"] { transform: translateX(-150%) scale(.6); opacity: 0; z-index: 8; pointer-events: none; }
 .product-carousel-logo {
   width: 6.4rem;
   height: 6.4rem;

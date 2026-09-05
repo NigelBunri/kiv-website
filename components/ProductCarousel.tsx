@@ -63,23 +63,18 @@ export function ProductCarousel() {
           // Cards more than one slot away sit fully off to whichever side
           // they'd approach from, invisible and non-interactive - only
           // the active card and its immediate left/right neighbors are
-          // ever meaningfully visible or focusable. Computed here (not
-          // via CSS custom-property arithmetic) because CSS has no
-          // reliably-supported abs()/conditional math to derive
-          // "distance from active" from a signed --offset alone.
+          // ever meaningfully visible or focusable. data-offset picks one
+          // of 5 fixed CSS rules in globals.css instead of computing an
+          // inline style="" here - see that rule's comment for why "far"
+          // only needs a direction, not the exact magnitude.
           const visible = magnitude <= 1;
-          const style: React.CSSProperties = {
-            transform: `translateX(${offset * 64}%) scale(${magnitude === 0 ? 1 : magnitude === 1 ? .78 : .6})`,
-            opacity: magnitude === 0 ? 1 : magnitude === 1 ? .55 : 0,
-            zIndex: 10 - magnitude,
-            pointerEvents: visible ? "auto" : "none",
-          };
+          const dataOffset = magnitude <= 1 ? String(offset) : offset > 0 ? "far-right" : "far-left";
           return (
             <Link
               key={product.slug}
               href={`/products/${product.slug}`}
               className={`product-carousel-card${offset === 0 ? " is-active" : ""}`}
-              style={style}
+              data-offset={dataOffset}
               aria-hidden={!visible}
               tabIndex={visible ? 0 : -1}
               onClick={(event) => {

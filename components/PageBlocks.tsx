@@ -163,7 +163,7 @@ export function Hero({
         ) : null}
       </div>
       {visual ? (
-        <div className="hero-visual" data-reveal style={{ "--reveal-delay": "160ms" } as React.CSSProperties}>
+        <div className="hero-visual" data-reveal data-reveal-delay="160">
           <span className="hero-visual-corner hero-visual-corner--tl" aria-hidden="true" />
           <span className="hero-visual-corner hero-visual-corner--br" aria-hidden="true" />
           <div className="hero-visual-frame">
@@ -181,7 +181,7 @@ export function Hero({
           </div>
         </div>
       ) : logo ? (
-        <div className="hero-panel hero-panel--logo" data-reveal style={{ "--reveal-delay": "160ms" } as React.CSSProperties}>
+        <div className="hero-panel hero-panel--logo" data-reveal data-reveal-delay="160">
           <span className="hero-panel-corner hero-panel-corner--tl" aria-hidden="true" />
           <span className="hero-panel-corner hero-panel-corner--br" aria-hidden="true" />
           <ResponsiveImage
@@ -197,7 +197,7 @@ export function Hero({
           />
         </div>
       ) : (
-        <div className="hero-panel" aria-label="KIV venture structure" data-reveal style={{ "--reveal-delay": "160ms" } as React.CSSProperties}>
+        <div className="hero-panel" aria-label="KIV venture structure" data-reveal data-reveal-delay="160">
           <span className="hero-panel-corner hero-panel-corner--tl" aria-hidden="true" />
           <span className="hero-panel-corner hero-panel-corner--br" aria-hidden="true" />
           <span>KCAN</span>
@@ -257,7 +257,7 @@ export function HomeHero() {
       </div>
 
       <OrbitRing />
-      <div className="home-hero-stats" data-reveal style={{ "--reveal-delay": "220ms" } as React.CSSProperties}>
+      <div className="home-hero-stats" data-reveal data-reveal-delay="220">
         {[
           { icon: "people" as const, label: "Built for", value: "Kingdom", detail: "Advancing purpose through technology" },
           { icon: "box" as const, label: "Core Ventures", value: "4 Pillars", detail: "Education, Market, Payments, Health" },
@@ -273,7 +273,7 @@ export function HomeHero() {
         ))}
       </div>
 
-      <Link className="home-kis-card" href="/products/kis" data-reveal style={{ "--reveal-delay": "300ms" } as React.CSSProperties}>
+      <Link className="home-kis-card" href="/products/kis" data-reveal data-reveal-delay="300">
         <div>
           <p>Our flagship product <HomeHeroIcon name="spark" /></p>
           <h2>KIS</h2>
@@ -327,7 +327,7 @@ export function ImageStory({
           loading="lazy"
         />
       </div>
-      <div className="image-story-copy" data-reveal style={{ "--reveal-delay": "120ms" } as React.CSSProperties}>
+      <div className="image-story-copy" data-reveal data-reveal-delay="120">
         <p className="eyebrow">{eyebrow}</p>
         <h2>{title}</h2>
         <p>{body}</p>
@@ -353,8 +353,14 @@ export function Section({ title, body, children }: { title: string; body?: strin
   );
 }
 
-function revealDelay(index: number, stepMs = 120, maxMs = 560): React.CSSProperties {
-  return { "--reveal-delay": `${Math.min(index * stepMs, maxMs)}ms` } as React.CSSProperties;
+// Returns a data-* attribute, not a style prop: ScrollReveal.tsx reads
+// data-reveal-delay and sets the --reveal-delay CSS variable itself, at the
+// exact moment it also adds .reveal-pending - the delay is meaningless
+// without that class, so nothing is lost by keeping it out of the
+// server-rendered HTML's style="" attributes entirely (see that file for
+// why - CSP's style-src-attr can then skip 'unsafe-inline' for this case).
+function revealDelay(index: number, stepMs = 120, maxMs = 560) {
+  return { "data-reveal-delay": Math.min(index * stepMs, maxMs) };
 }
 
 export function CardGrid({
@@ -386,9 +392,9 @@ export function CardGrid({
           </article>
         );
         return item.href ? (
-          <Link key={item.title} href={item.href} className="card-link" data-reveal style={revealDelay(index)}>{content}</Link>
+          <Link key={item.title} href={item.href} className="card-link" data-reveal {...revealDelay(index)}>{content}</Link>
         ) : (
-          <div key={item.title} data-reveal style={revealDelay(index)}>{content}</div>
+          <div key={item.title} data-reveal {...revealDelay(index)}>{content}</div>
         );
       })}
     </div>
@@ -399,7 +405,7 @@ export function ProductGrid() {
   return (
     <div className="product-grid">
       {products.map((product, index) => (
-        <Link key={product.slug} href={`/products/${product.slug}`} className="product-card" data-reveal style={revealDelay(index)}>
+        <Link key={product.slug} href={`/products/${product.slug}`} className="product-card" data-reveal {...revealDelay(index)}>
           <ResponsiveImage
             className="product-logo"
             src={`/images/sm/${product.slug}-logo-sm.png`}
@@ -436,7 +442,7 @@ export function SegmentGrid({
   return (
     <div className="card-grid segment-grid">
       {items.map((item, index) => (
-        <article key={item.title} className="card segment-card" data-reveal style={revealDelay(index)}>
+        <article key={item.title} className="card segment-card" data-reveal {...revealDelay(index)}>
           <ResponsiveImage
             className="segment-card-image"
             src={item.image.src}
@@ -467,7 +473,7 @@ export function DetailList({
   return (
     <div className="detail-list">
       {items.map((item, index) => (
-        <article key={item.title} className="detail-item" data-reveal style={revealDelay(index, 90, 420)}>
+        <article key={item.title} className="detail-item" data-reveal {...revealDelay(index, 90, 420)}>
           <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
           <div>
             <h3>{item.title}</h3>
@@ -487,7 +493,7 @@ export function Timeline({
   return (
     <div className="timeline">
       {items.map((item, index) => (
-        <article key={item.title} className="timeline-item" data-reveal style={revealDelay(index, 120, 520)}>
+        <article key={item.title} className="timeline-item" data-reveal {...revealDelay(index, 120, 520)}>
           <span aria-hidden="true" />
           <div>
             <h3>{item.title}</h3>
@@ -537,7 +543,7 @@ export function FeatureGrid({
   return (
     <div className="card-grid feature-grid">
       {items.map((item, index) => (
-        <article className="card feature-card" key={item.title} data-reveal style={revealDelay(index)}>
+        <article className="card feature-card" key={item.title} data-reveal {...revealDelay(index)}>
           <span className="feature-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
               {featureIcons[item.icon]}
@@ -568,7 +574,7 @@ export function PillarGrid({
   return (
     <div className="card-grid pillar-grid">
       {items.map((item, index) => (
-        <article key={item.title} className="card pillar-card" data-reveal style={revealDelay(index, 90, 480)}>
+        <article key={item.title} className="card pillar-card" data-reveal {...revealDelay(index, 90, 480)}>
           <div className="pillar-card-head">
             <span className="pillar-card-icon" aria-hidden="true">{item.icon}</span>
             <div>

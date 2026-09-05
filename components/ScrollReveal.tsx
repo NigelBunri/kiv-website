@@ -40,6 +40,14 @@ export function ScrollReveal() {
       const rect = el.getBoundingClientRect();
       const alreadyVisible = rect.top < window.innerHeight * 0.92 && rect.bottom > 0;
       if (!alreadyVisible) {
+        // data-reveal-delay is a data-* attribute, not a style="" one -
+        // the --reveal-delay custom property only matters once
+        // .reveal-pending is also present (see globals.css), so it's set
+        // here, at the exact same moment, instead of shipping it in the
+        // server-rendered HTML's style attribute for every element up
+        // front (see PageBlocks.tsx's revealDelay()).
+        const delay = el.dataset.revealDelay;
+        if (delay) el.style.setProperty("--reveal-delay", `${delay}ms`);
         el.classList.add("reveal-pending");
         observer.observe(el);
       }
