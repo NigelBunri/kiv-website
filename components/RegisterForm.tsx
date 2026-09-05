@@ -87,9 +87,10 @@ export function RegisterForm() {
 
   return (
     <form className="public-form" onSubmit={handleSubmit} noValidate>
-      <label>
+      <label htmlFor="register-display-name">
         Display name (optional)
         <input
+          id="register-display-name"
           name="displayName"
           type="text"
           autoComplete="name"
@@ -101,11 +102,12 @@ export function RegisterForm() {
         Country
         <CountrySelect id="register-country" value={country} onChange={setCountry} />
       </label>
-      <label>
+      <label htmlFor="register-phone">
         Phone number
         <div className="phone-input-row">
           <span className="phone-dial-code">{dialCode}</span>
           <input
+            id="register-phone"
             name="phoneNumber"
             type="tel"
             inputMode="numeric"
@@ -114,39 +116,45 @@ export function RegisterForm() {
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
             required
+            aria-required="true"
           />
         </div>
       </label>
-      <label>
+      <label htmlFor="register-password">
         Password
         <input
+          id="register-password"
           name="password"
           type="password"
           autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          aria-required="true"
+          aria-describedby="register-password-checklist"
         />
       </label>
-      <ul className="password-checklist">
+      <ul className="password-checklist" id="register-password-checklist">
         <li className={passwordChecks.length ? "met" : ""}>At least 10 characters</li>
         <li className={passwordChecks.upper ? "met" : ""}>One uppercase letter</li>
         <li className={passwordChecks.lower ? "met" : ""}>One lowercase letter</li>
         <li className={passwordChecks.digit ? "met" : ""}>One number</li>
       </ul>
-      <label>
+      <label htmlFor="register-password2">
         Confirm password
         <input
+          id="register-password2"
           name="password2"
           type="password"
           autoComplete="new-password"
           value={password2}
           onChange={(e) => setPassword2(e.target.value)}
           required
+          aria-required="true"
         />
       </label>
-      <label className="check-row">
-        <input type="checkbox" checked={termsAgreed} onChange={(e) => setTermsAgreed(e.target.checked)} />
+      <label className="check-row" htmlFor="register-terms">
+        <input id="register-terms" type="checkbox" checked={termsAgreed} onChange={(e) => setTermsAgreed(e.target.checked)} required aria-required="true" />
         <span>I agree to the <a href="/terms" target="_blank" rel="noreferrer">Terms</a> and <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a></span>
       </label>
       <button className="button primary" type="submit" disabled={!canSubmit}>

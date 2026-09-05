@@ -1,0 +1,55 @@
+# Kingdom Impact Ventures
+
+> Kingdom Impact Ventures (KIV) builds practical technology ventures for KCAN
+> (Kingdom Citizens & Ambassadors Network), beginning with Kingdom Impact
+> Social (KIS) and extending into future education, market, payments and
+> health products. KIV is the business and technology venture arm of KCAN;
+> KIS is its first flagship product.
+
+Public claims on this site are stage-aware: features and ventures are
+described as live, in advanced launch preparation, planned, or
+research-stage, and availability (Android/iOS/web) is only claimed where a
+real, configured link exists.
+
+## Company
+
+- [About](https://kingdomimpactventures.org/about): Who KIV is, how it operates, and how it answers to KCAN.
+- [Mission](https://kingdomimpactventures.org/mission): The mission and operating principles behind every KIV product decision.
+- [Who We Serve](https://kingdomimpactventures.org/who-we-serve): The people KIS is built for, the real problems they face, and how KIS solves them.
+- [Trust](https://kingdomimpactventures.org/trust): Trust, safety and public-claims policy.
+- [Security](https://kingdomimpactventures.org/security): Security practices and how to report a vulnerability.
+- [Updates](https://kingdomimpactventures.org/updates): Public updates on KIS launch preparation and the wider venture portfolio.
+
+## Products
+
+- [Products overview](https://kingdomimpactventures.org/products): KIS, the flagship app, plus the staged KIE/KIM/KIP/KIH venture portfolio.
+- [KIS - Kingdom Impact Social](https://kingdomimpactventures.org/products/kis): The first flagship product - social, partner and discipleship platform for KCAN communities. Advanced launch preparation.
+- [KIE](https://kingdomimpactventures.org/products/kie): Planned/research-stage education venture.
+- [KIM](https://kingdomimpactventures.org/products/kim): Planned/research-stage market venture.
+- [KIP](https://kingdomimpactventures.org/products/kip): Planned/research-stage payments venture.
+- [KIH](https://kingdomimpactventures.org/products/kih): Planned/research-stage health-support venture.
+- [KISTube](https://kistube.kingdomimpactventures.org): Video platform inside the KIS ecosystem, on its own subdomain.
+- [Download](https://kingdomimpactventures.org/download): Current KIS availability by platform.
+
+## Working with KIV
+
+- [Partners](https://kingdomimpactventures.org/partners): How churches, ministries and organisations can partner with KIV and KIS.
+- [Investors](https://kingdomimpactventures.org/investors): Investor information, without unsupported claims.
+- [Contact](https://kingdomimpactventures.org/contact): The right way to reach KIV - support, partners, investors and security.
+- [Support](https://kingdomimpactventures.org/support): Support articles on contact, account/data requests and availability.
+
+## Legal & policy
+
+- [Privacy](https://kingdomimpactventures.org/privacy)
+- [Terms](https://kingdomimpactventures.org/terms)
+- [Acceptable Use](https://kingdomimpactventures.org/acceptable-use)
+- [Community Guidelines](https://kingdomimpactventures.org/community-guidelines)
+- [Cookies](https://kingdomimpactventures.org/cookies)
+- [Child Safety](https://kingdomimpactventures.org/child-safety)
+- [Email Policy](https://kingdomimpactventures.org/email-policy)
+- [Account Deletion](https://kingdomimpactventures.org/account-deletion)
+- [Data Deletion](https://kingdomimpactventures.org/data-deletion)
+
+## Sitemap
+
+Full URL list: https://kingdomimpactventures.org/sitemap.xml

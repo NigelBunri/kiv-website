@@ -815,6 +815,7 @@ export const supportArticles = [
     slug: "contact-and-response-times",
     title: "Contact and response times",
     description: "How KIV handles public contact, partner and support requests.",
+    date: "2026-07-29",
     body: [
       "Public forms route requests to the configured server-side provider. If no provider is configured, the website records a clear development-safe response instead of pretending that delivery occurred.",
       "Urgent security reports should use the security reporting form or the published security contact address.",
@@ -827,6 +828,7 @@ export const supportArticles = [
     slug: "account-and-data-requests",
     title: "Account and data requests",
     description: "Where to begin account deletion and data deletion requests.",
+    date: "2026-07-29",
     body: [
       "Account and data deletion pages explain what information is needed and what KIV must verify before actioning a request.",
       "The public website does not collect passwords, recovery codes or private credentials for deletion requests.",
@@ -839,6 +841,7 @@ export const supportArticles = [
     slug: "kis-availability-and-launch-list",
     title: "KIS availability and launch list",
     description: "How to understand KIS coming-soon, launch-list, Android, iOS and web-app states.",
+    date: "2026-07-29",
     body: [
       "KIS availability is controlled by configuration. If official Android, iOS or web-app URLs are not configured, the public site should not display fake download links.",
       "The launch list can collect interest before public app availability, but it should not imply that store delivery, onboarding or account access has already been released.",
@@ -850,6 +853,7 @@ export const supportArticles = [
     slug: "trust-safety-and-public-claims",
     title: "Trust, safety and public claims",
     description: "Why KIV keeps some public claims limited even when product planning is broad.",
+    date: "2026-07-29",
     body: [
       "KIV uses stage-aware public language because the overall vision includes social, education, market, payments and health-support directions with different risk levels.",
       "A feature can be part of the product strategy without being ready for public availability, public legal claims or partner-facing commitments.",

@@ -27,13 +27,17 @@ export default async function SupportArticlePage({ params }: { params: Promise<{
         "@type": "Article",
         headline: article.title,
         description: article.description,
+        datePublished: article.date,
+        dateModified: article.date,
         author: { "@type": "Organization", name: site.name },
         publisher: { "@type": "Organization", name: site.name },
         mainEntityOfPage: absoluteUrl(`/support/${slug}`),
       }} />
       <section className="content-page">
         <article>
-          <p className="eyebrow">Support</p>
+          <p className="eyebrow">
+            Support · <time dateTime={article.date}>{article.date}</time>
+          </p>
           <h1>{article.title}</h1>
           <p>{article.description}</p>
           {article.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}

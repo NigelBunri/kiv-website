@@ -76,15 +76,17 @@ export function PairForm() {
         Open the KIS app, go to Profile → Manage devices → Web, and generate a code. Type it in below to sign in
         on this computer.
       </p>
-      <label>
+      <label htmlFor="pair-code">
         Pairing code
         <input
+          id="pair-code"
           name="code"
           autoComplete="one-time-code"
           placeholder="XXXX-XXXX-XX"
           value={code}
           onChange={(e) => setCode(e.target.value)}
           required
+          aria-required="true"
           autoFocus
         />
       </label>

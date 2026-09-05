@@ -65,12 +65,19 @@ export function pageMetadata({ title, description, path, type = "website", image
       siteName: site.name,
       type,
       images: [socialImage],
+      // Every page is English (US) copy - no locale switcher or translated
+      // routes exist, so this is a fixed fact about the site, not a guess.
+      locale: "en_US",
     },
     twitter: {
       card: "summary_large_image",
       title: fullTitle,
       description,
-      images: [socialImage.url],
+      // No twitter:site/twitter:creator: those need a real @handle, and
+      // KIV doesn't have a published X/Twitter account yet - inventing one
+      // would be exactly the kind of unverifiable claim this site's own
+      // structured-data policy (see StructuredData.tsx) avoids elsewhere.
+      images: [{ url: socialImage.url, alt: socialImage.alt }],
     },
   };
 }

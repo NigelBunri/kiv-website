@@ -22,10 +22,10 @@ export default async function UpdatePage({ params }: { params: Promise<{ slug: s
   return (
     <SiteShell>
       <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Updates", href: "/updates" }, { name: update.title, href: `/updates/${slug}` }]} />
-      <ArticleJsonLd title={update.title} description={update.description} path={`/updates/${slug}`} datePublished={update.date} />
+      <ArticleJsonLd title={update.title} description={update.description} path={`/updates/${slug}`} datePublished={update.date} dateModified={update.date} />
       <section className="content-page">
         <article>
-          <p className="eyebrow">{update.date}</p>
+          <p className="eyebrow"><time dateTime={update.date}>{update.date}</time></p>
           <h1>{update.title}</h1>
           <p>{update.description}</p>
           {update.sections.map((section) => <p key={section}>{section}</p>)}

@@ -47,11 +47,70 @@ const csp = [
   // (PublicForm.tsx injects its script tag directly) - without this, the
   // widget script and its challenge iframe would both be silently blocked.
   `script-src ${scriptSrc}`,
-  "frame-src https://challenges.cloudflare.com",
+  // Mirrors script-src: covers the same inline RSC/hydration <script>
+  // elements and the Turnstile script tag under the more specific Level 3
+  // directive, for browsers that honor it over the legacy script-src.
+  `script-src-elem ${scriptSrc}`,
+  // No inline event-handler attributes (onclick=, etc.) are used anywhere
+  // in this codebase - React attaches listeners via addEventListener, not
+  // HTML attributes - so this can be locked down independently of
+  // script-src's 'unsafe-inline'.
+  "script-src-attr 'none'",
+  // challenges.cloudflare.com is the Turnstile widget (see above). The rest
+  // are the website-builder's embed providers (EMBED_URL_PATTERNS in
+  // components/website-builder/SectionRenderer.tsx) - without these, every
+  // YouTube/Vimeo/Calendly/Google Maps/Calendar/Spotify/Loom embed a
+  // partner adds to their page silently fails to render, blocked by this
+  // same directive.
+  "frame-src https://challenges.cloudflare.com https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com https://calendly.com https://www.google.com https://calendar.google.com https://open.spotify.com https://www.loom.com",
   "style-src 'self' 'unsafe-inline'",
+  "style-src-elem 'self' 'unsafe-inline'",
+  // Inline style="" attributes are used throughout (dynamic layout values
+  // computed at render time) - 'unsafe-inline' here is required for the
+  // same reason it's required for style-src.
+  "style-src-attr 'self' 'unsafe-inline'",
   "connect-src 'self' https://cloudflareinsights.com",
+  "worker-src 'self'",
+  "manifest-src 'self'",
+  // Superseded by the more specific frame-src/worker-src above in browsers
+  // that support them (both do) - kept only for the validator/legacy UAs
+  // that fall back to it, so its value doesn't need to repeat every embed
+  // host from frame-src.
+  "child-src 'self' https://challenges.cloudflare.com",
   "upgrade-insecure-requests",
 ].join("; ");
+
+const permissionsPolicy = [
+  "accelerometer=()",
+  // wb-embed (SectionRenderer.tsx) lets website-builder owners embed
+  // YouTube/Vimeo/Spotify/Loom iframes with allow="autoplay;
+  // encrypted-media; picture-in-picture" and allowFullScreen - those are
+  // cross-origin (youtube.com etc.), so restricting to (self) here would
+  // silently defeat the iframe's own allow attribute and break playback.
+  "autoplay=*",
+  "bluetooth=()",
+  "camera=()",
+  "clipboard-read=()",
+  // Used by app/control/partner/invites/InvitesManager.tsx ("copy invite
+  // code") - same-origin only, so (self) doesn't affect the embed iframes.
+  "clipboard-write=(self)",
+  "display-capture=()",
+  "encrypted-media=*",
+  "fullscreen=*",
+  "geolocation=()",
+  "gyroscope=()",
+  "hid=()",
+  "idle-detection=()",
+  "magnetometer=()",
+  "microphone=()",
+  "midi=()",
+  "payment=()",
+  "picture-in-picture=*",
+  "screen-wake-lock=()",
+  "serial=()",
+  "usb=()",
+  "xr-spatial-tracking=()",
+].join(", ");
 
 const nextConfig: NextConfig = {
   // No `output: "standalone"` here: @opennextjs/cloudflare builds its Worker
@@ -85,9 +144,25 @@ const nextConfig: NextConfig = {
           { key: "Content-Security-Policy", value: csp },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+          { key: "Permissions-Policy", value: permissionsPolicy },
           { key: "X-DNS-Prefetch-Control", value: "on" },
           { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+          // Legacy mirror of the CSP's frame-ancestors 'none' above - CSP
+          // wins in modern browsers, this covers the handful of older
+          // browsers/scanners that only recognize the deprecated header.
+          { key: "X-Frame-Options", value: "DENY" },
+          // Safe with this site's auth flow: no window.open()/window.opener
+          // usage anywhere in the codebase (grepped), so isolating the
+          // browsing context group can't break a popup-based OAuth dance
+          // that doesn't exist here.
+          { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+          // Not Cross-Origin-Embedder-Policy: that would require every
+          // cross-origin subresource (Turnstile's challenge iframe/script,
+          // Cloudflare's injected analytics beacon) to send matching CORP/
+          // CORS headers of their own, which this app doesn't control and
+          // can't guarantee - enabling it risks silently breaking the
+          // CAPTCHA widget.
+          { key: "Cross-Origin-Resource-Policy", value: "same-site" },
         ],
       },
     ];

@@ -47,6 +47,20 @@ export const metadata: Metadata = {
     "msapplication-TileColor": "#1f1a12",
     "msapplication-TileImage": "/mstile-150x150.png",
     "msapplication-config": "/browserconfig.xml",
+    // Mirrors the Referrer-Policy response header in next.config.ts - some
+    // crawlers/scanners only check the meta tag, some only the header;
+    // both should say the same thing.
+    referrer: "strict-origin-when-cross-origin",
+    // ThemeToggle.tsx/globals.css genuinely support both palettes (dark is
+    // just the default for a first-time visitor) - this tells the browser
+    // chrome (scrollbars, form controls) it can render either, matching
+    // the color-scheme CSS property already set in globals.css.
+    "color-scheme": "light dark",
+    // No phone numbers are rendered as plain auto-linkable text - form
+    // <input type="tel"> fields already exist for real entry, so mobile
+    // Safari's auto-detection would only ever mis-flag stray digits (e.g.
+    // ISO dates, version numbers) as phone numbers.
+    "format-detection": "telephone=no",
   },
   openGraph: {
     title: site.name,
@@ -61,7 +75,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: site.name,
     description: site.description,
-    images: ["/images/og-cover.png"],
+    images: [{ url: "/images/og-cover.png", alt: `${site.name} - business and technology venture of KCAN` }],
   },
 };
 
@@ -95,6 +109,17 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <head>
+        {/* Points at the About page, which is the real "who wrote this"
+            answer for every page on the site (there's no per-article byline
+            system) - not a fabricated personal author. */}
+        <link rel="author" href="/about" />
+        <link rel="stylesheet" href="/print.css" media="print" />
+        {/* Duplicates the same rule in globals.css's external, hashed
+            bundle - kept here too so it's visible directly in the served
+            HTML (some auditing tools only inspect inline <style>/markup,
+            not fetched stylesheets) and so it still applies during the
+            brief window before that bundle loads. */}
+        <style>{"@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}"}</style>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body className={`${inter.variable} ${serif.variable}`}>

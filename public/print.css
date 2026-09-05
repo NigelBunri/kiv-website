@@ -1,0 +1,33 @@
+/* Printed/PDF output only (loaded via <link media="print">) - trims the
+   page down to the content someone actually wanted a copy of. Mirrors the
+   @media print block in app/globals.css (kept there too as a fallback for
+   any renderer that ignores this file's media attribute), so both stay in
+   sync if the sitewide chrome selectors ever change. */
+@media print {
+  .site-header,
+  .site-footer,
+  .button,
+  .public-form,
+  .breadcrumb-trail,
+  .primary-nav-scrim,
+  .primary-nav-mobile,
+  .menu-toggle,
+  .header-actions {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: .85em;
+  }
+
+  main {
+    padding: 0;
+    margin: 0;
+  }
+}

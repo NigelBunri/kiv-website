@@ -16,7 +16,7 @@ type Props = {
 export function CountrySelect({ value, onChange, id }: Props) {
   const options = getCountryOptions();
   return (
-    <select id={id} name="country" value={value} onChange={(e) => onChange(e.target.value)}>
+    <select id={id} name="country" autoComplete="country" value={value} onChange={(e) => onChange(e.target.value)}>
       {options.map((c) => (
         <option key={c.iso2} value={c.iso2}>
           {c.name} ({c.dialCode})

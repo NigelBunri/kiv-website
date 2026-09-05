@@ -40,7 +40,7 @@ export default function UpdatesPage() {
           {updates.map((update) => (
             <Link className="card-link" href={`/updates/${update.slug}`} key={update.slug}>
               <article className="card">
-                <p className="card-meta">{update.date}</p>
+                <p className="card-meta"><time dateTime={update.date}>{update.date}</time></p>
                 <h2>{update.title}</h2>
                 <p>{update.description}</p>
               </article>

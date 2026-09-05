@@ -1,8 +1,32 @@
 import Link from "next/link";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { BreadcrumbJsonLd, FAQPageJsonLd } from "@/components/StructuredData";
 import { products, site, type Product } from "@/lib/site";
 import { ProductCarousel } from "@/components/ProductCarousel";
 import { OrbitRing } from "@/components/OrbitRing";
+
+/**
+ * Visible, expandable FAQ list paired with its FAQPageJsonLd - same
+ * visible-markup-matches-structured-data principle as Breadcrumbs above.
+ * Every question/answer here must already be true elsewhere on the site;
+ * this only reformats existing public claims as Q&A, it doesn't introduce
+ * new ones (see StructuredData.tsx's note on why fabricated structured
+ * data is worse than none).
+ */
+export function FAQ({ items }: { items: Array<{ question: string; answer: string }> }) {
+  return (
+    <>
+      <div className="faq-list">
+        {items.map((item) => (
+          <details key={item.question} className="faq-item">
+            <summary>{item.question}</summary>
+            <p>{item.answer}</p>
+          </details>
+        ))}
+      </div>
+      <FAQPageJsonLd items={items} />
+    </>
+  );
+}
 
 /**
  * Visible breadcrumb trail paired with its BreadcrumbJsonLd - a page's

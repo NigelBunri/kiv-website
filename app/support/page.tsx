@@ -1,8 +1,35 @@
 import Link from "next/link";
 import { SiteShell } from "@/components/SiteShell";
-import { Breadcrumbs, CardGrid, Hero, ImageStory, Section } from "@/components/PageBlocks";
+import { Breadcrumbs, CardGrid, FAQ, Hero, ImageStory, Section } from "@/components/PageBlocks";
 import { pageMetadata } from "@/lib/metadata";
 import { supportArticles } from "@/lib/site";
+
+// Each answer restates a fact already published elsewhere on the site
+// (contact routing, deletion-request handling, KIS availability posture,
+// stage-aware public claims) - see the linked support articles below for
+// the fuller version of each.
+const faqItems = [
+  {
+    question: "How do I contact KIV?",
+    answer: "Public forms route requests to the configured server-side provider. General support is for public website and product-readiness questions; partner, investor and security reports use their own dedicated routes because they need different review and evidence.",
+  },
+  {
+    question: "Is KIS available to download yet?",
+    answer: "KIS availability is controlled by configuration. The download page only shows Android, iOS or web-app links when official links are actually configured, and never implies store delivery or account access before that.",
+  },
+  {
+    question: "How do I request account or data deletion?",
+    answer: "Use the account deletion or data deletion pages with an email address that can help verify ownership or request authority. The public website never collects passwords, recovery codes or private credentials as part of a deletion request, and some records may be retained where required for security, legal or abuse-prevention reasons.",
+  },
+  {
+    question: "Why do some KIV pages describe features as \"planned\" rather than live?",
+    answer: "KIV uses stage-aware language because payments, health, child safety, moderation, partner endorsements and public metrics all require review before they can be presented as live capabilities. A feature can be part of the product strategy without yet being ready for public availability or partner-facing commitments.",
+  },
+  {
+    question: "Where should I report a security issue?",
+    answer: "Urgent security reports should use the dedicated security reporting form or the published security contact address rather than the general contact route.",
+  },
+];
 
 export const metadata = pageMetadata({ title: "Support", description: "KIV public support information and request routing.", path: "/support" });
 
@@ -49,10 +76,17 @@ export default function SupportPage() {
         <div className="card-grid">
           {supportArticles.map((article) => (
             <Link className="card-link" href={`/support/${article.slug}`} key={article.slug}>
-              <article className="card"><h2>{article.title}</h2><p>{article.description}</p></article>
+              <article className="card">
+                <p className="card-meta"><time dateTime={article.date}>{article.date}</time></p>
+                <h2>{article.title}</h2>
+                <p>{article.description}</p>
+              </article>
             </Link>
           ))}
         </div>
+      </Section>
+      <Section title="Frequently asked questions">
+        <FAQ items={faqItems} />
       </Section>
     </SiteShell>
   );

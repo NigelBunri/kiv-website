@@ -81,9 +81,10 @@ export function LoginForm() {
     return (
       <form className="public-form" onSubmit={verifyCode} noValidate>
         <p className="form-note">We sent a code to {phone}. Enter it below to sign in with your KIS account.</p>
-        <label>
+        <label htmlFor="login-code">
           Verification code
           <input
+            id="login-code"
             name="code"
             inputMode="numeric"
             autoComplete="one-time-code"
@@ -91,6 +92,7 @@ export function LoginForm() {
             value={code}
             onChange={(e) => setCode(e.target.value)}
             required
+            aria-required="true"
             autoFocus
           />
         </label>
@@ -116,9 +118,10 @@ export function LoginForm() {
         Country
         <CountrySelect id="login-country" value={country} onChange={setCountry} />
       </label>
-      <label>
+      <label htmlFor="login-phone">
         Phone number
         <input
+          id="login-phone"
           name="phone"
           type="tel"
           autoComplete="tel"
@@ -126,6 +129,7 @@ export function LoginForm() {
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           required
+          aria-required="true"
           autoFocus
         />
       </label>

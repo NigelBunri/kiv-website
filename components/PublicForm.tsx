@@ -85,32 +85,32 @@ export function PublicForm({ kind, subject = "", product = "" }: PublicFormProps
         <label htmlFor={`${id}-website`}>Website</label>
         <input id={`${id}-website`} name="website" tabIndex={-1} autoComplete="off" />
       </div>
-      <label>
+      <label htmlFor={`${id}-name`}>
         Name
-        <input name="name" maxLength={120} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? `${id}-name-error` : undefined} required />
+        <input id={`${id}-name`} name="name" autoComplete="name" maxLength={120} aria-invalid={Boolean(errors.name)} aria-required="true" aria-describedby={errors.name ? `${id}-name-error` : undefined} required />
         {errors.name ? <span className="field-error" id={`${id}-name-error`}>{errors.name}</span> : null}
       </label>
-      <label>
+      <label htmlFor={`${id}-email`}>
         Email
-        <input name="email" type="email" maxLength={180} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? `${id}-email-error` : undefined} required />
+        <input id={`${id}-email`} name="email" type="email" autoComplete="email" maxLength={180} aria-invalid={Boolean(errors.email)} aria-required="true" aria-describedby={errors.email ? `${id}-email-error` : undefined} required />
         {errors.email ? <span className="field-error" id={`${id}-email-error`}>{errors.email}</span> : null}
       </label>
-      <label>
+      <label htmlFor={`${id}-organisation`}>
         Organisation
-        <input name="organisation" maxLength={160} />
+        <input id={`${id}-organisation`} name="organisation" autoComplete="organization" maxLength={160} />
       </label>
-      <label>
+      <label htmlFor={`${id}-subject`}>
         Subject
-        <input name="subject" maxLength={180} defaultValue={subject} aria-invalid={Boolean(errors.subject)} aria-describedby={errors.subject ? `${id}-subject-error` : undefined} required />
+        <input id={`${id}-subject`} name="subject" maxLength={180} defaultValue={subject} aria-invalid={Boolean(errors.subject)} aria-required="true" aria-describedby={errors.subject ? `${id}-subject-error` : undefined} required />
         {errors.subject ? <span className="field-error" id={`${id}-subject-error`}>{errors.subject}</span> : null}
       </label>
-      <label>
+      <label htmlFor={`${id}-message`}>
         Message
-        <textarea name="message" rows={7} maxLength={3000} aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? `${id}-message-error` : undefined} required />
+        <textarea id={`${id}-message`} name="message" rows={7} maxLength={3000} aria-invalid={Boolean(errors.message)} aria-required="true" aria-describedby={errors.message ? `${id}-message-error` : undefined} required />
         {errors.message ? <span className="field-error" id={`${id}-message-error`}>{errors.message}</span> : null}
       </label>
-      <label className="check-row">
-        <input type="checkbox" name="consent" />
+      <label className="check-row" htmlFor={`${id}-consent`}>
+        <input id={`${id}-consent`} type="checkbox" name="consent" required aria-required="true" />
         <span>I understand KIV will use this information to respond to this request. I will not submit passwords or private credentials.</span>
       </label>
       {errors.consent ? <span className="field-error">{errors.consent}</span> : null}
