@@ -905,6 +905,30 @@ main { overflow: hidden; }
   background: rgba(28, 21, 12, .68);
   color: var(--gold);
 }
+
+/* More dark-theme overrides, same root cause as the hero fixes above:
+   these are all "frosted glass" panels built as a light, near-opaque
+   rgba(255, ...) wash meant to sit on the light theme's own light body
+   background - each one paired with theme-adaptive text
+   (var(--ink)/var(--ink-soft), inherited or explicit), which is exactly
+   what makes them break: the wash stays light-and-solid in dark mode
+   while the text on top of it goes light too, collapsing to near-zero
+   contrast. Darkened here rather than left translucent-over-dark, so
+   each keeps reading as "a distinct panel" rather than disappearing into
+   the page. (.hero and .image-story below are the one exception grouped
+   in here that ISN'T actually broken - their alpha is low enough that
+   the wash barely lightens the dark background at all, so text contrast
+   was already fine; still darkened for visual consistency, not because
+   they were unreadable.) */
+:root[data-theme="dark"] .header-button--light { background: rgba(29, 22, 14, .82); }
+:root[data-theme="dark"] .hero { background: rgba(0, 0, 0, .16); }
+:root[data-theme="dark"] .image-story { background: rgba(0, 0, 0, .22); }
+:root[data-theme="dark"] .detail-item { background: rgba(29, 22, 14, .8); }
+:root[data-theme="dark"] .timeline-item { background: rgba(29, 22, 14, .8); }
+:root[data-theme="dark"] .availability-panel,
+:root[data-theme="dark"] .contact-strip,
+:root[data-theme="dark"] .download-state { background: rgba(29, 22, 14, .6); }
+
 .hero {
   position: relative;
   display: grid;
@@ -1286,6 +1310,14 @@ h3 { font-size: 1.3rem; }
   padding: clamp(3.5rem, 7vw, 6.5rem) clamp(1.25rem, 5vw, 5rem);
 }
 .section:nth-of-type(even) { background: rgba(248, 239, 219, .35); }
+/* Light-mode tint above reads as a subtle warm wash against the light
+   sky background - the same rgba, unchanged in dark mode, becomes a
+   LIGHTER patch on top of the now-dark background, right under text
+   that's also gone light (--ink), which collapses the contrast between
+   text and its own section background. Darkens instead of lightens here
+   so alternating sections keep the same "subtle depth cue" effect
+   without ever working against the text sitting on top of it. */
+:root[data-theme="dark"] .section:nth-of-type(even) { background: rgba(0, 0, 0, .22); }
 .section-heading {
   display: grid;
   gap: .95rem;
