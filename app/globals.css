@@ -766,6 +766,69 @@ main { overflow: hidden; }
 .home-venture-tag--market { top: 18.6rem; left: 50.7%; animation-delay: -1.4s; }
 .home-venture-tag--payments { top: 9rem; right: 7.1%; animation-delay: -2.2s; }
 .home-venture-tag--health { top: 19rem; right: 4.15%; animation-delay: -3.1s; }
+
+/* Orbit ring (OrbitRing.tsx) - replaces the 4 independently-bobbing
+   venture tags above with all 8 KIV products/entities (KIS/KIE/KIM/KIP/
+   KIH + KCAN/KIV/Shekinah Global) moving together as one horizontally
+   rotating ring over the hero art. .orbit-stage is a zero-size anchor
+   point (not a sized box) - every .orbit-item is absolutely positioned
+   from that single point and does its own translateX/scale/opacity via
+   inline style (computed in JS from each item's angle around the ring),
+   so this stage only needs to say WHERE that anchor point sits in the
+   hero, not how big the ring's bounding box is. */
+.orbit-stage {
+  position: absolute;
+  top: clamp(8rem, 14vw, 15.5rem);
+  left: 74%;
+  width: 0;
+  height: 0;
+  z-index: 1;
+}
+.orbit-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  justify-items: center;
+  gap: .4rem;
+  width: 7.6rem;
+  padding: 1.1rem .75rem 1rem;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(184, 138, 45, .28);
+  background: rgba(255, 253, 248, .8);
+  box-shadow: 0 20px 44px rgba(40, 29, 11, .1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  text-decoration: none;
+  color: #171310;
+  will-change: transform, opacity;
+  transition: box-shadow var(--fast) var(--ease);
+}
+.orbit-item:hover,
+.orbit-item:focus-visible { box-shadow: 0 26px 56px rgba(40, 29, 11, .2); }
+:root[data-theme="dark"] .orbit-item {
+  background: rgba(28, 21, 12, .76);
+  border-color: rgba(220, 174, 76, .32);
+  color: var(--ink);
+}
+.orbit-item-logo {
+  width: 3.1rem;
+  height: 3.1rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: var(--cream-2);
+  overflow: hidden;
+}
+.orbit-item-logo img { width: 100%; height: 100%; object-fit: contain; }
+.orbit-item-name {
+  font-size: .85rem;
+  font-weight: 800;
+  letter-spacing: .01em;
+  line-height: 1.15;
+  text-align: center;
+}
+
 .home-hero-stats {
   position: absolute;
   left: clamp(1.25rem, 4.3vw, 4.1rem);
@@ -2126,6 +2189,7 @@ textarea { resize: vertical; }
     font-size: clamp(2.15rem, 8vw, 3rem);
   }
   .home-venture-tag { display: none; }
+  .orbit-stage { display: none; }
   .home-hero-stats {
     position: relative;
     left: auto;

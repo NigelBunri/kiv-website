@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { products, site, type Product } from "@/lib/site";
 import { ProductCarousel } from "@/components/ProductCarousel";
+import { OrbitRing } from "@/components/OrbitRing";
 
 /**
  * Visible breadcrumb trail paired with its BreadcrumbJsonLd - a page's
@@ -231,23 +232,7 @@ export function HomeHero() {
         <ProductCarousel />
       </div>
 
-      <div className="home-venture-tag home-venture-tag--education" data-reveal style={{ "--reveal-delay": "180ms" } as React.CSSProperties}>
-        <span>▰</span>
-        <strong>Education</strong>
-      </div>
-      <div className="home-venture-tag home-venture-tag--market" data-reveal style={{ "--reveal-delay": "260ms" } as React.CSSProperties}>
-        <span>◱</span>
-        <strong>Market</strong>
-      </div>
-      <div className="home-venture-tag home-venture-tag--payments" data-reveal style={{ "--reveal-delay": "340ms" } as React.CSSProperties}>
-        <span>▭</span>
-        <strong>Payments</strong>
-      </div>
-      <div className="home-venture-tag home-venture-tag--health" data-reveal style={{ "--reveal-delay": "420ms" } as React.CSSProperties}>
-        <span>♥</span>
-        <strong>Health</strong>
-      </div>
-
+      <OrbitRing />
       <div className="home-hero-stats" data-reveal style={{ "--reveal-delay": "220ms" } as React.CSSProperties}>
         {[
           { icon: "people" as const, label: "Built for", value: "Kingdom", detail: "Advancing purpose through technology" },
