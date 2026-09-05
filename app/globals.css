@@ -2236,7 +2236,17 @@ textarea { resize: vertical; }
   .hero-visual, .image-story--reverse .image-story-media { order: -1; }
 }
 @media (max-width: 620px) {
-  .footer-nav-groups { grid-template-columns: 1fr; }
+  /* Stacked into a single column here, the three groups (Company,
+     Products, Legal & trust) had nothing but their own 1.5rem grid gap
+     separating them from each other - barely more than the .5rem gap
+     between individual links within a group - so the whole footer read
+     as one continuous list of links rather than three distinct
+     sections. A visible divider + real breathing room above each group
+     (after the first) fixes that, the same divider-between-stacked-
+     items pattern already used for .home-hero-stats just above. */
+  .footer-nav-groups { grid-template-columns: 1fr; gap: 2rem; }
+  .footer-nav-group { padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, .1); }
+  .footer-nav-group:first-child { padding-top: 0; border-top: 0; }
   .site-header { padding: .75rem 1rem; }
   .brand-mark { width: 3rem; height: 3rem; }
   .brand-text { max-width: 6.5rem; }
