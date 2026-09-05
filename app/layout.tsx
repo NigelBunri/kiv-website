@@ -70,9 +70,32 @@ export const viewport: Viewport = {
   themeColor: "#1f1a12",
 };
 
+// Sets data-theme on <html> before first paint, so there's no flash of
+// the wrong theme between the server-rendered (theme-less) HTML and this
+// script running. Dark is the default for a first-time visitor (no
+// kiv-theme key in localStorage yet) - ThemeToggle.tsx writes that key
+// once a visitor picks a theme explicitly. Deliberately does NOT fall
+// back to prefers-color-scheme: the brief is "dark by default", not
+// "match the OS" - a visitor who wants light gets it via the toggle, not
+// by us guessing from their system setting.
+const THEME_INIT_SCRIPT = `
+(function () {
+  try {
+    var stored = localStorage.getItem("kiv-theme");
+    var theme = stored === "light" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", theme);
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "dark");
+  }
+})();
+`;
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className={`${inter.variable} ${serif.variable}`}>
         <OrganizationJsonLd />
         <WebsiteJsonLd />

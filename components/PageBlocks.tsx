@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { products, site, type Product } from "@/lib/site";
+import { ProductCarousel } from "@/components/ProductCarousel";
 
 /**
  * Visible breadcrumb trail paired with its BreadcrumbJsonLd - a page's
@@ -227,17 +228,7 @@ export function HomeHero() {
       />
       <div className="home-hero-scrim" aria-hidden="true" />
       <div className="home-hero-copy" data-reveal>
-        <p className="home-hero-breadcrumb"><span />KCAN <strong>→</strong> KIV <strong>→</strong> KIS</p>
-        <h1 id="home-hero-title">
-          Kingdom technology ventures built with <span>clear purpose and responsible impact.</span>
-        </h1>
-        <p>
-          Kingdom Impact Ventures (KIV) is the business and technology venture of KCAN. We build and support ventures in education, market, payments and health - for Kingdom impact.
-        </p>
-        <div className="home-hero-actions">
-          <Link className="home-button home-button--dark" href="/products/kis">View KIS <span aria-hidden="true">→</span></Link>
-          <Link className="home-button home-button--light" href="/mission">Explore our mission <span aria-hidden="true">→</span></Link>
-        </div>
+        <ProductCarousel />
       </div>
 
       <div className="home-venture-tag home-venture-tag--education" data-reveal style={{ "--reveal-delay": "180ms" } as React.CSSProperties}>

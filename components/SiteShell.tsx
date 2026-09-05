@@ -8,6 +8,7 @@ import { useDismissableMenu } from "@/lib/useDismissableMenu";
 import { useNavFlyout, type FlyoutNavEntry } from "@/lib/useNavFlyout";
 import { UserMenu } from "./UserMenu";
 import { ScrollableTabNav } from "./ScrollableTabNav";
+import { ThemeToggle } from "./ThemeToggle";
 
 function isActiveNavLink(pathname: string | null, href: string) {
   return pathname === href || pathname?.startsWith(`${href}/`) === true;
@@ -68,6 +69,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         </button>
         <ScrollableTabNav items={navItems} ariaLabel="Primary navigation" trackClassName="primary-nav" />
         <div className="header-actions" aria-label="Primary actions">
+          <ThemeToggle />
           <button
             type="button"
             ref={actionsToggleRef}
@@ -131,6 +133,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             </Link>
           ))}
           <div className="primary-nav-mobile-divider" role="separator" />
+          <ThemeToggle />
           <Link className="header-button header-button--gold" href="/products/kis" onClick={() => setMenuOpen(false)}>
             View KIS <span aria-hidden="true">→</span>
           </Link>

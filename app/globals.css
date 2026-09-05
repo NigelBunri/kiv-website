@@ -55,6 +55,55 @@
   --base: 240ms;
 }
 
+/* Dark theme - applied via [data-theme="dark"] on <html>, set by the
+   blocking inline script in app/layout.tsx (before first paint, so there
+   is no flash of the light theme) and toggled at runtime by
+   ThemeToggle.tsx. Dark is the default for a first-time visitor (no
+   stored preference yet) - see that script for the exact fallback logic.
+   Values aren't a literal inversion of the light palette's lightness -
+   each token keeps its light-mode ROLE (primary text, accent, elevated
+   surface, etc.) with values chosen for contrast against a dark base,
+   same warm-gold identity throughout. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --ink: #f3ead4;
+  --ink-soft: #cdb999;
+  --ink-faint: #9c8a70;
+
+  --gold: #dcae4c;
+  --gold-strong: #f2c968;
+  --gold-soft: #3a2c14;
+
+  --cream: #201a10;
+  --cream-2: #170f0a;
+  --paper: #120d08;
+  --surface: #1d160e;
+  --line: #3c301d;
+  --line-soft: #291f12;
+
+  --success: #57b98a;
+  --danger: #e2695a;
+  --focus: #7aa8ea;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .45), 0 3px 8px rgba(0, 0, 0, .32);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, .5), 0 2px 6px rgba(0, 0, 0, .32);
+  --shadow-lg: 0 22px 50px rgba(0, 0, 0, .55), 0 8px 18px rgba(0, 0, 0, .35);
+  --shadow-xl: 0 36px 90px rgba(0, 0, 0, .6), 0 12px 28px rgba(0, 0, 0, .38);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 * { box-sizing: border-box; }
 html {
   scroll-behavior: smooth;
@@ -94,6 +143,24 @@ body {
       image-set(url("/images/heaven-bg.webp") type("image/webp") 1x, url("/images/heaven-bg.jpg") type("image/jpeg") 1x);
   }
 }
+/* Dark theme's own background art (kiv-dark-hero-bg) instead of the
+   light theme's heaven-bg - same layering approach (dark scrim over the
+   photo in one background property, background-attachment:fixed for the
+   same subtle parallax), just a darker scrim since the art itself is
+   already dark and a light wash would wash it out. */
+:root[data-theme="dark"] body {
+  background:
+    linear-gradient(rgba(18, 13, 8, .55), rgba(18, 13, 8, .72)),
+    url("/images/kiv-dark-hero-bg.jpg") center top / cover no-repeat fixed;
+  background-color: var(--paper);
+}
+@supports (background-image: image-set(url("x.webp") type("image/webp"))) {
+  :root[data-theme="dark"] body {
+    background-image:
+      linear-gradient(rgba(18, 13, 8, .55), rgba(18, 13, 8, .72)),
+      image-set(url("/images/kiv-dark-hero-bg.webp") type("image/webp") 1x, url("/images/kiv-dark-hero-bg.jpg") type("image/jpeg") 1x);
+  }
+}
 a { color: inherit; }
 a, button {
   transition: color var(--fast) var(--ease), background-color var(--fast) var(--ease),
@@ -111,7 +178,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   top: 1rem;
   z-index: 30;
   transform: translateY(-160%);
-  background: var(--ink);
+  background: #1c170f;
   color: white;
   padding: .75rem 1.1rem;
   border-radius: var(--radius-sm);
@@ -188,6 +255,7 @@ body::before {
   backdrop-filter: blur(20px) saturate(160%);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
 }
+:root[data-theme="dark"] .site-header { background: rgba(18, 13, 8, .86); }
 .brand {
   display: inline-flex;
   align-items: center;
@@ -202,8 +270,13 @@ body::before {
   width: 3.6rem;
   height: 3.6rem;
   border-radius: var(--radius-sm);
-  background: linear-gradient(145deg, var(--ink) 0%, #322a1b 100%);
-  color: var(--gold-soft);
+  /* Fixed dark literals, not var(--ink)/var(--gold-soft) - this badge is
+     meant to stay a permanently dark monogram with light gold text in
+     BOTH themes (it's not "the page's text/background", it's a fixed
+     logo mark), which broke once --ink started meaning "light text
+     color" in dark mode instead of always being a dark literal. */
+  background: linear-gradient(145deg, #1c170f 0%, #322a1b 100%);
+  color: var(--gold);
   font-weight: 800;
   font-size: 1rem;
   letter-spacing: .06em;
@@ -356,6 +429,37 @@ body::before {
   align-items: center;
   gap: .75rem;
   flex-shrink: 0;
+}
+.theme-toggle {
+  width: 2.65rem;
+  height: 2.65rem;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.theme-toggle:hover { background: var(--gold-soft); color: var(--gold-strong); }
+.theme-toggle svg { width: 19px; height: 19px; }
+/* Inside the mobile slide-in panel (a vertical link stack), the toggle
+   needs its own row rather than the circular header treatment. */
+.primary-nav-mobile .theme-toggle {
+  display: flex;
+  width: auto;
+  height: auto;
+  justify-self: start;
+  border-radius: var(--radius-md);
+  padding: .7rem 1rem;
+  gap: .6rem;
+  flex-direction: row;
+}
+.primary-nav-mobile .theme-toggle::after {
+  content: attr(aria-label);
+  font-weight: 700;
+  font-size: .95rem;
 }
 .header-button {
   min-height: 3rem;
@@ -539,6 +643,96 @@ main { overflow: hidden; }
   border: 1px solid rgba(184, 138, 45, .28);
 }
 .home-button:hover { transform: translateY(-3px); }
+
+/* Product carousel - replaces .home-hero-copy's breadcrumb/heading/
+   paragraph/buttons (ProductCarousel.tsx). Sized to the same column
+   .home-hero-copy occupied (see .home-hero-copy above, still min(48rem,
+   46vw)) - the "peek" effect is relative to THIS component's own edges,
+   clipped by .product-carousel-track's overflow:hidden, not the full
+   viewport. */
+.product-carousel { width: 100%; }
+.product-carousel-track {
+  position: relative;
+  height: 23rem;
+  isolation: isolate;
+}
+.product-carousel-card {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: min(24rem, 100%);
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: .55rem;
+  padding: 1.9rem 1.7rem;
+  text-align: center;
+  text-decoration: none;
+  color: var(--ink);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--base) var(--ease), opacity var(--base) var(--ease);
+  will-change: transform, opacity;
+}
+.product-carousel-card.is-active { border-color: rgba(184, 138, 45, .4); }
+.product-carousel-logo {
+  width: 5.5rem;
+  height: 5.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: var(--cream-2);
+  margin-bottom: .3rem;
+}
+.product-carousel-logo img { width: 3.4rem; height: 3.4rem; object-fit: contain; }
+.product-carousel-card strong { font-size: 1.2rem; }
+.product-carousel-name {
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--gold-strong);
+}
+.product-carousel-card p {
+  margin: .2rem 0 0;
+  font-size: .92rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.product-carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  margin-top: 1.4rem;
+}
+.product-carousel-controls > button {
+  width: 2.6rem;
+  height: 2.6rem;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.product-carousel-controls > button:hover { background: var(--gold-soft); color: var(--gold-strong); }
+.product-carousel-controls > button svg { width: 18px; height: 18px; }
+.product-carousel-dots { display: flex; align-items: center; gap: .5rem; }
+.product-carousel-dots button {
+  width: .55rem;
+  height: .55rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--line);
+  cursor: pointer;
+}
+.product-carousel-dots button.is-active { width: 1.5rem; background: var(--gold); }
+
 .home-venture-tag {
   position: absolute;
   z-index: 1;
@@ -682,6 +876,35 @@ main { overflow: hidden; }
   object-fit: contain;
   filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .45));
 }
+
+/* Dark-theme overrides for the hero's decorative pieces that sit on top
+   of .home-hero-art (a fixed photo, not the body background - see that
+   rule's own comment) and were built with hardcoded light colors rather
+   than the --ink/--surface tokens, since the hero was originally the
+   only always-light part of the page. .home-kis-card is deliberately
+   NOT touched here - it was already a permanent dark card by original
+   design (its own hardcoded near-black gradient, for contrast against
+   the light hero), so it already looks correct in both themes unchanged. */
+:root[data-theme="dark"] .home-hero { background: #0c0906; }
+:root[data-theme="dark"] .home-hero-scrim {
+  background:
+    linear-gradient(90deg, rgba(12, 9, 6, .96) 0%, rgba(12, 9, 6, .85) 32%, rgba(12, 9, 6, .35) 55%, rgba(12, 9, 6, .08) 100%),
+    linear-gradient(180deg, rgba(12, 9, 6, .88) 0%, rgba(12, 9, 6, .1) 28%, rgba(0, 0, 0, .1) 100%);
+}
+:root[data-theme="dark"] .home-hero-stats {
+  background: rgba(18, 13, 8, .74);
+  border-color: rgba(220, 174, 76, .22);
+}
+:root[data-theme="dark"] .home-hero-stats article { border-right-color: rgba(220, 174, 76, .2); }
+:root[data-theme="dark"] .home-hero-stats svg { color: var(--gold); }
+:root[data-theme="dark"] .home-hero-stats span,
+:root[data-theme="dark"] .home-hero-stats p { color: var(--ink); }
+:root[data-theme="dark"] .home-hero-stats strong { color: var(--gold); }
+:root[data-theme="dark"] .home-venture-tag {
+  border-color: rgba(220, 174, 76, .3);
+  background: rgba(28, 21, 12, .68);
+  color: var(--gold);
+}
 .hero {
   position: relative;
   display: grid;
@@ -793,8 +1016,8 @@ h3 { font-size: 1.3rem; }
   display: grid;
   gap: .1rem;
   padding: 1.75rem 1.65rem;
-  background: linear-gradient(160deg, #241d12 0%, var(--ink) 60%);
-  color: var(--cream);
+  background: linear-gradient(160deg, #241d12 0%, #1c170f 60%);
+  color: #fff7e7;
   border-radius: var(--radius-lg);
   /* A gold hairline ring around the whole card, matching .hero-visual's
      frame treatment - the two hero right-column variants now read as one
@@ -981,9 +1204,9 @@ h3 { font-size: 1.3rem; }
   overflow: hidden;
 }
 .button.primary {
-  background: var(--ink);
+  background: #1c170f;
   color: white;
-  border-color: var(--ink);
+  border-color: #1c170f;
   box-shadow: var(--shadow-sm);
 }
 .button.primary::before {
@@ -1349,8 +1572,8 @@ h3 { font-size: 1.3rem; }
   width: 2.45rem;
   height: 2.45rem;
   border-radius: var(--radius-md);
-  background: var(--ink);
-  color: var(--gold-soft);
+  background: #1c170f;
+  color: var(--gold);
   font-weight: 800;
   font-size: .82rem;
   box-shadow: var(--shadow-sm);
@@ -1415,8 +1638,8 @@ h3 { font-size: 1.3rem; }
   align-items: center;
   gap: .75rem;
   padding: 1.25rem 1.4rem;
-  background: linear-gradient(160deg, #241d12 0%, var(--ink) 65%);
-  color: var(--cream);
+  background: linear-gradient(160deg, #241d12 0%, #1c170f 65%);
+  color: #fff7e7;
 }
 .pillar-card-icon {
   display: inline-grid;
@@ -1429,8 +1652,8 @@ h3 { font-size: 1.3rem; }
   border: 1px solid rgba(243, 204, 126, .35);
   font-size: 1.2rem;
 }
-.pillar-card-head h3 { color: var(--cream); margin-bottom: .15rem; font-size: 1.1rem; }
-.pillar-card-head p { margin: 0; color: var(--gold-soft); font-size: .78rem; letter-spacing: .03em; }
+.pillar-card-head h3 { color: #fff7e7; margin-bottom: .15rem; font-size: 1.1rem; }
+.pillar-card-head p { margin: 0; color: #f2e0b3; font-size: .78rem; letter-spacing: .03em; }
 .pillar-card-body { padding: 1.1rem 1.4rem 1.4rem; }
 .pillar-card-body ul {
   margin: 0;
@@ -1467,7 +1690,7 @@ h3 { font-size: 1.3rem; }
   padding: clamp(2.25rem, 5vw, 3rem) clamp(1.5rem, 5vw, 3rem);
   max-width: 68rem;
   border-radius: var(--radius-lg);
-  background: linear-gradient(160deg, #241d12 0%, var(--ink) 65%);
+  background: linear-gradient(160deg, #241d12 0%, #1c170f 65%);
   box-shadow: 0 0 0 1px rgba(184, 138, 45, .4), var(--shadow-xl);
   text-align: center;
 }
@@ -1588,8 +1811,14 @@ h3 { font-size: 1.3rem; }
   grid-template-columns: minmax(0, 1fr) minmax(18rem, 1.4fr);
   gap: 2rem;
   padding: 3rem clamp(1.25rem, 5vw, 5rem);
-  background: var(--ink);
-  color: var(--cream);
+  /* Fixed dark/light literals (the light theme's own --ink/--cream
+     values), not the variables - same reasoning as .brand-mark above:
+     this footer is meant to stay permanently dark with light text in
+     BOTH themes (an intentional "always dark footer" even on the light
+     theme), which inverted into a light footer with dark text once
+     --ink/--cream started swapping roles in dark mode. */
+  background: #1c170f;
+  color: #fff7e7;
   border-top: 1px solid rgba(255, 255, 255, .06);
 }
 .site-footer > div { display: grid; gap: .6rem; }
@@ -1719,7 +1948,7 @@ textarea { resize: vertical; }
   font-weight: 700;
   cursor: pointer;
 }
-.auth-tabs-switch button.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+.auth-tabs-switch button.active { background: #1c170f; color: #fff; border-color: #1c170f; }
 .check-row {
   display: flex;
   align-items: flex-start;
