@@ -653,18 +653,27 @@ main { overflow: hidden; }
 .product-carousel { width: 100%; }
 .product-carousel-track {
   position: relative;
-  height: 23rem;
+  height: 25.5rem;
   isolation: isolate;
+  /* Missing on the first pass: the peeking side cards translate outside
+     the track's own box (that's the whole point of the peek effect), but
+     with nothing clipping them, on a narrow/mobile viewport - where
+     .home-hero-copy goes full-width and there's little to no open hero
+     space around it - the neighbor cards spilled out past where the
+     carousel visually should end instead of reading as a contained
+     slideshow. */
+  overflow: hidden;
+  border-radius: var(--radius-lg);
 }
 .product-carousel-card {
   position: absolute;
   inset: 0 auto auto 0;
-  width: min(24rem, 100%);
+  width: min(28rem, 100%);
   display: grid;
   justify-items: center;
   align-content: start;
-  gap: .55rem;
-  padding: 1.9rem 1.7rem;
+  gap: .6rem;
+  padding: 2.1rem 1.85rem;
   text-align: center;
   text-decoration: none;
   color: var(--ink);
@@ -677,18 +686,18 @@ main { overflow: hidden; }
 }
 .product-carousel-card.is-active { border-color: rgba(184, 138, 45, .4); }
 .product-carousel-logo {
-  width: 5.5rem;
-  height: 5.5rem;
+  width: 6.4rem;
+  height: 6.4rem;
   display: grid;
   place-items: center;
   border-radius: var(--radius-full);
   background: var(--cream-2);
   margin-bottom: .3rem;
 }
-.product-carousel-logo img { width: 3.4rem; height: 3.4rem; object-fit: contain; }
-.product-carousel-card strong { font-size: 1.2rem; }
+.product-carousel-logo img { width: 4rem; height: 4rem; object-fit: contain; }
+.product-carousel-card strong { font-size: 1.4rem; }
 .product-carousel-name {
-  font-size: .78rem;
+  font-size: .82rem;
   font-weight: 800;
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -696,8 +705,8 @@ main { overflow: hidden; }
 }
 .product-carousel-card p {
   margin: .2rem 0 0;
-  font-size: .92rem;
-  line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.55;
   color: var(--ink-soft);
 }
 .product-carousel-controls {
@@ -708,8 +717,8 @@ main { overflow: hidden; }
   margin-top: 1.4rem;
 }
 .product-carousel-controls > button {
-  width: 2.6rem;
-  height: 2.6rem;
+  width: 2.9rem;
+  height: 2.9rem;
   flex-shrink: 0;
   display: grid;
   place-items: center;
@@ -790,10 +799,10 @@ main { overflow: hidden; }
   left: 0;
   display: grid;
   justify-items: center;
-  gap: .4rem;
-  width: 7.6rem;
-  padding: 1.1rem .75rem 1rem;
-  border-radius: 1.25rem;
+  gap: .5rem;
+  width: 10.5rem;
+  padding: 1.5rem 1rem 1.3rem;
+  border-radius: 1.5rem;
   border: 1px solid rgba(184, 138, 45, .28);
   background: rgba(255, 253, 248, .8);
   box-shadow: 0 20px 44px rgba(40, 29, 11, .1);
@@ -812,8 +821,8 @@ main { overflow: hidden; }
   color: var(--ink);
 }
 .orbit-item-logo {
-  width: 3.1rem;
-  height: 3.1rem;
+  width: 4.4rem;
+  height: 4.4rem;
   display: grid;
   place-items: center;
   border-radius: var(--radius-full);
@@ -822,7 +831,7 @@ main { overflow: hidden; }
 }
 .orbit-item-logo img { width: 100%; height: 100%; object-fit: contain; }
 .orbit-item-name {
-  font-size: .85rem;
+  font-size: 1rem;
   font-weight: 800;
   letter-spacing: .01em;
   line-height: 1.15;
@@ -2184,6 +2193,12 @@ textarea { resize: vertical; }
     width: 100%;
     max-width: 44rem;
   }
+  /* Card width is min(28rem, 100%), so on a real phone this is 100% of
+     .home-hero-copy's own narrower mobile width above - each product's
+     description can wrap to more lines here than it does in the wider
+     desktop card, so the track needs a bit more headroom to avoid
+     clipping the last line. */
+  .product-carousel-track { height: 27rem; }
   .home-hero h1 {
     max-width: 100%;
     font-size: clamp(2.15rem, 8vw, 3rem);

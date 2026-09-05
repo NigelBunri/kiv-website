@@ -27,11 +27,19 @@ const DEGREES_PER_MS = 360 / 42000; // one full orbit every 42s
 // point - NARROW_PX matches globals.css's own `.orbit-stage { display:
 // none; }` breakpoint (max-width: 980px), so the ring visibly shrinks
 // away to nothing rather than staying full-size and then vanishing in
-// one abrupt jump at that breakpoint.
-const WIDE_PX = 1400;
+// one abrupt jump at that breakpoint. WIDE_PX is deliberately higher
+// than the hero's own "carousel column stops growing" point (~46vw
+// capping at 48rem, well below 1500px) - at these bigger item/radius
+// values, full size needs to wait for a wide enough viewport that the
+// ring's leftmost swing still clears the product carousel column
+// (checked against .home-hero-copy/.product-carousel-card's own widths
+// in globals.css - roughly 65px of clearance at 1500px, growing fast
+// above that as the carousel's width caps out while the ring's anchor
+// point keeps scaling with viewport width).
+const WIDE_PX = 1500;
 const NARROW_PX = 980;
 const FLOOR_SCALE = 0.22;
-const MAX_RADIUS_REM = 10.5;
+const MAX_RADIUS_REM = 14;
 
 function responsiveScaleForWidth(width: number): number {
   if (width >= WIDE_PX) return 1;
@@ -123,7 +131,7 @@ export function OrbitRing() {
             }}
           >
             <span className="orbit-item-logo">
-              <Image src={item.logo} alt="" width={96} height={96} />
+              <Image src={item.logo} alt="" width={140} height={140} />
             </span>
             <span className="orbit-item-name">{item.name}</span>
           </Link>
