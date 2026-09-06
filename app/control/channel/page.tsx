@@ -52,7 +52,7 @@ export default async function ChannelPage({ searchParams }: { searchParams: Prom
   // No status filter - the channel manager (this user) sees both draft and
   // published content by default; Django only restricts to published for
   // non-managers.
-  const [contentsRes, detailRes, analyticsRes] = await Promise.all([
+  const [contentsRes, detailRes, analyticsRes, impressionsRes] = await Promise.all([
     fetch(`${kisApiBase()}/api/v1/broadcasts/channels/${encodeURIComponent(channel.id)}/contents/`, {
       headers, cache: "no-store", signal: AbortSignal.timeout(15_000),
     }),
@@ -65,12 +65,24 @@ export default async function ChannelPage({ searchParams }: { searchParams: Prom
     fetch(`${kisApiBase()}/api/v1/broadcasts/channels/${encodeURIComponent(channel.id)}/analytics/`, {
       headers, cache: "no-store", signal: AbortSignal.timeout(15_000),
     }),
+    // Per-video impressions/CTR - real data (backed by ChannelAnalyticsDailyRollup,
+    // which normal view-events already populate), unlike the traffic-sources
+    // endpoint next to it in the backend, which nothing currently writes to -
+    // deliberately not fetching that one here, since it would only ever
+    // render an empty section.
+    fetch(`${kisApiBase()}/api/v1/broadcasts/channels/${encodeURIComponent(channel.id)}/analytics/impressions/`, {
+      headers, cache: "no-store", signal: AbortSignal.timeout(15_000),
+    }),
   ]);
   const contentsData = contentsRes.ok ? await contentsRes.json() : {};
   const contents = Array.isArray(contentsData?.results) ? contentsData.results : [];
   const detail: Channel = detailRes.ok ? await detailRes.json() : channel;
   const analyticsData = analyticsRes.ok ? await analyticsRes.json() : {};
   const analyticsSummary: Record<string, number> = analyticsData?.summary || {};
+  const impressionsData = impressionsRes.ok ? await impressionsRes.json() : {};
+  const videoPerformance: Array<{
+    content_id: string; title: string; impressions: number; views: number; ctr_percent: number; avg_watch_time: number;
+  }> = Array.isArray(impressionsData?.by_content) ? impressionsData.by_content : [];
 
   return (
     <>
@@ -91,6 +103,36 @@ export default async function ChannelPage({ searchParams }: { searchParams: Prom
             <div className="control-stat-card"><span>Comments</span><strong>{analyticsSummary.comments ?? 0}</strong></div>
             <div className="control-stat-card"><span>Saves</span><strong>{analyticsSummary.saves ?? 0}</strong></div>
             <div className="control-stat-card"><span>Shares</span><strong>{analyticsSummary.shares ?? 0}</strong></div>
+          </div>
+        </section>
+      ) : null}
+      {videoPerformance.length > 0 ? (
+        <section className="control-section">
+          <h2>Video performance</h2>
+          <p className="control-note">Last 30 days, ranked by impressions.</p>
+          <div className="control-table-wrap">
+            <table className="control-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Impressions</th>
+                  <th>Views</th>
+                  <th>CTR</th>
+                  <th>Avg. watch time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {videoPerformance.map((row) => (
+                  <tr key={row.content_id}>
+                    <td>{row.title || "Untitled"}</td>
+                    <td>{row.impressions}</td>
+                    <td>{row.views}</td>
+                    <td>{row.ctr_percent}%</td>
+                    <td>{formatWatchTime(row.avg_watch_time)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </section>
       ) : null}
