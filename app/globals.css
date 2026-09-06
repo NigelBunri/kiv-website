@@ -3659,6 +3659,10 @@ a.control-list-row:hover { border-color: var(--gold-soft); background: var(--cre
   outline-offset: 1px;
 }
 .control-actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: .5rem; }
+/* Video performance/Traffic breakdown tables can run wider than a narrow
+   viewport (5 numeric columns) - scrolls inside its own box rather than
+   the whole control page gaining a horizontal scrollbar. */
+.control-table-wrap { overflow-x: auto; }
 .control-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: .88rem; }
 .control-table th {
   text-align: left;
