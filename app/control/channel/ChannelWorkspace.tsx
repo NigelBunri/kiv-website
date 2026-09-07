@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PayoutAccountConnectPanel from "@/app/control/PayoutAccountConnectPanel";
 
 type Channel = {
@@ -21,6 +21,14 @@ type Channel = {
   payout_bank_last4?: string;
 };
 
+type Asset = {
+  id: string;
+  asset_type: string;
+  url: string;
+  processing_status: string;
+  duration_seconds?: number;
+};
+
 type Content = {
   id: string;
   title: string;
@@ -29,6 +37,7 @@ type Content = {
   text_plain_preview?: string;
   description_preview?: string;
   visibility?: string;
+  assets?: Asset[];
 };
 
 async function postJson(url: string, body?: unknown) {
@@ -43,6 +52,46 @@ async function patchJson(url: string, body: unknown) {
   const data = await res.json();
   if (!data.success) throw new Error(data.message || "Request failed.");
   return data.data;
+}
+
+async function getJson(url: string) {
+  const res = await fetch(url);
+  const data = await res.json();
+  if (!data.success) throw new Error(data.message || "Request failed.");
+  return data.data;
+}
+
+// XMLHttpRequest, not fetch - fetch's Request body has no upload-progress
+// event; a multi-minute video PUT with no progress indicator beyond a
+// static "Uploading…" text is a bad experience, worth the extra API surface
+// here specifically (see ChannelWorkspace's other uploads, which stay on
+// the simpler fetch+text-status pattern since those uploads are near-
+// instant).
+function xhrPutWithProgress(url: string, headers: Record<string, string> | undefined, file: File, onProgress: (percent: number) => void): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("PUT", url);
+    for (const [key, value] of Object.entries(headers || {})) {
+      xhr.setRequestHeader(key, value);
+    }
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) onProgress(Math.round((event.loaded / event.total) * 100));
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) resolve();
+      else reject(new Error(`Upload failed (status ${xhr.status}).`));
+    };
+    xhr.onerror = () => reject(new Error("Upload failed. Check your connection and try again."));
+    xhr.send(file);
+  });
+}
+
+const VIDEO_ASSET_TYPES = new Set(["video", "short_video"]);
+// Terminal states a video asset can end in - stop polling once reached.
+const TERMINAL_PROCESSING_STATUSES = new Set(["ready", "failed"]);
+
+function primaryVideoAsset(content: Content): Asset | undefined {
+  return content.assets?.find((asset) => VIDEO_ASSET_TYPES.has(asset.asset_type));
 }
 
 export default function ChannelWorkspace({ channel: initialChannel, initialContents }: { channel: Channel; initialContents: Content[] }) {
@@ -79,11 +128,84 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
   const [postFile, setPostFile] = useState<File | null>(null);
   const [creatingPost, setCreatingPost] = useState(false);
   const [postProgress, setPostProgress] = useState("");
+  const [uploadPercent, setUploadPercent] = useState(0);
+  // Content ids with a video asset still queued/transcoding - drives the
+  // polling effect below. A video's create response never has a ready
+  // playback URL; this is what turns "queued" into "ready"/"failed" in the
+  // UI without a page reload.
+  const [processingContentIds, setProcessingContentIds] = useState<string[]>([]);
+
+  async function createVideoPost(file: File) {
+    setPostProgress("Creating post…");
+    let createdContentId: string | null = null;
+    try {
+      const content = await postJson(`/api/control/channel/${channel.id}/contents`, {
+        title: postTitle,
+        text_plain: postText,
+        content_type: "video",
+      });
+      createdContentId = content.id;
+      setContents((prev) => [content, ...prev]);
+
+      setPostProgress("Starting upload…");
+      const initiate = await postJson(`/api/control/channel/uploads/initiate`, {
+        filename: file.name,
+        content_type: file.type,
+        size_bytes: file.size,
+      });
+
+      setPostProgress("Uploading…");
+      await xhrPutWithProgress(initiate.uploadUrl, initiate.headers, file, setUploadPercent);
+
+      setPostProgress("Finalizing…");
+      // Confirm runs Django's own size/content-type/existence verification
+      // against the real S3 object - not skippable even though the
+      // client already knows storageKey from initiate's response.
+      await postJson(`/api/control/channel/uploads/${initiate.uploadId}/confirm`, {});
+
+      setPostProgress("Attaching…");
+      // This is the ONE call that actually queues a kisvideo transcode
+      // (apps.broadcasts.views.ChannelContentAssetUploadView, behind
+      // KIS_VIDEO_SERVICE_ENABLED server-side) - storageKey comes from
+      // initiate's response, never confirm's (confirm intentionally never
+      // exposes the raw object key to the client).
+      const asset = await postJson(`/api/control/channel/${channel.id}/contents/${content.id}/assets`, {
+        asset_type: "video",
+        storage_path: initiate.storageKey,
+        mime_type: file.type,
+      });
+
+      setContents((prev) => prev.map((c) => (c.id === content.id ? { ...c, assets: [asset] } : c)));
+      if (!TERMINAL_PROCESSING_STATUSES.has(asset.processing_status)) {
+        setProcessingContentIds((prev) => [...prev, content.id]);
+      }
+      setMessage({ kind: "success", text: "Video uploaded — processing now. This can take a few minutes; the post will update automatically." });
+      setPostTitle(""); setPostText(""); setPostFile(null);
+    } catch (error: unknown) {
+      // Best-effort cleanup: don't leave an empty draft behind if the
+      // upload itself failed partway through. Failure to delete is
+      // swallowed - the user can always delete it manually from the list -
+      // so it never masks the real error being surfaced below.
+      if (createdContentId) {
+        fetch(`/api/control/channel/contents/${createdContentId}`, { method: "DELETE" }).catch(() => {});
+        setContents((prev) => prev.filter((c) => c.id !== createdContentId));
+      }
+      setMessage({ kind: "error", text: error instanceof Error ? error.message : "Unable to upload video." });
+    } finally {
+      setPostProgress("");
+      setUploadPercent(0);
+    }
+  }
+
   async function createPost(event: React.FormEvent) {
     event.preventDefault();
     setCreatingPost(true);
     setMessage(null);
     try {
+      if (postFile && postFile.type.startsWith("video/")) {
+        await createVideoPost(postFile);
+        return;
+      }
       const body: Record<string, unknown> = { title: postTitle, text_plain: postText };
       if (postFile) {
         setPostProgress("Uploading…");
@@ -108,6 +230,35 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
       setPostProgress("");
     }
   }
+
+  // Polls each in-flight video's content detail until its asset reaches a
+  // terminal processing_status. Re-created whenever the tracked id set
+  // changes; cleans itself up on unmount/navigation so nothing leaks.
+  useEffect(() => {
+    if (processingContentIds.length === 0) return;
+    let cancelled = false;
+    const interval = setInterval(async () => {
+      for (const contentId of processingContentIds) {
+        try {
+          const updated = await getJson(`/api/control/channel/contents/${contentId}`);
+          if (cancelled) return;
+          setContents((prev) => prev.map((c) => (c.id === contentId ? { ...c, ...updated } : c)));
+          const asset = primaryVideoAsset(updated);
+          if (asset && TERMINAL_PROCESSING_STATUSES.has(asset.processing_status)) {
+            setProcessingContentIds((prev) => prev.filter((id) => id !== contentId));
+          }
+        } catch {
+          // Transient network/API error - leave this id in the polling
+          // set, the next tick retries. Never silently stop watching a
+          // video just because one poll failed.
+        }
+      }
+    }, 5000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [processingContentIds]);
 
   // ---- Edit ----
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -170,6 +321,7 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
         if (!data.success) throw new Error(data.message || "Unable to delete post.");
       }
       setContents((prev) => prev.filter((c) => c.id !== id));
+      setProcessingContentIds((prev) => prev.filter((pid) => pid !== id));
     } catch (error: unknown) {
       setMessage({ kind: "error", text: error instanceof Error ? error.message : "Unable to delete post." });
     } finally {
@@ -229,8 +381,22 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
           <label>Title<input value={postTitle} onChange={(e) => setPostTitle(e.target.value)} required /></label>
           <label>Text<textarea rows={4} value={postText} onChange={(e) => setPostText(e.target.value)} /></label>
           <label>Image or video (optional)<input type="file" accept="image/*,video/*" onChange={(e) => setPostFile(e.target.files?.[0] || null)} /></label>
+          {postFile && postFile.type.startsWith("video/") && creatingPost ? (
+            <div className="control-note" role="status">
+              <div>{postProgress || "Working…"}</div>
+              {postProgress === "Uploading…" ? (
+                <div style={{ marginTop: "0.35rem", height: "6px", borderRadius: "3px", background: "rgba(0,0,0,0.1)", overflow: "hidden" }}>
+                  <div
+                    style={{ width: `${uploadPercent}%`, height: "100%", background: "var(--gold, #caa24a)", transition: "width 0.2s ease" }}
+                  />
+                </div>
+              ) : null}
+            </div>
+          ) : null}
           <div className="control-actions">
-            <button type="submit" className="button primary" disabled={creatingPost || !postTitle.trim()}>{creatingPost ? (postProgress || "Creating…") : "Create draft"}</button>
+            <button type="submit" className="button primary" disabled={creatingPost || !postTitle.trim()}>
+              {creatingPost ? (postFile?.type.startsWith("video/") ? `${postProgress || "Working…"}${postProgress === "Uploading…" ? ` ${uploadPercent}%` : ""}` : (postProgress || "Creating…")) : "Create draft"}
+            </button>
           </div>
         </form>
       </section>
@@ -241,37 +407,60 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
           <div className="control-empty">No posts yet.</div>
         ) : (
           <div className="control-list">
-            {contents.map((content) => (
-              <div key={content.id} className="control-list-row" style={{ flexDirection: "column", alignItems: "stretch" }}>
-                {editingId === content.id ? (
-                  <div className="control-form">
-                    <label>Title<input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} /></label>
-                    <label>Text<textarea rows={3} value={editText} onChange={(e) => setEditText(e.target.value)} /></label>
-                    <div className="control-actions">
-                      <button type="button" className="button primary" onClick={() => saveEdit(content.id)} disabled={savingEdit}>{savingEdit ? "Saving…" : "Save"}</button>
-                      <button type="button" className="button" onClick={cancelEdit} disabled={savingEdit}>Cancel</button>
+            {contents.map((content) => {
+              const videoAsset = primaryVideoAsset(content);
+              const isProcessing = videoAsset && !TERMINAL_PROCESSING_STATUSES.has(videoAsset.processing_status);
+              const isFailed = videoAsset?.processing_status === "failed";
+              return (
+                <div key={content.id} className="control-list-row" style={{ flexDirection: "column", alignItems: "stretch" }}>
+                  {editingId === content.id ? (
+                    <div className="control-form">
+                      <label>Title<input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} /></label>
+                      <label>Text<textarea rows={3} value={editText} onChange={(e) => setEditText(e.target.value)} /></label>
+                      <div className="control-actions">
+                        <button type="button" className="button primary" onClick={() => saveEdit(content.id)} disabled={savingEdit}>{savingEdit ? "Saving…" : "Save"}</button>
+                        <button type="button" className="button" onClick={cancelEdit} disabled={savingEdit}>Cancel</button>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <div>
-                      <div className="control-list-row-title">{content.title}</div>
-                      <div className="control-list-row-meta">{content.text_plain_preview || content.description_preview || content.content_type}</div>
+                  ) : (
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div>
+                        <div className="control-list-row-title">{content.title}</div>
+                        <div className="control-list-row-meta">{content.text_plain_preview || content.description_preview || content.content_type}</div>
+                        {isProcessing ? (
+                          <div className="control-note" role="status" style={{ marginTop: "0.25rem" }}>
+                            Processing your video… ({videoAsset.processing_status}) - this can take a few minutes and will update automatically.
+                          </div>
+                        ) : null}
+                        {isFailed ? (
+                          <div className="control-error" style={{ marginTop: "0.25rem" }}>
+                            Video processing failed. Delete this post and try uploading again.
+                          </div>
+                        ) : null}
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        <span className={`control-badge control-badge--${content.status === "published" ? "active" : "pending"}`}>{content.status}</span>
+                        <button type="button" className="button" onClick={() => startEdit(content)} disabled={busyId === content.id}>Edit</button>
+                        {content.status === "published" ? (
+                          <button type="button" className="button" onClick={() => unpublish(content.id)} disabled={busyId === content.id}>Unpublish</button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="button primary"
+                            onClick={() => publish(content.id)}
+                            disabled={busyId === content.id || Boolean(isProcessing) || isFailed}
+                            title={isProcessing ? "Wait for video processing to finish before publishing." : isFailed ? "This video failed to process." : undefined}
+                          >
+                            Publish
+                          </button>
+                        )}
+                        <button type="button" className="button" onClick={() => removeContent(content.id)} disabled={busyId === content.id}>Delete</button>
+                      </div>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                      <span className={`control-badge control-badge--${content.status === "published" ? "active" : "pending"}`}>{content.status}</span>
-                      <button type="button" className="button" onClick={() => startEdit(content)} disabled={busyId === content.id}>Edit</button>
-                      {content.status === "published" ? (
-                        <button type="button" className="button" onClick={() => unpublish(content.id)} disabled={busyId === content.id}>Unpublish</button>
-                      ) : (
-                        <button type="button" className="button primary" onClick={() => publish(content.id)} disabled={busyId === content.id}>Publish</button>
-                      )}
-                      <button type="button" className="button" onClick={() => removeContent(content.id)} disabled={busyId === content.id}>Delete</button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </section>
