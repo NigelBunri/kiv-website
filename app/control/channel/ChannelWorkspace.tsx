@@ -86,6 +86,26 @@ function xhrPutWithProgress(url: string, headers: Record<string, string> | undef
   });
 }
 
+// Best-effort, but "best effort" was previously a single unchecked fetch:
+// if the Worker-to-Django hop hit one transient network error, the DELETE
+// never actually happened server-side, yet the row still vanished from
+// local UI state - so the empty draft silently reappeared as a permanent
+// zombie on the next page load (BroadcastChannelContentListCreateView.get
+// only filters is_deleted=False, nothing time- or status-based). Two
+// attempts with a short gap covers a single transient edge hiccup without
+// turning a best-effort cleanup into a queue/retry system.
+async function deleteContentBestEffort(contentId: string, attempts = 2): Promise<void> {
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      const res = await fetch(`/api/control/channel/contents/${contentId}`, { method: "DELETE" });
+      if (res.ok) return;
+    } catch {
+      // fall through to retry/give up below
+    }
+    if (attempt < attempts) await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+}
+
 const VIDEO_ASSET_TYPES = new Set(["video", "short_video"]);
 // Terminal states a video asset can end in - stop polling once reached.
 const TERMINAL_PROCESSING_STATUSES = new Set(["ready", "failed"]);
@@ -187,7 +207,7 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
       // swallowed - the user can always delete it manually from the list -
       // so it never masks the real error being surfaced below.
       if (createdContentId) {
-        fetch(`/api/control/channel/contents/${createdContentId}`, { method: "DELETE" }).catch(() => {});
+        deleteContentBestEffort(createdContentId);
         setContents((prev) => prev.filter((c) => c.id !== createdContentId));
       }
       setMessage({ kind: "error", text: error instanceof Error ? error.message : "Unable to upload video." });

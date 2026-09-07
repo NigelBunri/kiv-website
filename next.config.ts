@@ -69,7 +69,12 @@ const csp = [
   // computed at render time) - 'unsafe-inline' here is required for the
   // same reason it's required for style-src.
   "style-src-attr 'self' 'unsafe-inline'",
-  "connect-src 'self' https://cloudflareinsights.com",
+  // Creator-studio video uploads PUT directly from the browser to a
+  // presigned S3 URL (kisvideo pipeline) - without this, Chrome blocks the
+  // connection at the CSP layer before the request is ever sent (no network
+  // entry, no CORS preflight - just a connect-src violation in the console),
+  // which looked identical to a silent upload failure.
+  "connect-src 'self' https://cloudflareinsights.com https://s3.eu-west-2.amazonaws.com",
   "worker-src 'self'",
   "manifest-src 'self'",
   // Superseded by the more specific frame-src/worker-src above in browsers
