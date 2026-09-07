@@ -21,18 +21,7 @@ export async function proxyToDjango(
   }
   const { session, refreshed } = auth;
   const method = options.method || (request.method as "GET" | "POST" | "PATCH" | "PUT" | "DELETE");
-  // DELETE used to be excluded here like GET (no body needed for either by
-  // REST convention), but empirically every DELETE through this proxy came
-  // back a 502 "Unable to reach the server" - 100% reproducible, while
-  // PATCH/POST/PUT on the exact same Django host never did. The Django-side
-  // operation was actually succeeding every time (confirmed: retrying the
-  // same DELETE came back 404, i.e. already gone) - only the response back
-  // through this Worker->origin hop was failing, and forwarding a body
-  // (even an empty one) is the one thing that reliably made it stop.
-  // Consistent with a bodyless-DELETE quirk somewhere in the Worker fetch /
-  // origin proxy chain, not a Django bug - Django's DELETE handlers never
-  // read request.data, so sending "{}" instead of no body is inert there.
-  const shouldForwardBody = options.forwardBody ?? method !== "GET";
+  const shouldForwardBody = options.forwardBody ?? (method !== "GET" && method !== "DELETE");
   let body: string | undefined;
   if (shouldForwardBody) {
     body = JSON.stringify(await request.json().catch(() => ({})));
@@ -47,11 +36,23 @@ export async function proxyToDjango(
       signal: AbortSignal.timeout(15_000),
     });
     const data = await upstream.json().catch(() => ({}));
+    // upstream.status can be 204 (every DELETE handler here returns
+    // HTTP_204_NO_CONTENT) - the Fetch spec forbids constructing a Response
+    // with a body for 101/204/205/304, so passing that status straight into
+    // NextResponse.json() throws synchronously inside this try block and
+    // was landing in the catch below as a misleading 502 "unable to reach
+    // the server", even though Django's delete had already succeeded.
+    // Confirmed live via wrangler tail: "TypeError: Response with null body
+    // status (101, 204, 205, or 304) cannot have a body." Normalizing to
+    // 200 is safe - every caller here only checks response.ok/data.success,
+    // never the exact numeric status.
+    const NULL_BODY_STATUSES = new Set([101, 204, 205, 304]);
+    const responseStatus = NULL_BODY_STATUSES.has(upstream.status) ? 200 : upstream.status;
     const response = NextResponse.json(
       upstream.ok
         ? { success: true, data }
         : { success: false, message: data?.detail || firstError(data) || "Something went wrong.", errors: data },
-      { status: upstream.status },
+      { status: responseStatus },
     );
     if (refreshed) setSessionCookie(response, session);
     return response;
