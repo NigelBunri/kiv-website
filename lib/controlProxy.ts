@@ -21,7 +21,18 @@ export async function proxyToDjango(
   }
   const { session, refreshed } = auth;
   const method = options.method || (request.method as "GET" | "POST" | "PATCH" | "PUT" | "DELETE");
-  const shouldForwardBody = options.forwardBody ?? (method !== "GET" && method !== "DELETE");
+  // DELETE used to be excluded here like GET (no body needed for either by
+  // REST convention), but empirically every DELETE through this proxy came
+  // back a 502 "Unable to reach the server" - 100% reproducible, while
+  // PATCH/POST/PUT on the exact same Django host never did. The Django-side
+  // operation was actually succeeding every time (confirmed: retrying the
+  // same DELETE came back 404, i.e. already gone) - only the response back
+  // through this Worker->origin hop was failing, and forwarding a body
+  // (even an empty one) is the one thing that reliably made it stop.
+  // Consistent with a bodyless-DELETE quirk somewhere in the Worker fetch /
+  // origin proxy chain, not a Django bug - Django's DELETE handlers never
+  // read request.data, so sending "{}" instead of no body is inert there.
+  const shouldForwardBody = options.forwardBody ?? method !== "GET";
   let body: string | undefined;
   if (shouldForwardBody) {
     body = JSON.stringify(await request.json().catch(() => ({})));

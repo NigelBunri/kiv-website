@@ -86,14 +86,14 @@ function xhrPutWithProgress(url: string, headers: Record<string, string> | undef
   });
 }
 
-// Best-effort, but "best effort" was previously a single unchecked fetch:
-// if the Worker-to-Django hop hit one transient network error, the DELETE
-// never actually happened server-side, yet the row still vanished from
-// local UI state - so the empty draft silently reappeared as a permanent
-// zombie on the next page load (BroadcastChannelContentListCreateView.get
-// only filters is_deleted=False, nothing time- or status-based). Two
-// attempts with a short gap covers a single transient edge hiccup without
-// turning a best-effort cleanup into a queue/retry system.
+// Best-effort, but "best effort" was previously a single unchecked fetch.
+// The proxy's bodyless-DELETE bug (fixed in lib/controlProxy.ts) is the
+// known cause of a false-failure 502 here, but this retry is kept as a
+// safety net for any other transient Worker->Django hiccup: without it, a
+// real failure would leave the draft un-deleted server-side while it still
+// vanishes from local UI state, silently reappearing as a zombie on the
+// next page load (BroadcastChannelContentListCreateView.get only filters
+// is_deleted=False, nothing time- or status-based).
 async function deleteContentBestEffort(contentId: string, attempts = 2): Promise<void> {
   for (let attempt = 1; attempt <= attempts; attempt++) {
     try {

@@ -48,7 +48,14 @@ export async function DELETE(_request: NextRequest, { params }: { params: Promis
   try {
     const upstream = await fetch(`${kisApiBase()}/api/v1/commerce/cart-items/${encodeURIComponent(itemId)}/`, {
       method: "DELETE",
-      headers: authHeaders(session),
+      // A bodyless DELETE through this Worker->origin hop reliably came back
+      // a false-failure 502 even though Django's delete had already
+      // succeeded (see lib/controlProxy.ts for the full isolation - PATCH/
+      // POST on the same host never failed, only bodyless DELETE did).
+      // Sending an inert empty body is what fixes it; Django's delete view
+      // never reads request.data here regardless.
+      headers: { "Content-Type": "application/json", ...authHeaders(session) },
+      body: "{}",
       cache: "no-store",
       signal: AbortSignal.timeout(15_000),
     });
