@@ -312,7 +312,12 @@ export default function ChannelWorkspace({ channel: initialChannel, initialConte
   async function publish(id: string) {
     setBusyId(id);
     try {
-      const data = await postJson(`/api/control/channel/contents/${id}/publish`);
+      // Explicit, not relying on Django's own visibility fallback: content
+      // is always created private (a safe draft default), and there's no
+      // visibility picker in this UI yet - "Publish" is the one action that
+      // should make content actually visible, so it says so outright rather
+      // than depending on a same-request-body-missing default to get there.
+      const data = await postJson(`/api/control/channel/contents/${id}/publish`, { visibility: "public" });
       setContents((prev) => prev.map((c) => (c.id === id ? { ...c, status: data.status || "published" } : c)));
     } catch (error: unknown) {
       setMessage({ kind: "error", text: error instanceof Error ? error.message : "Unable to publish." });
