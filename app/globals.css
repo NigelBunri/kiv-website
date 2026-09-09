@@ -2126,6 +2126,33 @@ textarea { resize: vertical; }
   border: 1px solid var(--line-soft);
   background: rgba(255, 247, 231, .4);
 }
+.join-link-page {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.join-link-card {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  padding: 2rem 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line-soft);
+  background: rgba(255, 247, 231, .4);
+  text-align: center;
+}
+.join-link-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--line-soft);
+}
+.join-link-fallback-note {
+  font-size: .85rem;
+  color: var(--text-muted, #6b6b6b);
+  margin: 0;
+}
 .not-found {
   min-height: 70vh;
   display: grid;
