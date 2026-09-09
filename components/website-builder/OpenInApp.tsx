@@ -38,7 +38,25 @@ function detectPlatform(): Platform {
 // a store listing (once KIS ships and NEXT_PUBLIC_KIS_GOOGLE_PLAY_URL /
 // NEXT_PUBLIC_KIS_APP_STORE_URL are configured) or /download in the
 // meantime, rather than a dead store link.
-export function OpenInApp({ deepLink, label = "Open in the KIS app" }: { deepLink: string; label?: string }) {
+export function OpenInApp({
+  deepLink,
+  label = "Open in the KIS app",
+  attributionCode,
+}: {
+  deepLink: string;
+  label?: string;
+  // Referral install attribution: when the app isn't already installed,
+  // the store fallback below loses the deep-link's token entirely (no
+  // Universal Links/App Links pass through an install). Writing the
+  // referral code to the clipboard right before that fallback lets the
+  // freshly-installed app recover it on first launch - the "existing
+  // clipboard/manual-code fallback" the deep-links spec calls for, using
+  // @react-native-clipboard/clipboard's read side on the app end
+  // (src/screens/ReferralCodePrimingScreen or equivalent onboarding
+  // check). Only ever a short, opaque referral code - never any private
+  // data - so nothing sensitive sits in a shared clipboard.
+  attributionCode?: string;
+}) {
   const [platform, setPlatform] = useState<Platform>("desktop");
 
   useEffect(() => {
@@ -51,6 +69,20 @@ export function OpenInApp({ deepLink, label = "Open in the KIS app" }: { deepLin
   const storeUrl = platform === "ios" ? kis?.availability?.appStoreUrl : kis?.availability?.googlePlayUrl;
   const storeReady = platform === "ios" ? kis?.availability?.ios : kis?.availability?.android;
 
+  async function goToStoreFallback(fallbackUrl: string) {
+    if (attributionCode && navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(attributionCode);
+      } catch {
+        // Clipboard access can be denied (permissions, insecure context,
+        // user gesture requirements on some browsers) - the store
+        // redirect must still happen either way, this is a best-effort
+        // attribution aid, not a required step.
+      }
+    }
+    window.location.href = fallbackUrl;
+  }
+
   function handleClick() {
     const scheme = toCustomScheme(deepLink);
     if (!scheme) return;
@@ -62,7 +94,7 @@ export function OpenInApp({ deepLink, label = "Open in the KIS app" }: { deepLin
       // the app - don't fire the fallback navigation on top of that.
       if (document.hidden) return;
       if (Date.now() - openedAt < 2500) {
-        window.location.href = fallbackUrl;
+        void goToStoreFallback(fallbackUrl);
       }
     }, 1800);
   }

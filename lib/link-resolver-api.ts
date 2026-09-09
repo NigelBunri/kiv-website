@@ -20,9 +20,12 @@ export type LinkResolveResult = {
   description?: string;
   avatar_url?: string | null;
   detail?: string;
+  referral_code?: string;
 };
 
-const SUPPORTED_LINK_TYPES = new Set(["call", "broadcast-call", "group", "community", "partner", "contact"]);
+const SUPPORTED_LINK_TYPES = new Set([
+  "call", "broadcast-call", "group", "community", "partner", "contact", "referral",
+]);
 
 export function isSupportedLinkType(linkType: string): boolean {
   return SUPPORTED_LINK_TYPES.has(linkType);

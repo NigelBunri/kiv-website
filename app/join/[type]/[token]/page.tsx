@@ -25,11 +25,15 @@ const TYPE_LABELS: Record<string, string> = {
   community: "community",
   partner: "organization",
   contact: "person",
+  referral: "invite",
 };
 
 // A contact link's whole point is starting a conversation, not "joining"
 // anything - every other link type reads correctly as "Join X", but
 // "Join John Smith" doesn't, so this is the one type with its own verb.
+// A referral link is an invitation from a specific person, not a request
+// to join a specific thing, so it gets its own copy entirely (handled
+// directly in the page body below rather than forced through this verb).
 function actionVerb(type: string): "Join" | "Message" {
   return type === "contact" ? "Message" : "Join";
 }
@@ -49,11 +53,24 @@ export async function generateMetadata({ params }: { params: Promise<Params> }) 
       robots: { index: false, follow: false },
     });
   }
-  const verb = actionVerb(type);
-  const title = result.name ? `${verb} ${result.name} on KIS` : `${verb} this ${label} on KIS`;
+  const title =
+    type === "referral"
+      ? result.name
+        ? `${result.name} invited you to KIS`
+        : "You've been invited to KIS"
+      : actionVerb(type) === "Join"
+        ? result.name
+          ? `Join ${result.name} on KIS`
+          : `Join this ${label} on KIS`
+        : result.name
+          ? `Message ${result.name} on KIS`
+          : `Message this ${label} on KIS`;
   return pageMetadata({
     title,
-    description: result.description || `Open KIS to join this ${label}.`,
+    description:
+      type === "referral"
+        ? "Get the KIS app and connect with your community."
+        : result.description || `Open KIS to join this ${label}.`,
     path: `/join/${type}/${token}`,
     image: result.avatar_url ? { url: result.avatar_url, width: 1200, height: 630, alt: title } : undefined,
     // Invite links are per-recipient/ephemeral, not evergreen public
@@ -81,6 +98,7 @@ export default async function JoinLinkPage({ params }: { params: Promise<Params>
     notFound();
   }
   const verb = actionVerb(type);
+  const isReferral = type === "referral";
 
   return (
     <SiteShell>
@@ -88,18 +106,41 @@ export default async function JoinLinkPage({ params }: { params: Promise<Params>
       <div className="join-link-page">
         {result.status === "ok" ? (
           <Section
-            title={result.name ? `${verb} ${result.name}` : `${verb} this ${label}`}
-            body={result.description || `Open KIS to ${verb.toLowerCase()} this ${label}.`}
+            title={
+              isReferral
+                ? result.name
+                  ? `${result.name} invited you to KIS`
+                  : "You've been invited to KIS"
+                : result.name
+                  ? `${verb} ${result.name}`
+                  : `${verb} this ${label}`
+            }
+            body={
+              isReferral
+                ? "Get the app to connect with your community on KIS."
+                : result.description || `Open KIS to ${verb.toLowerCase()} this ${label}.`
+            }
           >
             <div className="join-link-card">
               {result.avatar_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={result.avatar_url} alt="" className="join-link-avatar" />
               ) : null}
-              <OpenInApp deepLink={deepLink} label={`Open in KIS to ${verb.toLowerCase()}`} />
-              <p className="join-link-fallback-note">
-                Don&apos;t have KIS yet? Opening this link will take you to get the app.
-              </p>
+              <OpenInApp
+                deepLink={deepLink}
+                label={isReferral ? "Get the KIS app" : `Open in KIS to ${verb.toLowerCase()}`}
+                attributionCode={isReferral ? result.referral_code : undefined}
+              />
+              {isReferral ? (
+                <p className="join-link-fallback-note">
+                  Already have KIS? Opening this link takes you straight into the app. New here? We'll take
+                  you to get the app — your invite code carries over automatically.
+                </p>
+              ) : (
+                <p className="join-link-fallback-note">
+                  Don&apos;t have KIS yet? Opening this link will take you to get the app.
+                </p>
+              )}
             </div>
           </Section>
         ) : (
