@@ -22,7 +22,7 @@ export type LinkResolveResult = {
   detail?: string;
 };
 
-const SUPPORTED_LINK_TYPES = new Set(["call", "broadcast-call", "group", "community", "partner"]);
+const SUPPORTED_LINK_TYPES = new Set(["call", "broadcast-call", "group", "community", "partner", "contact"]);
 
 export function isSupportedLinkType(linkType: string): boolean {
   return SUPPORTED_LINK_TYPES.has(linkType);

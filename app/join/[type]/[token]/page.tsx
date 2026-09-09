@@ -24,7 +24,15 @@ const TYPE_LABELS: Record<string, string> = {
   group: "group",
   community: "community",
   partner: "organization",
+  contact: "person",
 };
+
+// A contact link's whole point is starting a conversation, not "joining"
+// anything - every other link type reads correctly as "Join X", but
+// "Join John Smith" doesn't, so this is the one type with its own verb.
+function actionVerb(type: string): "Join" | "Message" {
+  return type === "contact" ? "Message" : "Join";
+}
 
 export async function generateMetadata({ params }: { params: Promise<Params> }) {
   const { type, token } = await params;
@@ -41,7 +49,8 @@ export async function generateMetadata({ params }: { params: Promise<Params> }) 
       robots: { index: false, follow: false },
     });
   }
-  const title = result.name ? `Join ${result.name} on KIS` : `Join this ${label} on KIS`;
+  const verb = actionVerb(type);
+  const title = result.name ? `${verb} ${result.name} on KIS` : `${verb} this ${label} on KIS`;
   return pageMetadata({
     title,
     description: result.description || `Open KIS to join this ${label}.`,
@@ -71,6 +80,7 @@ export default async function JoinLinkPage({ params }: { params: Promise<Params>
   if (result.status === "invalid") {
     notFound();
   }
+  const verb = actionVerb(type);
 
   return (
     <SiteShell>
@@ -78,15 +88,15 @@ export default async function JoinLinkPage({ params }: { params: Promise<Params>
       <div className="join-link-page">
         {result.status === "ok" ? (
           <Section
-            title={result.name ? `Join ${result.name}` : `Join this ${label}`}
-            body={result.description || `Open KIS to join this ${label}.`}
+            title={result.name ? `${verb} ${result.name}` : `${verb} this ${label}`}
+            body={result.description || `Open KIS to ${verb.toLowerCase()} this ${label}.`}
           >
             <div className="join-link-card">
               {result.avatar_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={result.avatar_url} alt="" className="join-link-avatar" />
               ) : null}
-              <OpenInApp deepLink={deepLink} label={`Open in KIS to join`} />
+              <OpenInApp deepLink={deepLink} label={`Open in KIS to ${verb.toLowerCase()}`} />
               <p className="join-link-fallback-note">
                 Don&apos;t have KIS yet? Opening this link will take you to get the app.
               </p>
