@@ -1,5 +1,6 @@
 import { authHeaders, kisApiBase } from "@/lib/session";
 import { fetchControlProfile } from "@/lib/controlAuth";
+import WipeAllDevicesButton from "./WipeAllDevicesButton";
 
 type Widget = { value: number | string; label: string; aux?: Record<string, number> };
 type DashboardPayload = {
@@ -18,6 +19,7 @@ export default async function AdminOverviewPage() {
 
   const res = await fetch(`${kisApiBase()}/control/admin/dashboard/overview/`, { headers, cache: "no-store", signal: AbortSignal.timeout(20_000) });
   const payload: DashboardPayload | null = res.ok ? await res.json() : null;
+  const { profile } = result;
 
   return (
     <>
@@ -46,6 +48,8 @@ export default async function AdminOverviewPage() {
           </pre>
         </section>
       ) : null}
+
+      {profile.isSuperuser ? <WipeAllDevicesButton /> : null}
     </>
   );
 }

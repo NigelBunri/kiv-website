@@ -61,6 +61,19 @@ export default function UserActions({ userId, status, tier }: { userId: string; 
           Change tier
         </button>
       </div>
+      <div className="control-actions" style={{ marginTop: "1rem" }}>
+        <button
+          type="button"
+          className="button secondary"
+          disabled={busy}
+          onClick={() => {
+            if (!window.confirm("Delete every registered device for this account? The user will be signed out everywhere and treated as logging in for the first time on their next login. This cannot be undone.")) return;
+            runAction(`/api/control/admin/users/${userId}/wipe-devices`, { reason: "admin_console_reset" });
+          }}
+        >
+          Reset devices
+        </button>
+      </div>
       {message ? <p className={message.kind === "error" ? "control-error" : "control-success"}>{message.text}</p> : null}
     </section>
   );
