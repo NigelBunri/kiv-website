@@ -5,12 +5,22 @@ import { useRouter } from "next/navigation";
 
 const TIER_OPTIONS = ["Free", "Pro", "Business", "Business Pro", "Partner", "Partner Pro"];
 
-export default function UserActions({ userId, status, tier }: { userId: string; status: string; tier: string }) {
+export default function UserActions({
+  userId, status, tier, isActive, isDeleted,
+}: {
+  userId: string; status: string; tier: string; isActive: boolean; isDeleted: boolean;
+}) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [selectedTier, setSelectedTier] = useState(tier);
   const [message, setMessage] = useState<{ kind: "error" | "success"; text: string } | null>(null);
   const isBanned = status === "banned" || status === "suspended";
+  const isBlocked = status === "blocked";
+  // Deletion doesn't change `status` (schedule_account_deletion only flips
+  // is_active/is_deleted) — needs its own condition rather than folding
+  // into isBanned/isBlocked, or a scheduled-for-deletion account would show
+  // as if nothing were wrong with it.
+  const needsRestore = isBanned || isBlocked || isDeleted || !isActive;
 
   async function runAction(path: string, body?: Record<string, unknown>) {
     setBusy(true);
@@ -36,14 +46,46 @@ export default function UserActions({ userId, status, tier }: { userId: string; 
     <section className="control-section">
       <h2>Actions</h2>
       <div className="control-actions">
-        {isBanned ? (
-          <button type="button" className="button primary" disabled={busy} onClick={() => runAction(`/api/control/admin/users/${userId}/unban`)}>
-            Unban
+        {needsRestore ? (
+          <button
+            type="button"
+            className="button primary"
+            disabled={busy}
+            onClick={() => runAction(`/api/control/admin/users/${userId}/restore`)}
+          >
+            Restore
           </button>
         ) : (
-          <button type="button" className="button secondary" disabled={busy} onClick={() => runAction(`/api/control/admin/users/${userId}/ban`, { permanent: false })}>
-            Suspend
-          </button>
+          <>
+            <button type="button" className="button secondary" disabled={busy} onClick={() => runAction(`/api/control/admin/users/${userId}/ban`, { permanent: false })}>
+              Suspend
+            </button>
+            <button type="button" className="button secondary" disabled={busy} onClick={() => runAction(`/api/control/admin/users/${userId}/ban`, { permanent: true })}>
+              Ban
+            </button>
+            <button
+              type="button"
+              className="button secondary"
+              disabled={busy}
+              onClick={() => {
+                if (!window.confirm("Block this account? They will be signed out everywhere and unable to sign back in until restored.")) return;
+                runAction(`/api/control/admin/users/${userId}/block`, { reason: "admin_console" });
+              }}
+            >
+              Block
+            </button>
+            <button
+              type="button"
+              className="button secondary"
+              disabled={busy}
+              onClick={() => {
+                if (!window.confirm("Delete this account? It will be deactivated immediately and permanently deleted after the grace period unless restored before then.")) return;
+                runAction(`/api/control/admin/users/${userId}/delete`, { reason: "admin_console" });
+              }}
+            >
+              Delete
+            </button>
+          </>
         )}
       </div>
       <div className="control-actions" style={{ marginTop: "1rem" }}>

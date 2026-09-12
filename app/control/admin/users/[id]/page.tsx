@@ -11,6 +11,8 @@ type AdminUser = {
   phone: string;
   tier: string;
   status: string;
+  is_active: boolean;
+  is_deleted: boolean;
   country: string;
   is_staff: boolean;
   is_superuser: boolean;
@@ -49,7 +51,7 @@ export default async function AdminUserDetailPage({ params }: { params: Promise<
         </div>
       </section>
 
-      <UserActions userId={user.id} status={user.status} tier={user.tier} />
+      <UserActions userId={user.id} status={user.status} tier={user.tier} isActive={user.is_active} isDeleted={user.is_deleted} />
     </>
   );
 }

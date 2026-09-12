@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { RevealableMedia } from "../RevealableMedia";
+import { ModerationActions, type ModerationInfo } from "../ModerationActions";
 
 type MediaSafetyScanSummary = {
   id: string;
@@ -12,6 +13,10 @@ type MediaSafetyScanSummary = {
   score: number | null;
   context: string;
   has_media: boolean;
+  target_type: string | null;
+  target_id: string | null;
+  moderatable: boolean;
+  moderation: ModerationInfo;
 };
 
 type Flag = {
@@ -65,7 +70,8 @@ export default function ModerationQueueTable({ flags }: { flags: Flag[] }) {
             <th>Severity</th>
             <th>Reason</th>
             <th>Content</th>
-            <th>Action</th>
+            <th>Human moderation</th>
+            <th>Flag action</th>
           </tr>
         </thead>
         <tbody>
@@ -85,6 +91,17 @@ export default function ModerationQueueTable({ flags }: { flags: Flag[] }) {
               <td>
                 {flag.media_safety_scan?.has_media ? (
                   <RevealableMedia scanId={flag.media_safety_scan.id} mimeType={flag.media_safety_scan.mime_type} />
+                ) : (
+                  <span className="control-note">—</span>
+                )}
+              </td>
+              <td>
+                {flag.media_safety_scan?.moderatable && flag.media_safety_scan.target_type && flag.media_safety_scan.target_id ? (
+                  <ModerationActions
+                    targetType={flag.media_safety_scan.target_type}
+                    targetId={flag.media_safety_scan.target_id}
+                    moderation={flag.media_safety_scan.moderation}
+                  />
                 ) : (
                   <span className="control-note">—</span>
                 )}

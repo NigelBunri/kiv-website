@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { RevealableMedia } from "../RevealableMedia";
+import { ModerationActions, type ModerationInfo } from "../ModerationActions";
 
 type Scan = {
   id: string;
@@ -16,6 +17,10 @@ type Scan = {
   score: number | null;
   created_at: string | null;
   has_media: boolean;
+  target_type: string | null;
+  target_id: string | null;
+  moderatable: boolean;
+  moderation: ModerationInfo;
 };
 
 const STATUS_FILTERS = ["", "blocked", "pending_review", "passed", "failed", "not_configured"] as const;
@@ -56,6 +61,7 @@ export default function MediaSafetyScanTable({ scans, activeStatus }: { scans: S
                 <th>Score</th>
                 <th>When</th>
                 <th>Content</th>
+                <th>Human moderation</th>
               </tr>
             </thead>
             <tbody>
@@ -72,6 +78,13 @@ export default function MediaSafetyScanTable({ scans, activeStatus }: { scans: S
                       <RevealableMedia scanId={scan.id} mimeType={scan.mime_type} />
                     ) : (
                       <span className="control-note">No file stored</span>
+                    )}
+                  </td>
+                  <td>
+                    {scan.moderatable && scan.target_type && scan.target_id ? (
+                      <ModerationActions targetType={scan.target_type} targetId={scan.target_id} moderation={scan.moderation} />
+                    ) : (
+                      <span className="control-note">Not moderatable yet</span>
                     )}
                   </td>
                 </tr>
