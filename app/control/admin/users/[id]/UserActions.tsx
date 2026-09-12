@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 const TIER_OPTIONS = ["Free", "Pro", "Business", "Business Pro", "Partner", "Partner Pro"];
 
 export default function UserActions({
-  userId, status, tier, isActive, isDeleted,
+  userId, status, tier, isActive, isDeleted, hasPendingDeletion,
 }: {
-  userId: string; status: string; tier: string; isActive: boolean; isDeleted: boolean;
+  userId: string; status: string; tier: string; isActive: boolean; isDeleted: boolean; hasPendingDeletion: boolean;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -16,6 +16,12 @@ export default function UserActions({
   const [message, setMessage] = useState<{ kind: "error" | "success"; text: string } | null>(null);
   const isBanned = status === "banned" || status === "suspended";
   const isBlocked = status === "blocked";
+  // "suspended" here is the automatic PENDING HUMAN REVIEW state
+  // apps.moderation.services.apply_ai_flag_consequence puts an account
+  // into after repeated/severe content violations - this is where a human
+  // reviewer decides whether to restore it or escalate to permanent
+  // deletion.
+  const isPendingHumanReview = status === "suspended";
   // Deletion doesn't change `status` (schedule_account_deletion only flips
   // is_active/is_deleted) — needs its own condition rather than folding
   // into isBanned/isBlocked, or a scheduled-for-deletion account would show
@@ -55,7 +61,21 @@ export default function UserActions({
           >
             Restore
           </button>
-        ) : (
+        ) : null}
+        {isPendingHumanReview && !hasPendingDeletion ? (
+          <button
+            type="button"
+            className="button secondary"
+            disabled={busy}
+            onClick={() => {
+              if (!window.confirm("Schedule this account for permanent deletion following the violation review? The user will be warned now and the account permanently deleted in a few hours unless restored before then.")) return;
+              runAction(`/api/control/admin/users/${userId}/schedule-violation-deletion`, { reason: "admin_console_violation_review" });
+            }}
+          >
+            Schedule permanent deletion (violations)
+          </button>
+        ) : null}
+        {!needsRestore ? (
           <>
             <button type="button" className="button secondary" disabled={busy} onClick={() => runAction(`/api/control/admin/users/${userId}/ban`, { permanent: false })}>
               Suspend
@@ -86,7 +106,7 @@ export default function UserActions({
               Delete
             </button>
           </>
-        )}
+        ) : null}
       </div>
       <div className="control-actions" style={{ marginTop: "1rem" }}>
         <select value={selectedTier} onChange={(event) => setSelectedTier(event.target.value)}>
