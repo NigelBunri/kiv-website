@@ -85,6 +85,7 @@ const ADMIN_NAV_ITEMS: NavLink[] = [
   { href: "/control/admin/users", label: "Users" },
   { href: "/control/admin/partners", label: "Partners" },
   { href: "/control/admin/moderation", label: "Moderation" },
+  { href: "/control/admin/media-safety", label: "Media safety scans" },
   { href: "/control/admin/audit", label: "Audit trail" },
   { href: "/control/admin/security", label: "Suspicious activity" },
   { href: "/control/admin/verification", label: "Verification queue" },

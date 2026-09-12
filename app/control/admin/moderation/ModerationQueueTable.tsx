@@ -2,6 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { RevealableMedia } from "../RevealableMedia";
+
+type MediaSafetyScanSummary = {
+  id: string;
+  status: string;
+  reason: string;
+  mime_type: string;
+  score: number | null;
+  context: string;
+  has_media: boolean;
+};
 
 type Flag = {
   id: string;
@@ -11,6 +22,7 @@ type Flag = {
   status: string;
   reason: string;
   created_at: string | null;
+  media_safety_scan: MediaSafetyScanSummary | null;
 };
 
 const ACTIONS = ["dismiss", "warn", "restrict", "suspend", "ban", "takedown"] as const;
@@ -52,6 +64,7 @@ export default function ModerationQueueTable({ flags }: { flags: Flag[] }) {
             <th>Target</th>
             <th>Severity</th>
             <th>Reason</th>
+            <th>Content</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -60,7 +73,22 @@ export default function ModerationQueueTable({ flags }: { flags: Flag[] }) {
             <tr key={flag.id}>
               <td>{flag.target_type} {flag.target_id ? `#${flag.target_id.slice(0, 8)}` : ""}</td>
               <td><span className="control-badge control-badge--pending">{flag.severity}</span></td>
-              <td>{flag.reason || "-"}</td>
+              <td>
+                {flag.reason || "-"}
+                {flag.media_safety_scan ? (
+                  <p className="control-note">
+                    AI: {flag.media_safety_scan.status}
+                    {flag.media_safety_scan.score != null ? ` (score ${flag.media_safety_scan.score.toFixed(2)})` : ""}
+                  </p>
+                ) : null}
+              </td>
+              <td>
+                {flag.media_safety_scan?.has_media ? (
+                  <RevealableMedia scanId={flag.media_safety_scan.id} mimeType={flag.media_safety_scan.mime_type} />
+                ) : (
+                  <span className="control-note">—</span>
+                )}
+              </td>
               <td>
                 <select
                   defaultValue=""
