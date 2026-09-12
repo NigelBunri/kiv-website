@@ -16,7 +16,25 @@ export function PairForm() {
   const [code, setCode] = useState(codeFromLink);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const [autoSubmitted, setAutoSubmitted] = useState(false);
+
+  // Pairing codes are single-use: once a redeem succeeds, this same code
+  // will always report "invalid/expired" afterward. Without a visible
+  // confirmation here, a successful sign-in looked identical to a failed
+  // one for the fraction of a second before the redirect landed - easy to
+  // mistake as "it didn't work" and go revoke the very session that just
+  // signed you in. Showing this explicitly, and holding it on screen
+  // briefly before navigating, closes that gap.
+  function goToNext() {
+    const isCrossOrigin = /^https?:\/\//i.test(next) && !next.startsWith(window.location.origin);
+    if (isCrossOrigin) {
+      window.location.href = next;
+    } else {
+      router.push(next);
+      router.refresh();
+    }
+  }
 
   async function redeem(candidateCode: string) {
     setPending(true);
@@ -30,36 +48,47 @@ export function PairForm() {
       const data = await response.json();
       if (!data.success) {
         setError(data.message || "That code didn't work.");
+        setPending(false);
         return;
       }
-      // See LoginForm.tsx's identical fix: `next` can now be a
-      // fully-qualified cross-origin URL back to kistube.
-      // kingdomimpactventures.org, which router.push() can't navigate to.
-      const isCrossOrigin = /^https?:\/\//i.test(next) && !next.startsWith(window.location.origin);
-      if (isCrossOrigin) {
-        window.location.href = next;
-      } else {
-        router.push(next);
-        router.refresh();
-      }
+      setSuccess(true);
+      setTimeout(goToNext, 1200);
     } catch {
       setError("Something went wrong signing you in. Please try again.");
-    } finally {
       setPending(false);
     }
   }
 
   useEffect(() => {
-    if (codeFromLink && !autoSubmitted) {
+    if (!codeFromLink || autoSubmitted) return;
+    // A code is single-use, but a page reload remounts this component and
+    // would otherwise auto-submit the same ?code= link again, guaranteeing
+    // "invalid/expired" on a code that may have already signed the user in
+    // moments earlier. sessionStorage survives the reload; useState alone
+    // doesn't.
+    const storageKey = `kis_pair_attempted:${codeFromLink}`;
+    if (sessionStorage.getItem(storageKey)) {
       setAutoSubmitted(true);
-      void redeem(codeFromLink);
+      setError("This link has already been used in this browser tab. If you're not signed in, generate a fresh code from Profile → Manage devices → Web.");
+      return;
     }
+    sessionStorage.setItem(storageKey, "1");
+    setAutoSubmitted(true);
+    void redeem(codeFromLink);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [codeFromLink, autoSubmitted]);
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     void redeem(code);
+  }
+
+  if (success) {
+    return (
+      <div className="public-form">
+        <p className="form-status" role="status" aria-live="polite">✓ Signed in — taking you in…</p>
+      </div>
+    );
   }
 
   if (codeFromLink && pending && !error) {
@@ -93,7 +122,17 @@ export function PairForm() {
       <button className="button primary" type="submit" disabled={pending || !code}>
         {pending ? "Signing in…" : "Sign in"}
       </button>
-      {error ? <div className="form-status" role="status" aria-live="polite">{error}</div> : null}
+      {error ? (
+        <div className="form-status" role="status" aria-live="polite">
+          {error}
+          {error.toLowerCase().includes("invalid") || error.toLowerCase().includes("expired") ? (
+            <>
+              {" "}This code may have already been used — a pairing code only works once. Generate a fresh one from
+              Profile → Manage devices → Web and try again, without reloading this page.
+            </>
+          ) : null}
+        </div>
+      ) : null}
       <p className="form-note">
         Prefer a text message code instead? <a href={`/login?next=${encodeURIComponent(next)}`}>Sign in with your phone number</a>.
       </p>
