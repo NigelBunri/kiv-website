@@ -3,13 +3,13 @@ import { Breadcrumbs, CardGrid, DetailList, Hero, ImageStory, ProductGrid, Secti
 import { pageMetadata } from "@/lib/metadata";
 import { launchWorkflow, products, ventureTimeline } from "@/lib/site";
 
-export const metadata = pageMetadata({ title: "Products", description: "KIV product portfolio: KIS, KIE, KIM, KIP and KIH.", path: "/products" });
+export const metadata = pageMetadata({ title: "Products", description: "KIV product portfolio: KIS, KISTube, KIE, KIM, KIP and KIH.", path: "/products" });
 
 export default function ProductsPage() {
   return (
     <SiteShell>
       <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Products", href: "/products" }]} />
-      <Hero eyebrow="Products" title="One flagship product in launch preparation, with future ventures clearly staged." body="KIS is KIV's first flagship product. KIE, KIM, KIP and KIH are future ventures and are not represented as launched products." />
+      <Hero eyebrow="Products" title="One flagship product in launch preparation, one live today, and future ventures clearly staged." body="KIS is KIV's first flagship product, and KISTube is its video and content home, already live and public. KIE, KIM, KIP and KIH are future ventures and are not represented as launched products." />
       <ImageStory
         src="/images/kiv-portfolio-roadmap.jpg"
         alt="A staged KIV portfolio roadmap with KIS active first, followed by education, market, payments and health venture concepts."
@@ -18,6 +18,7 @@ export default function ProductsPage() {
         body="The portfolio is presented as a disciplined sequence, not a set of products already available to the public."
         points={[
           "KIS is the active flagship in launch preparation.",
+          "KISTube, KIS's video and content platform, is already live and public.",
           "KIE, KIM, KIP and KIH remain planned or research-stage.",
           "Future venture pages avoid release dates, user counts and licensing claims.",
         ]}

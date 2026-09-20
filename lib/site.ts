@@ -16,7 +16,7 @@ export const site = {
   turnstileSiteKey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "",
 } as const;
 
-export type ProductStage = "advanced-launch-preparation" | "planned" | "research";
+export type ProductStage = "live" | "advanced-launch-preparation" | "planned" | "research";
 
 export type Product = {
   slug: string;
@@ -620,6 +620,28 @@ export const products: Product[] = [
     },
   },
   {
+    slug: "kistube",
+    name: "KISTube",
+    fullName: "KISTube",
+    stage: "live",
+    statusLabel: "Live and public",
+    summary:
+      "KISTube is the public video and content home for KIS: channels, broadcasts, testimonies, education, health, market and jobs content, live today at its own site.",
+    audience: "Viewers, creators, ministries, channels and anyone following KIS content publicly.",
+    details: [
+      "Browse channels and watch what partners and creators have published, right from a browser.",
+      "Runs as its own standalone deployment at kistube.kingdomimpactventures.org, separate from the rest of the KIS ecosystem.",
+      "The one part of the KIS ecosystem this site can honestly call live and public today, not just in preparation.",
+    ],
+    availability: {
+      android: false,
+      ios: false,
+      web: true,
+      launchList: false,
+      webAppUrl: "https://kistube.kingdomimpactventures.org",
+    },
+  },
+  {
     slug: "kie",
     name: "KIE",
     fullName: "Kingdom Impact Education",
@@ -680,6 +702,21 @@ export const products: Product[] = [
     availability: { android: false, ios: false, web: false, launchList: false },
   },
 ];
+
+// KIV itself isn't a Product (no availability/audience/details in that
+// shape - it's the venture, not one of the things the venture builds),
+// but the homepage hero showcases it first, ahead of the actual product
+// portfolio. Defined once here so ProductCarousel and OrbitRing share the
+// same name/summary/link instead of two copies drifting apart. Links to
+// /about rather than a /products/kiv page, since KIV has no dedicated
+// product page of its own (see OrbitRing.tsx's own comment on this).
+export const kivShowcase = {
+  slug: "kiv",
+  name: "KIV",
+  fullName: site.name,
+  summary: site.description,
+  href: "/about",
+};
 
 // description + previewImage feed the hover/focus mega-menu flyout
 // (lib/useNavFlyout.tsx) that SiteShell's primary nav shares with the

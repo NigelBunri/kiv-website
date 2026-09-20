@@ -3,22 +3,25 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { products } from "@/lib/site";
+import { kivShowcase, products } from "@/lib/site";
 
-// The 5 KIS-family products (from lib/site.ts, so slug/name/logo paths
-// stay a single source of truth with the rest of the site) plus the 3
-// entities above/beside them in the KCAN -> KIV -> KIS structure. KCAN,
-// KIV and Shekinah Global have no dedicated page of their own yet (see
-// app/about/page.tsx, the only place that currently explains them), so
-// their boxes link there rather than to a 404.
+// KIV leads the ring - it's the venture behind everything else here, so
+// it takes the first orbit position rather than being tucked in beside
+// KCAN and Shekinah Global at the end. The KIS-family products (from
+// lib/site.ts, so slug/name/logo paths stay a single source of truth
+// with the rest of the site) follow, then the 2 remaining entities in
+// the KCAN -> KIV -> KIS structure. KCAN and Shekinah Global have no
+// dedicated page of their own yet (see app/about/page.tsx, the only
+// place that currently explains them), so their boxes link there rather
+// than to a 404 - KIV's own box does the same, via kivShowcase.href.
 const ORBIT_ITEMS = [
+  { key: kivShowcase.slug, name: kivShowcase.name, logo: `/images/${kivShowcase.slug}-logo-512.png`, href: kivShowcase.href },
   ...products.map((p) => ({ key: p.slug, name: p.name, logo: `/images/${p.slug}-logo-512.png`, href: `/products/${p.slug}` })),
   { key: "kcan", name: "KCAN", logo: "/images/kcan-logo-512.png", href: "/about" },
-  { key: "kiv", name: "KIV", logo: "/images/kiv-logo-512.png", href: "/about" },
   { key: "shekina-global", name: "Shekinah Global", logo: "/images/shekina-global-logo-512.png", href: "/about" },
 ];
 
-const ITEM_COUNT = ORBIT_ITEMS.length; // 8
+const ITEM_COUNT = ORBIT_ITEMS.length;
 const ANGLE_STEP = 360 / ITEM_COUNT;
 const DEGREES_PER_MS = 360 / 42000; // one full orbit every 42s
 

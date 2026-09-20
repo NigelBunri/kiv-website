@@ -3,9 +3,24 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { products } from "@/lib/site";
+import { kivShowcase, products } from "@/lib/site";
 
 const AUTOPLAY_MS = 4500;
+
+// KIV leads the carousel, ahead of the products it builds - see
+// kivShowcase's own comment in lib/site.ts for why it isn't just folded
+// into the `products` array itself. href is precomputed here so every
+// item in this list (KIV included) has the same shape to render.
+const CAROUSEL_ITEMS = [
+  kivShowcase,
+  ...products.map((product) => ({
+    slug: product.slug,
+    name: product.name,
+    fullName: product.fullName,
+    summary: product.summary,
+    href: `/products/${product.slug}`,
+  })),
+];
 
 // Shortest signed distance from `from` to `to` around a ring of `count`
 // slots - e.g. with 5 products, going from index 4 to index 0 is +1 (the
@@ -19,7 +34,7 @@ function ringOffset(from: number, to: number, count: number): number {
 }
 
 export function ProductCarousel() {
-  const count = products.length;
+  const count = CAROUSEL_ITEMS.length;
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -57,7 +72,7 @@ export function ProductCarousel() {
         Kingdom Impact Ventures - KCAN, KIV, KIS and our product portfolio
       </h1>
       <div className="product-carousel-track">
-        {products.map((product, index) => {
+        {CAROUSEL_ITEMS.map((item, index) => {
           const offset = ringOffset(active, index, count);
           const magnitude = Math.abs(offset);
           // Cards more than one slot away sit fully off to whichever side
@@ -71,8 +86,8 @@ export function ProductCarousel() {
           const dataOffset = magnitude <= 1 ? String(offset) : offset > 0 ? "far-right" : "far-left";
           return (
             <Link
-              key={product.slug}
-              href={`/products/${product.slug}`}
+              key={item.slug}
+              href={item.href}
               className={`product-carousel-card${offset === 0 ? " is-active" : ""}`}
               data-offset={dataOffset}
               aria-hidden={!visible}
@@ -91,11 +106,11 @@ export function ProductCarousel() {
               }}
             >
               <span className="product-carousel-logo">
-                <Image src={`/images/${product.slug}-logo-512.png`} alt="" width={96} height={96} />
+                <Image src={`/images/${item.slug}-logo-512.png`} alt="" width={96} height={96} />
               </span>
-              <strong>{product.fullName}</strong>
-              <span className="product-carousel-name">{product.name}</span>
-              <p>{product.summary}</p>
+              <strong>{item.fullName}</strong>
+              <span className="product-carousel-name">{item.name}</span>
+              <p>{item.summary}</p>
             </Link>
           );
         })}
@@ -106,13 +121,13 @@ export function ProductCarousel() {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m14.5 5-7 7 7 7" /></svg>
         </button>
         <div className="product-carousel-dots" role="tablist" aria-label="Choose a product">
-          {products.map((product, index) => (
+          {CAROUSEL_ITEMS.map((item, index) => (
             <button
-              key={product.slug}
+              key={item.slug}
               type="button"
               role="tab"
               aria-selected={index === active}
-              aria-label={`Show ${product.name}`}
+              aria-label={`Show ${item.name}`}
               className={index === active ? "is-active" : ""}
               onClick={() => goTo(index)}
             />
