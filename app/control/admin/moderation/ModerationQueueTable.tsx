@@ -28,6 +28,10 @@ type Flag = {
   reason: string;
   created_at: string | null;
   media_safety_scan: MediaSafetyScanSummary | null;
+  // Computed on the flag's own target_type/target_id server-side, NOT
+  // gated behind media_safety_scan - a user-reported flag (no AI scan
+  // involved) still needs this to show the real moderation actions below.
+  moderatable: boolean;
 };
 
 const ACTIONS = ["dismiss", "warn", "restrict", "suspend", "ban", "takedown"] as const;
@@ -96,11 +100,11 @@ export default function ModerationQueueTable({ flags }: { flags: Flag[] }) {
                 )}
               </td>
               <td>
-                {flag.media_safety_scan?.moderatable && flag.media_safety_scan.target_type && flag.media_safety_scan.target_id ? (
+                {flag.moderatable && flag.target_id ? (
                   <ModerationActions
-                    targetType={flag.media_safety_scan.target_type}
-                    targetId={flag.media_safety_scan.target_id}
-                    moderation={flag.media_safety_scan.moderation}
+                    targetType={flag.target_type}
+                    targetId={flag.target_id}
+                    moderation={flag.media_safety_scan?.moderation ?? null}
                   />
                 ) : (
                   <span className="control-note">—</span>
