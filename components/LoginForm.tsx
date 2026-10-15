@@ -4,56 +4,46 @@ import { FormEvent, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CountrySelect } from "./CountrySelect";
 
-type Step = "phone" | "code";
-
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next") || "/";
 
-  const [step, setStep] = useState<Step>("phone");
   const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("CM");
-  const [code, setCode] = useState("");
+  const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<{ message: string; useQrInstead?: boolean }>({ message: "" });
 
-  async function requestCode(event: FormEvent<HTMLFormElement>) {
+  async function login(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setPending(true);
-    setError("");
+    setError({ message: "" });
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, country }),
+        body: JSON.stringify({ phone, country, password }),
       });
       const data = await response.json();
       if (!data.success) {
-        setError(data.message || "Could not send a code to that number.");
-        return;
-      }
-      setStep("code");
-    } catch {
-      setError("Something went wrong sending the code. Please try again.");
-    } finally {
-      setPending(false);
-    }
-  }
-
-  async function verifyCode(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setPending(true);
-    setError("");
-    try {
-      const response = await fetch("/api/auth/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, country, code }),
-      });
-      const data = await response.json();
-      if (!data.success) {
-        setError(data.message || "That code didn't work.");
+        // Mirrors the mobile app's own handling of this exact error
+        // (src/screens/LoginScreen.tsx) - password login from a device
+        // Django doesn't already trust for this account is deliberately
+        // blocked; the pairing code from the app (Profile -> Manage
+        // devices -> Web) is the required next step, not a retry.
+        if (data.secondary_device_required || data.error_code === "secondary_device_qr_required") {
+          setError({
+            message: "This account is already active on another device. Use a pairing code from the app instead.",
+            useQrInstead: true,
+          });
+          return;
+        }
+        if (data.two_factor_required) {
+          setError({ message: "This account has two-factor authentication enabled, which isn't supported on the website yet. Sign in from the KIS app instead." });
+          return;
+        }
+        setError({ message: data.message || "Invalid phone number or password." });
         return;
       }
       // `next` can now be a fully-qualified cross-origin URL (e.g.
@@ -71,48 +61,14 @@ export function LoginForm() {
         router.refresh();
       }
     } catch {
-      setError("Something went wrong verifying that code. Please try again.");
+      setError({ message: "Something went wrong signing in. Please try again." });
     } finally {
       setPending(false);
     }
   }
 
-  if (step === "code") {
-    return (
-      <form className="public-form" onSubmit={verifyCode} noValidate>
-        <p className="form-note">We sent a code to {phone}. Enter it below to sign in with your KIS account.</p>
-        <label htmlFor="login-code">
-          Verification code
-          <input
-            id="login-code"
-            name="code"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            maxLength={8}
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            required
-            aria-required="true"
-            autoFocus
-          />
-        </label>
-        <button className="button primary" type="submit" disabled={pending || !code}>
-          {pending ? "Signing in…" : "Sign in"}
-        </button>
-        <button
-          type="button"
-          className="button"
-          onClick={() => { setStep("phone"); setCode(""); setError(""); }}
-        >
-          Use a different number
-        </button>
-        {error ? <div className="form-status" role="status" aria-live="polite">{error}</div> : null}
-      </form>
-    );
-  }
-
   return (
-    <form className="public-form" onSubmit={requestCode} noValidate>
+    <form className="public-form" onSubmit={login} noValidate>
       <p className="form-note">Sign in with the KIS account you already use in the app - no new account needed.</p>
       <label htmlFor="login-country">
         Country
@@ -133,10 +89,33 @@ export function LoginForm() {
           autoFocus
         />
       </label>
-      <button className="button primary" type="submit" disabled={pending || !phone}>
-        {pending ? "Sending code…" : "Send code"}
+      <label htmlFor="login-password">
+        Password
+        <input
+          id="login-password"
+          name="password"
+          type="password"
+          autoComplete="current-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          aria-required="true"
+        />
+      </label>
+      <button className="button primary" type="submit" disabled={pending || !phone || !password}>
+        {pending ? "Signing in…" : "Sign in"}
       </button>
-      {error ? <div className="form-status" role="status" aria-live="polite">{error}</div> : null}
+      {error.message ? (
+        <div className="form-status" role="status" aria-live="polite">
+          {error.message}
+          {error.useQrInstead ? (
+            <>
+              {" "}
+              <a href={`/pair?next=${encodeURIComponent(next)}`}>Use a pairing code</a>.
+            </>
+          ) : null}
+        </div>
+      ) : null}
       <p className="form-note">
         Have a pairing code from the app instead? <a href={`/pair?next=${encodeURIComponent(next)}`}>Use it here</a>.
       </p>

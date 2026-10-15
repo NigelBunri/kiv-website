@@ -79,3 +79,23 @@ test("KIS availability environment matrix is represented in source", () => {
   assert.match(productPanel, /Store links will appear here only after official release links are configured/);
   assert.match(productPanel, /rel="noopener noreferrer"/);
 });
+
+test("website login does not call the removed OTP endpoints (WEB-040/041)", () => {
+  // Regression: this used to be a two-step SMS-OTP flow against
+  // /api/v1/auth/otp/initiate/ + /api/v1/auth/otp/verify/ - neither
+  // endpoint exists anymore in the Django backend (apps/otp/ has no
+  // views.py/urls.py at all; OTP was removed as part of the KIS Google
+  // Auth migration), so every website sign-in via phone number failed
+  // 100% of the time. Login is now a single password-based call against
+  // the real, current /api/v1/auth/login/ endpoint, matching how the
+  // mobile app (src/screens/LoginScreen.tsx) already logs in.
+  const loginRoute = readFileSync(join(root, "app/api/auth/login/route.ts"), "utf8");
+  assert.doesNotMatch(loginRoute, /otp\/initiate/);
+  assert.doesNotMatch(loginRoute, /otp\/verify/);
+  assert.match(loginRoute, /\/api\/v1\/auth\/login\//);
+  assert.equal(existsSync(join(root, "app/api/auth/verify/route.ts")), false, "the dead OTP verify route should be removed, not just unused");
+
+  const loginForm = readFileSync(join(root, "components/LoginForm.tsx"), "utf8");
+  assert.match(loginForm, /type="password"/);
+  assert.doesNotMatch(loginForm, /one-time-code/);
+});

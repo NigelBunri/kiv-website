@@ -5,12 +5,12 @@ const DEVICE_ID_COOKIE = "kis_device_id";
 const DEVICE_ID_MAX_AGE = 60 * 60 * 24 * 365; // 1 year - outlives any single session, deliberately
 
 // Redeems a short-lived pairing code generated on the user's phone (Profile
-// -> Manage devices -> Web). Unlike /api/auth/verify (OTP web login, which
-// only ever allows ONE web session at a time), Django's redeem endpoint
-// deliberately does not revoke other web devices, so pairing from a second
-// computer doesn't sign the first one out. Same device_id / cookie-sealing
-// pattern as verify/route.ts - this is the only other place a raw JWT ever
-// exists in this process.
+// -> Manage devices -> Web). This is the required path when password login
+// (/api/auth/login) comes back with secondary_device_required - Django
+// deliberately blocks a plain password login from an unrecognized device
+// and requires pairing from the already-trusted primary device instead.
+// Pairing also doesn't revoke other web devices, unlike signing in
+// elsewhere. Same device_id / cookie-sealing pattern as login/route.ts.
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}));
   const code = String(body?.code || "").trim();
