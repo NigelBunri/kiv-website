@@ -2153,6 +2153,18 @@ textarea { resize: vertical; }
   color: var(--text-muted, #6b6b6b);
   margin: 0;
 }
+/* .join-link-card never got a dark-theme background like every other
+   card on this site (.detail-item, .timeline-item, .availability-panel,
+   etc. all do) - it kept its light-mode translucent cream background
+   over the dark theme's own dark hero-bg photo, which read as a muddy
+   near-black card, and the fallback note's #6b6b6b grey (tuned for a
+   light/cream background) was close to unreadable against it. */
+:root[data-theme="dark"] .join-link-card {
+  background: rgba(29, 22, 14, .6);
+}
+:root[data-theme="dark"] .join-link-fallback-note {
+  color: var(--ink-faint);
+}
 .not-found {
   min-height: 70vh;
   display: grid;
