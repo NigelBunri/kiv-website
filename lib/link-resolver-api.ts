@@ -31,6 +31,14 @@ const SUPPORTED_LINK_TYPES = new Set([
   // resolver contract either way: read-only preview, matches
   // apps.core.link_resolver's SUPPORTED_TYPES on the backend.
   "gift", "live-guest",
+  // Civic petitions (token = Petition.id) and events (token = Event.slug)
+  // - the mobile app already shares links for these but had no real
+  // public web page behind them until apps.core.link_resolver grew
+  // _resolve_petition/_resolve_event. Nested under /join/[type]/[token]
+  // like group/community/partner, not standalone like gift/live-guest,
+  // since there's no app-side redirect quirk forcing a different path
+  // shape here.
+  "petition", "event",
 ]);
 
 export function isSupportedLinkType(linkType: string): boolean {

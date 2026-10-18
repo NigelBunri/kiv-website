@@ -26,16 +26,37 @@ const TYPE_LABELS: Record<string, string> = {
   partner: "organization",
   contact: "person",
   referral: "invite",
+  petition: "petition",
+  event: "event",
 };
 
 // A contact link's whole point is starting a conversation, not "joining"
 // anything - every other link type reads correctly as "Join X", but
 // "Join John Smith" doesn't, so this is the one type with its own verb.
-// A referral link is an invitation from a specific person, not a request
-// to join a specific thing, so it gets its own copy entirely (handled
-// directly in the page body below rather than forced through this verb).
-function actionVerb(type: string): "Join" | "Message" {
-  return type === "contact" ? "Message" : "Join";
+// A petition is signed, not joined; an event is viewed/attended, not
+// joined, in the sense this verb is otherwise used for group/community/
+// partner membership. A referral link is an invitation from a specific
+// person, not a request to join a specific thing, so it gets its own
+// copy entirely (handled directly in the page body below rather than
+// forced through this verb).
+function actionVerb(type: string): "Join" | "Message" | "Sign" | "View" {
+  if (type === "contact") return "Message";
+  if (type === "petition") return "Sign";
+  if (type === "event") return "View";
+  return "Join";
+}
+
+// Shared by generateMetadata (page title) and the page body's own
+// <Section title>, so adding a new verb above only means adding one case
+// here instead of two separate ad hoc ternaries drifting apart - the bug
+// this replaces: the old inline ternary only branched on
+// `actionVerb(type) === "Join"` vs "else, assume Message", which produced
+// "Message Fix the road on KIS" for a petition once "Sign"/"View" existed
+// as real verbs.
+function titleFor(verb: ReturnType<typeof actionVerb>, name: string | null | undefined, label: string): string {
+  if (verb === "Sign") return name ? `Sign the petition: ${name}` : "Sign this petition";
+  if (name) return `${verb} ${name}`;
+  return `${verb} this ${label}`;
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }) {
@@ -58,13 +79,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }) 
       ? result.name
         ? `${result.name} invited you to KIS`
         : "You've been invited to KIS"
-      : actionVerb(type) === "Join"
-        ? result.name
-          ? `Join ${result.name} on KIS`
-          : `Join this ${label} on KIS`
-        : result.name
-          ? `Message ${result.name} on KIS`
-          : `Message this ${label} on KIS`;
+      : `${titleFor(actionVerb(type), result.name, label)} on KIS`;
   return pageMetadata({
     title,
     description:
@@ -111,9 +126,7 @@ export default async function JoinLinkPage({ params }: { params: Promise<Params>
                 ? result.name
                   ? `${result.name} invited you to KIS`
                   : "You've been invited to KIS"
-                : result.name
-                  ? `${verb} ${result.name}`
-                  : `${verb} this ${label}`
+                : titleFor(verb, result.name, label)
             }
             body={
               isReferral
