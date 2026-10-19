@@ -24,7 +24,7 @@ export type LinkResolveResult = {
 };
 
 const SUPPORTED_LINK_TYPES = new Set([
-  "call", "broadcast-call", "group", "community", "partner", "contact", "referral",
+  "call", "broadcast-call", "group", "channel", "community", "partner", "contact", "referral",
   // Standalone routes (/gift/[token], /live-guest/[token]), not nested
   // under /join/[type]/[token] like the rest of this set - added by the
   // comms-migration share-link reachability fix (Sep 2026). Same

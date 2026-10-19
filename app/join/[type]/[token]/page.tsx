@@ -22,6 +22,7 @@ const TYPE_LABELS: Record<string, string> = {
   call: "call",
   "broadcast-call": "broadcast",
   group: "group",
+  channel: "channel",
   community: "community",
   partner: "organization",
   contact: "person",
